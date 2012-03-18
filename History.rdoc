@@ -1,3 +1,13 @@
+== v0.17.0 [2012-03-18] Michael Granger <ged@FaerieMUD.org>
+
+- Squelch logging of expected SQL errors.
+  Errors are normal during Mongrel2::Config.db= and
+  .database_initialized?, so add a new .without_sql_logging method for
+  temporarily disabling SQL logging, and wrap that around the methods
+  in quesion.
+- Fix documentation for WebSocket#validate_control_frame
+
+
 == v0.16.0 [2012-03-10] Michael Granger <ged@FaerieMUD.org>
 
 - Add WebSocket (RFC6455) support
