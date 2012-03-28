@@ -1,3 +1,8 @@
+== v0.19.0 [2012-03-28] Michael Granger <ged@FaerieMUD.org>
+
+- Make HTTPResponse default to a 200 status if there's a body.
+
+
 == v0.18.0 [2012-03-28] Michael Granger <ged@FaerieMUD.org>
 
 - Make the 'handler' DSL directive replace any existing handler with
