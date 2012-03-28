@@ -114,5 +114,14 @@ describe Mongrel2::Config::Handler do
 		@handler.errors.full_messages.first.should =~ /invalid/i
 	end
 
+	it "isn't valid if its send_spec isn't unique" do
+		dup = @handler.dup
+		@handler.save
+
+		expect {
+			dup.save
+		}.to raise_error( Sequel::ValidationFailed, /is already taken/ )
+	end
+
 end
 
