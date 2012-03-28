@@ -85,6 +85,12 @@ class Mongrel2::Config::Host < Mongrel2::Config( :host )
 				:recv_ident => recv_ident
 			)
 
+			existing = Mongrel2::Config::Handler.filter( :send_ident => send_ident )
+			unless existing.select( :id ).empty?
+				Mongrel2.log.debug "Dropping existing %p handler." % [ send_ident ]
+				existing.delete
+			end
+
 			Mongrel2.log.debug "Creating handler with options: %p" % [ options ]
 			return Mongrel2::Config::Handler.create( options )
 		end
