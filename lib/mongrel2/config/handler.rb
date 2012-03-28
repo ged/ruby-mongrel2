@@ -8,7 +8,7 @@ class Mongrel2::Config::Handler < Mongrel2::Config( :handler )
 
 	### As of Mongrel2/1.7.5:
 	# CREATE TABLE handler (id INTEGER PRIMARY KEY,
-	#     send_spec TEXT, 
+	#     send_spec TEXT,
 	#     send_ident TEXT,
 	#     recv_spec TEXT,
 	#     recv_ident TEXT,
@@ -31,7 +31,7 @@ class Mongrel2::Config::Handler < Mongrel2::Config( :handler )
 
 	##
 	# :method: by_send_ident( uuid )
-	# 
+	#
 	# Look up a Handler by its send_ident, which should be a +uuid+ or similar String.
 	def_dataset_method( :by_send_ident ) do |ident|
 		filter( :send_ident => ident )
@@ -43,6 +43,7 @@ class Mongrel2::Config::Handler < Mongrel2::Config( :handler )
 		self.validate_idents
 		self.validate_specs
 		self.validate_protocol
+		self.validate_uniqueness
 	end
 
 
@@ -102,6 +103,11 @@ class Mongrel2::Config::Handler < Mongrel2::Config( :handler )
 		end
 	end
 
+
+	### Ensure that handlers are unique.
+	def validate_uniqueness
+		self.validates_unique( :send_ident, :send_spec, :recv_spec )
+	end
 
 
 	#######
