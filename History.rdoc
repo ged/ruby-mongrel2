@@ -1,3 +1,11 @@
+== v0.18.0 [2012-03-28] Michael Granger <ged@FaerieMUD.org>
+
+- Make the 'handler' DSL directive replace any existing handler with
+  its send_ident.
+- Add a validation to ensure that handler configs have unique send/recv
+  specs and IDs.
+
+
 == v0.17.0 [2012-03-18] Michael Granger <ged@FaerieMUD.org>
 
 - Squelch logging of expected SQL errors.
