@@ -16,9 +16,6 @@ class Mongrel2::HTTPResponse < Mongrel2::Response
 	# The format for building valid HTTP responses
 	STATUS_LINE_FORMAT = "HTTP/1.1 %03d %s".freeze
 
-	# The default status
-	DEFAULT_HTTP_STATUS = 204
-
 	# A network End-Of-Line
 	EOL = "\r\n".freeze
 
@@ -67,9 +64,10 @@ class Mongrel2::HTTPResponse < Mongrel2::Response
 
 	### Send the response status to the client
 	def status_line
-		self.log.warn "Building status line for unset status" if self.status.nil?
+		self.log.debug "Building status line for status: %p" % [ self.status ]
 
-		st = self.status || DEFAULT_HTTP_STATUS
+		st = self.status ||
+		     ((self.body.nil? || self.body.empty?) ? HTTP::NO_CONTENT : HTTP::OK)
 		return STATUS_LINE_FORMAT % [ st, HTTP::STATUS_NAME[st] ]
 	end
 

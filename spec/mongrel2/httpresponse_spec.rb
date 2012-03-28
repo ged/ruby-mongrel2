@@ -98,6 +98,15 @@ describe Mongrel2::HTTPResponse do
 		@response.headers.should have(1).keys
 	end
 
+	it "sets its status line to 200 OK if the body is set and the status hasn't yet been set" do
+		@response << "Some stuff"
+		@response.status_line.should == 'HTTP/1.1 200 OK'
+	end
+
+	it "sets its status line to 204 No Content if the body is set and the status hasn't yet been set" do
+		@response.status_line.should == 'HTTP/1.1 204 No Content'
+	end
+
 	it "can find the length of its body if it's a String" do
 		test_body = 'A string full of stuff'
 		@response.body = test_body
