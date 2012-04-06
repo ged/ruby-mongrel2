@@ -26,8 +26,7 @@ describe Mongrel2::Config::Route do
 
 	before( :all ) do
 		setup_logging()
-		Mongrel2::Config.configure( :configdb => ':memory:' )
-		Mongrel2::Config.init_database
+		setup_config_db()
 	end
 
 	before( :each ) do
