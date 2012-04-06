@@ -18,10 +18,10 @@ begin
 	require 'amalgalite'
 	# Rude hack to stop Sequel::Model from complaining if it's subclassed before
 	# the first database connection is established. Ugh.
-	Sequel::Model.db = Sequel.amalgalite if Sequel::DATABASES.empty?
+	Sequel::Model.db = Sequel.connect( 'amalgalite:/' ) if Sequel::DATABASES.empty?
 rescue LoadError
 	require 'sqlite3'
-	Sequel::Model.db = Sequel.sqlite if Sequel::DATABASES.empty?
+	Sequel::Model.db = Sequel.connect( 'sqlite:/' ) if Sequel::DATABASES.empty?
 end
 
 
@@ -85,22 +85,20 @@ module Mongrel2
 			lambda {|raw| TNetstring.parse( raw ).first} )
 
 
-		### Return a bound Method object to the Sequel constructor of choice for the
-		### config DB. This is used to choose either 'amalgalite' or 'sqlite3', preferring
-		### the former.
-		def self::adapter_method
+		### Return the name of the Sequel SQLite adapter to use. If the amalgalite library
+		### is available, this will return 'amalgalite', else it returns 'sqlite'.
+		def self::sqlite_adapter
 			if defined?( ::Amalgalite )
-				return Sequel.method( :amalgalite )
+				return 'amalgalite'
 			else
-				return Sequel.method( :sqlite )
+				return 'sqlite'
 			end
 		end
 
 
 		### Return a Sequel::Database for an in-memory database via the available SQLite library
 		def self::in_memory_db
-			# Just calling either .amalgalite or .sqlite returns an in-memory DB
-			return self.adapter_method.call
+			return Sequel.connect( adapter: self.sqlite_adapter )
 		end
 
 
@@ -112,7 +110,7 @@ module Mongrel2
 			config = DEFAULTS.merge( config )
 
 			if config[ :configdb ]
-				self.db = self.adapter_method.call( config[:configdb] )
+				self.db = Sequel.connect( config[:configdb] )
 			end
 		end
 
@@ -197,14 +195,17 @@ module Mongrel2
 		end
 
 
-		### Return a Pathname object for the current database, or nil if the current
+		### Return the name of the current config database, or nil if the current
 		### database is an in-memory one.
-		def self::pathname
-			dburi = URI( self.db.uri )
-			pathname = dburi.path
-			pathname.slice!( 0, 1 ) if pathname.start_with?( '/' )
-			return nil if pathname.empty?
-			return Pathname( pathname )
+		def self::dbname
+			Mongrel2.log.warn "Returning dbname from: %p" % [ self.db.opts ]
+			if self.db.opts[:dbname]
+				return self.db.opts[:dbname]
+			elsif self.db.uri
+				return URI( self.db.uri )
+			else
+				return nil
+			end
 		end
 
 

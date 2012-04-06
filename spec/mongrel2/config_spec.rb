@@ -25,7 +25,7 @@ require 'mongrel2/config'
 describe Mongrel2::Config do
 
 	before( :all ) do
-		setup_logging()
+		setup_logging( :fatal )
 		setup_config_db()
 	end
 
@@ -97,13 +97,16 @@ describe Mongrel2::Config do
 	end
 
 	it "can return the path to the config DB as a Pathname if it's pointing at a file" do
-		Mongrel2::Config.db = Mongrel2::Config.adapter_method[ 'config-spec.sqlite' ]
-		Mongrel2::Config.pathname.should == Pathname( 'config-spec.sqlite' )
+		Mongrel2::Config.db =
+			Sequel.connect( adapter: Mongrel2::Config.sqlite_adapter, dbname: 'config-spec.sqlite' )
+		Mongrel2::Config.dbname.should == 'config-spec.sqlite'
 	end
 
 	it "returns nil if asked for the pathname to an in-memory database" do
 		Mongrel2::Config.db = Mongrel2::Config.in_memory_db
-		Mongrel2::Config.pathname.should be_nil()
+		Mongrel2::Config.dbname.should be_a( URI )
+		Mongrel2::Config.dbname.path.should == '/'
+		[ 'amalgalite', 'sqlite' ].should include( Mongrel2::Config.dbname.scheme )
 	end
 
 	describe "Configurability support", :if => defined?( Configurability ) do
