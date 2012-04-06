@@ -26,7 +26,7 @@ hoespec = Hoe.spec 'mongrel2' do
 	self.developer 'Michael Granger', 'ged@FaerieMUD.org'
 
 	self.dependency 'nokogiri',   '~> 1.5'
-	self.dependency 'sequel',     '~> 3.31'
+	self.dependency 'sequel',     '~> 3.34'
 	self.dependency 'amalgalite', '~> 1.1'
 	self.dependency 'tnetstring', '~> 0.3'
 	self.dependency 'yajl-ruby',  '~> 1.0'
@@ -36,7 +36,7 @@ hoespec = Hoe.spec 'mongrel2' do
 
 	self.dependency 'configurability', '~> 1.0', :developer
 	self.dependency 'simplecov',       '~> 0.6', :developer
-	self.dependency 'rspec',           '~> 2.8', :developer
+	self.dependency 'hoe-deveiate',    '~> 0.1', :developer
 
 	self.spec_extras[:licenses] = ["BSD"]
 	self.require_ruby_version( '>= 1.9.2' )
