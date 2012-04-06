@@ -1,11 +1,9 @@
-# .rvm.gems generated gem export file. Note that any env variable settings will be missing. Append these after using a ';' field separator
-hoe-deveiate -v0.0.8
+# .gems generated gem export file. Note that any env variable settings will be missing. Append these after using a ';' field separator
 amalgalite -v1.1.2
-arrayfields -v4.7.4
-configurability -v1.0.8
-fastercsv -v1.5.4
-nokogiri -v1.5.0
-sequel -v3.31.0
+configurability -v1.0.10
+hoe-deveiate -v0.1.0
+nokogiri -v1.5.2
+sequel -v3.34.1
 simplecov -v0.6.1
 sysexits -v1.0.2
 tnetstring -v0.3.4

@@ -104,9 +104,7 @@ describe Mongrel2::Config do
 
 	it "returns nil if asked for the pathname to an in-memory database" do
 		Mongrel2::Config.db = Mongrel2::Config.in_memory_db
-		Mongrel2::Config.dbname.should be_a( URI )
-		Mongrel2::Config.dbname.path.should == '/'
-		[ 'amalgalite', 'sqlite' ].should include( Mongrel2::Config.dbname.scheme )
+		Mongrel2::Config.dbname.should be_nil()
 	end
 
 	describe "Configurability support", :if => defined?( Configurability ) do
