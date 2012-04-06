@@ -1,3 +1,20 @@
+== v0.20.0 [2012-03-28] Michael Granger <ged@FaerieMUD.org>
+
+- Fix the config DB for Sequel 3.34.
+
+Note: This fix includes several API changes
+
+- Mongrel2::Config.adapter_method is now .sqlite_adapter, and just
+  returns the name of the appropriate adapter instead of a Method
+  object that returns a Sequel::Database.
+- Mongrel2::Config.pathname is now .dbname, and returns either a URI
+  or a String, depending on how the database handle was created.
+
+These changes also will make it easier to use alternative
+configuration databases, e.g., when I get the PostgreSQL config
+module working, it'll be easier to point the config model at it.
+
+
 == v0.19.0 [2012-03-28] Michael Granger <ged@FaerieMUD.org>
 
 - Make HTTPResponse default to a 200 status if there's a body.
