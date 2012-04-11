@@ -198,9 +198,8 @@ module Mongrel2
 		### Return the name of the current config database, or nil if the current
 		### database is an in-memory one.
 		def self::dbname
-			Mongrel2.log.warn "Returning dbname from: %p" % [ self.db.opts ]
-			if self.db.opts[:dbname]
-				return self.db.opts[:dbname]
+			if self.db.opts[:database]
+				return self.db.opts[:database]
 			elsif self.db.uri
 				return URI( self.db.uri )
 			else

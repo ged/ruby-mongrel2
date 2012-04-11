@@ -31,6 +31,7 @@ describe Mongrel2::Config do
 
 	after( :all ) do
 		reset_logging()
+		File.delete( 'config-spec.sqlite' ) if File.exist?( 'config.spec.sqlite' )
 	end
 
 
@@ -97,8 +98,8 @@ describe Mongrel2::Config do
 	end
 
 	it "can return the path to the config DB as a Pathname if it's pointing at a file" do
-		Mongrel2::Config.db =
-			Sequel.connect( adapter: Mongrel2::Config.sqlite_adapter, dbname: 'config-spec.sqlite' )
+		Mongrel2::Config.db = Sequel.
+			connect( adapter: Mongrel2::Config.sqlite_adapter, database: 'config-spec.sqlite' )
 		Mongrel2::Config.dbname.should == 'config-spec.sqlite'
 	end
 
