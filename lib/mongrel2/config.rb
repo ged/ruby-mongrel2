@@ -106,11 +106,16 @@ module Mongrel2
 		### 'mongrel2' section of the config file if there is one. This method can also be used
 		### without Configurability by passing an object that can be merged with
 		### Mongrel2::Config::DEFAULTS.
-		def self::configure( config={} )
+		def self::configure( config=nil )
+			return unless config
+
 			config = DEFAULTS.merge( config )
 
-			if config[ :configdb ]
-				self.db = Sequel.connect( config[:configdb] )
+			if dbspec = config[ :configdb ]
+				# Assume it's a path to a sqlite database if it doesn't have a schema
+				dbspec = "%s://%s" % [ self.sqlite_adapter, dbspec ] unless
+					dbspec.include?( ':' )
+				self.db = Sequel.connect( dbspec )
 			end
 		end
 
