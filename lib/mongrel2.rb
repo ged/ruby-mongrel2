@@ -4,11 +4,11 @@ require 'zmq'
 
 #
 # A Mongrel2 connector and configuration library for Ruby.
-# 
+#
 # == Author/s
-# 
+#
 # * Michael Granger <ged@FaerieMUD.org>
-# 
+#
 module Mongrel2
 
 	abort "\n\n>>> Mongrel2 requires Ruby 1.9.2 or later. <<<\n\n" if RUBY_VERSION < '1.9.2'

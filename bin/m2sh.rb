@@ -500,7 +500,7 @@ class Mongrel2::M2SHCommand
 
 		# Run the command, waiting for it to finish if invoked from shell mode, or
 		# execing it if not.
-		cmd = [ mongrel2, Mongrel2::Config.pathname.to_s, server.uuid ]
+		cmd = [ mongrel2, Mongrel2::Config.dbname.to_s, server.uuid ]
 		cmd.unshift( 'sudo' ) if self.options.sudo
 
 		if @shellmode
