@@ -39,6 +39,7 @@ hoespec = Hoe.spec 'mongrel2' do
 	self.dependency 'hoe-deveiate',    '~> 0.1', :developer
 
 	self.spec_extras[:licenses] = ["BSD"]
+	self.spec_extras[:rdoc_options] = ['-f', 'fivefish', '-t', 'Mongrel2 Ruby Connector']
 	self.require_ruby_version( '>= 1.9.2' )
 
 	self.hg_sign_tags = true if self.respond_to?( :hg_sign_tags= )
