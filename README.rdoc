@@ -1,6 +1,10 @@
 = Ruby-Mongrel2
 
-* http://deveiate.org/projects/Ruby-Mongrel2/
+home :: http://deveiate.org/projects/Ruby-Mongrel2/
+code :: http://repo.deveiate.org/Ruby-Mongrel2
+github :: https://github.com/ged/ruby-mongrel2
+docs :: http://deveiate.org/code/mongrel2
+
 
 == Description
 
