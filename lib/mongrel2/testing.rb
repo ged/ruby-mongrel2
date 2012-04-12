@@ -3,7 +3,7 @@
 require 'uri'
 require 'pathname'
 require 'mongrel2'
-require 'mongrel2/handler'
+require 'mongrel2/request'
 
 
 # A collection of constants and functions for testing Mongrel2 applications,
