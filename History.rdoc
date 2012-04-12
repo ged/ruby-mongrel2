@@ -1,3 +1,11 @@
+== v0.20.3 [2012-04-12] Michael Granger <ged@FaerieMUD.org>
+
+- Fix a require in mongrel2/testing.
+- Assume paths passed to configure( :configdb ) should use SQLite.
+- Move the "other implementations" section to the bottom of the README.
+- Set API docs to use fivefish if available
+
+
 == v0.20.2 [2012-04-10] Michael Granger <ged@FaerieMUD.org>
 
 - Fix Mongrel2::Config.dbname.
