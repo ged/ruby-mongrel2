@@ -3,6 +3,7 @@
 require 'mongrel2/request' unless defined?( Mongrel2::Request )
 require 'mongrel2/mixins'
 require 'mongrel2/httpresponse'
+require 'ipaddr'
 
 
 # The Mongrel2 HTTP Request class. Instances of this class represent an HTTP request from
@@ -77,6 +78,12 @@ class Mongrel2::HTTPRequest < Mongrel2::Request
 		return self.headers.content_encoding = type
 	end
 
+
+	### Fetch the original requestor IP address.
+	def remote_ip
+		ips = [ self.headers.x_forwarded_for ]
+		return IPAddr.new( ips.flatten.first )
+	end
 
 
 	#########
