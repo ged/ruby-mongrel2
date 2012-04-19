@@ -53,9 +53,10 @@ module Mongrel2
 
 
 		# Configuration defaults
-		DEFAULTS = {
+		CONFIG_DEFAULTS = {
 			:configdb => Mongrel2::DEFAULT_CONFIG_URI,
 		}
+		DEFAULTS = CONFIG_DEFAULTS
 
 		# The Pathname of the data directory
 		DATA_DIR = if Gem.datadir( 'mongrel2' )
@@ -105,11 +106,11 @@ module Mongrel2
 		### Configurability API -- called when the configuration is loaded with the
 		### 'mongrel2' section of the config file if there is one. This method can also be used
 		### without Configurability by passing an object that can be merged with
-		### Mongrel2::Config::DEFAULTS.
+		### Mongrel2::Config::CONFIG_DEFAULTS.
 		def self::configure( config=nil )
 			return unless config
 
-			config = DEFAULTS.merge( config )
+			config = CONFIG_DEFAULTS.merge( config )
 
 			if dbspec = config[ :configdb ]
 				# Assume it's a path to a sqlite database if it doesn't have a schema
