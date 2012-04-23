@@ -161,6 +161,7 @@ class Mongrel2::Handler
 	def start_accepting_requests
 		until @conn.closed?
 			req = @conn.receive
+			self.log.info( req.inspect )
 			res = self.dispatch_request( req )
 
 			if res
