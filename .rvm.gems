@@ -1,7 +1,7 @@
 # .gems generated gem export file. Note that any env variable settings will be missing. Append these after using a ';' field separator
 amalgalite -v1.1.2
 configurability -v1.0.10
-hoe-deveiate -v0.1.0
+hoe-deveiate -v0.1.1
 nokogiri -v1.5.2
 sequel -v3.34.1
 simplecov -v0.6.1
