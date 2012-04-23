@@ -1,3 +1,13 @@
+== v0.21.0 [2012-04-23] Michael Granger <ged@FaerieMUD.org>
+
+- Rename the defaults for Mongrel2::Config.
+  This was changed to conform with Configurability's defaults API. The
+  old name was aliased to the new for backward-compatibility.
+- Add a Mongrel2::HTTPRequest#remote_ip method. This should support
+  both the current Mongrel (1.7.5) and the future plan for appended
+  X-Forwarded-For headers. [mahlon]
+
+
 == v0.20.3 [2012-04-12] Michael Granger <ged@FaerieMUD.org>
 
 - Fix a require in mongrel2/testing.
