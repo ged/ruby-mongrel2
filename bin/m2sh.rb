@@ -184,6 +184,8 @@ class Mongrel2::M2SHCommand
 				opt :config, "Specify the configfile to use.",
 					:default => DEFAULT_CONFIG_URI
 				opt :sudo, "Use 'sudo' to run the mongrel2 server."
+				opt :port, "Reset the server port to <i> before starting it.",
+					:type => :integer
 				text ''
 
 				text 'Other Options:'
@@ -497,6 +499,12 @@ class Mongrel2::M2SHCommand
 	def start_command( *args )
 		server = find_server( args.shift )
 		mongrel2 = ENV['MONGREL2'] || 'mongrel2'
+
+		if options.port
+			message "Resetting %s server's port to %d" % [ server.name, options.port ]
+			server.port = options.port
+			server.save
+		end
 
 		# Run the command, waiting for it to finish if invoked from shell mode, or
 		# execing it if not.
