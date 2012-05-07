@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-require 'logger'
+require 'loggability'
 require 'mongrel2/config'
 require 'mongrel2/handler'
 
@@ -23,8 +23,8 @@ end # class HelloWorldHandler
 configdb = ARGV.shift || 'examples.sqlite'
 
 # Log to a file instead of STDERR for a bit more speed.
-# Mongrel2.log = Logger.new( 'hello-world.log' )
-Mongrel2.log.level = Logger::DEBUG
+# Loggability.output_to( 'hello-world.log' )
+Loggability.level = :debug
 
 # Point to the config database, which will cause the handler to use
 # its ID to look up its own socket info.

@@ -1,16 +1,20 @@
 #!/usr/bin/ruby
 
 require 'yajl'
+require 'loggability'
 
 require 'mongrel2/request' unless defined?( Mongrel2::Request )
-require 'mongrel2/mixins'
 
 
 # The Mongrel2 JSON Request class. Instances of this class represent a JSSocket request from
 # a Mongrel2 server.
 class Mongrel2::JSONRequest < Mongrel2::Request
-	include Mongrel2::Loggable
+	extend Loggability
 
+	# Loggability API -- set up logging under the 'mongrel2' log host
+	log_to :mongrel2
+
+	# Mongrel2::Request API -- register this request type as handling 'JSON' requests
 	register_request_type( self, :JSON )
 
 

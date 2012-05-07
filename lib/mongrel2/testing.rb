@@ -2,6 +2,7 @@
 
 require 'uri'
 require 'pathname'
+require 'loggability'
 require 'mongrel2'
 require 'mongrel2/request'
 
@@ -19,6 +20,10 @@ module Mongrel2
 
 	### A factory for generating Mongrel2::Request objects for testing.
 	class RequestFactory
+		extend Loggability
+
+		# Loggability API -- set up logging under the 'mongrel2' log host
+		log_to :mongrel2
 
 		# Default testing UUID (sender_id)
 		DEFAULT_TEST_UUID = 'BD17D85C-4730-4BF2-999D-9D2B2E0FCCF9'
@@ -217,7 +222,11 @@ module Mongrel2
 
 	### A factory for generating WebSocket request objects for testing.
 	class WebSocketFrameFactory < Mongrel2::RequestFactory
+		extend Loggability
 		include Mongrel2::Constants
+
+		# Loggability API -- set up logging under the 'mongrel2' log host
+		log_to :mongrel2
 
 		# The default host
 		DEFAULT_TESTING_HOST  = 'localhost'
@@ -371,7 +380,7 @@ module Mongrel2
 			flag_symbols.flatten!
 			flag_symbols.compact!
 
-			Mongrel2.log.debug "Making a flags header for symbols: %p" % [ flag_symbols ]
+			self.log.debug "Making a flags header for symbols: %p" % [ flag_symbols ]
 
 			return flag_symbols.inject( 0x00 ) do |flags, flag|
 				case flag

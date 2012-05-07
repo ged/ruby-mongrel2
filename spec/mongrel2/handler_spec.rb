@@ -138,7 +138,6 @@ describe Mongrel2::Handler do
 		response.status.should == 204
 	end
 
-
 	it "ignores JSON messages by default" do
 		req = make_json_request()
 		@request_sock.should_receive( :recv ).and_return( req )
@@ -150,7 +149,6 @@ describe Mongrel2::Handler do
 		request.should be_a( Mongrel2::JSONRequest )
 		response.should be_nil()
 	end
-
 
 	it "dispatches JSON message to the #handle_json method" do
 		json_handler = Class.new( OneShotHandler ) do
@@ -170,7 +168,6 @@ describe Mongrel2::Handler do
 		response.should be_a( Mongrel2::Response )
 	end
 
-
 	it "ignores XML messages by default" do
 		req = make_xml_request()
 		@request_sock.should_receive( :recv ).and_return( req )
@@ -182,7 +179,6 @@ describe Mongrel2::Handler do
 		request.should be_a( Mongrel2::XMLRequest )
 		response.should be_nil()
 	end
-
 
 	it "dispatches XML message to the #handle_xml method" do
 		xml_handler = Class.new( OneShotHandler ) do
@@ -201,7 +197,6 @@ describe Mongrel2::Handler do
 		request.should be_a( Mongrel2::XMLRequest )
 		response.should be_a( Mongrel2::Response )
 	end
-
 
 	it "continues when a ZMQ::Error is received but the connection remains open" do
 		req = make_request()

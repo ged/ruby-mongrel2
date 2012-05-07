@@ -1,17 +1,22 @@
 #!/usr/bin/env ruby
 
+require 'loggability'
+
 require 'mongrel2' unless defined?( Mongrel2 )
 require 'mongrel2/config' unless defined?( Mongrel2::Config )
 
 # See DSL.rdoc for details on how to use this mixin.
 module Mongrel2::Config::DSL
 
-
 	# A decorator object that provides the DSL-ish interface to the various Config
 	# objects. It derives its interface on the fly from columns of the class it's
 	# created with and a DSLMethods mixin if the target class defines one.
 	class Adapter
-		include Mongrel2::Loggable
+		extend Loggability
+
+		# Loggability API -- set up logging under the 'mongrel2' log host
+		log_to :mongrel2
+
 
 		### Create an instance of the specified +targetclass+ using the specified +opts+
 		### as initial values. The first pair of +opts+ will be used in the filter to

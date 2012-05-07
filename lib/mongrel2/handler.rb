@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 
 require 'zmq'
+require 'loggability'
 
 require 'mongrel2' unless defined?( Mongrel2 )
 require 'mongrel2/config'
@@ -81,16 +82,20 @@ require 'mongrel2/websocket'
 #     app.run
 #
 class Mongrel2::Handler
-	include Mongrel2::Loggable,
-	        Mongrel2::Constants
+	extend Loggability
+	include Mongrel2::Constants
+
+
+	# Loggability API -- set up logging under the 'mongrel2' log host
+	log_to :mongrel2
 
 
 	### Create an instance of the handler using the config from the database with
 	### the given +appid+ and run it.
 	def self::run( appid )
-		Mongrel2.log.info "Running application %p" % [ appid ]
+		self.log.info "Running application %p" % [ appid ]
 		send_spec, recv_spec = self.connection_info_for( appid )
-		Mongrel2.log.info "  config specs: %s <-> %s" % [ send_spec, recv_spec ]
+		self.log.info "  config specs: %s <-> %s" % [ send_spec, recv_spec ]
 		new( appid, send_spec, recv_spec ).run
 	end
 
@@ -98,11 +103,11 @@ class Mongrel2::Handler
 	### Return the send_spec and recv_spec for the given +appid+ from the current configuration
 	### database. Returns +nil+ if no Handler is configured with +appid+ as its +sender_id+.
 	def self::connection_info_for( appid )
-		Mongrel2.log.debug "Looking up handler spec for appid %p" % [ appid ]
+		self.log.debug "Looking up handler spec for appid %p" % [ appid ]
 		hconfig = Mongrel2::Config::Handler.by_send_ident( appid ).first or
 			raise ArgumentError, "no handler with a send_ident of %p configured" % [ appid ]
 
-		Mongrel2.log.debug "  found: %s" % [ hconfig.values ]
+		self.log.debug "  found: %s" % [ hconfig.values ]
 		return hconfig.send_spec, hconfig.recv_spec
 	end
 

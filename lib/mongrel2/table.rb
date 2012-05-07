@@ -1,9 +1,9 @@
 #!/usr/bin/ruby
 
 require 'forwardable'
+require 'loggability'
 
 require 'mongrel2' unless defined?( Mongrel2 )
-require 'mongrel2/mixins'
 
 
 # The Mongrel2 Table class. Instances of this class provide a case-insensitive hash-like
@@ -14,15 +14,18 @@ require 'mongrel2/mixins'
 #   headers['user-agent']  # => 'PornBrowser 1.1.5'
 #   headers[:user_agent]   # => 'PornBrowser 1.1.5'
 #   headers.user_agent     # => 'PornBrowser 1.1.5'
-# 
+#
 # == Author/s
-# 
+#
 # * Michael Granger <ged@FaerieMUD.org>
 # * Mahlon E. Smith <mahlon@martini.nu>
 #
 class Mongrel2::Table
-	extend Forwardable
-	include Mongrel2::Loggable
+	extend Forwardable,
+	       Loggability
+
+	# Loggability API -- set up logging under the 'mongrel2' log host
+	log_to :mongrel2
 
 	# Methods that understand case-insensitive keys
 	KEYED_METHODS = [ :"[]", :"[]=", :delete, :fetch, :has_key?, :include?, :member?, :store ]
