@@ -1,3 +1,10 @@
+== v0.22.0 [2012-05-07] Michael Granger <ged@FaerieMUD.org>
+
+- Convert to Loggability for logging.
+- Add an option to bin/m2sh.rb to rewrite the mongrel2 port of a host
+  on the fly at startup.
+
+
 == v0.21.0 [2012-04-23] Michael Granger <ged@FaerieMUD.org>
 
 - Rename the defaults for Mongrel2::Config.
