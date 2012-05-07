@@ -1,7 +1,6 @@
 #!/usr/bin/ruby
 
 require 'mongrel2/request' unless defined?( Mongrel2::Request )
-require 'mongrel2/mixins'
 require 'mongrel2/constants'
 
 
@@ -211,7 +210,7 @@ module Mongrel2::WebSocket
 
 		### Create a response frame from the given request +frame+.
 		def self::from_request( frame )
-			Mongrel2.log.debug "Creating a %p response to request %p" % [ self, frame ]
+			self.log.debug "Creating a %p response to request %p" % [ self, frame ]
 			response = new( frame.sender_id, frame.conn_id, frame.path )
 			response.request_frame = frame
 

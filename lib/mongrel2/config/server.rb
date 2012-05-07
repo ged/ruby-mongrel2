@@ -41,16 +41,16 @@ class Mongrel2::Config::Server < Mongrel2::Config( :server )
 	def control_socket_uri
 		# Find the control socket relative to the server's chroot
 		csock_uri = Mongrel2::Config.settings[:control_port] || DEFAULT_CONTROL_SOCKET
-		Mongrel2.log.debug "Chrooted control socket uri is: %p" % [ csock_uri ]
+		self.log.debug "Chrooted control socket uri is: %p" % [ csock_uri ]
 
 		scheme, sock_path = csock_uri.split( '://', 2 )
-		Mongrel2.log.debug "  chrooted socket path is: %p" % [ sock_path ]
+		self.log.debug "  chrooted socket path is: %p" % [ sock_path ]
 
 		csock_path = Pathname( self.chroot ) + sock_path
-		Mongrel2.log.debug "  fully-qualified path is: %p" % [ csock_path ]
+		self.log.debug "  fully-qualified path is: %p" % [ csock_path ]
 		csock_uri = "%s://%s" % [ scheme, csock_path ]
 
-		Mongrel2.log.debug "  control socket URI is: %p" % [ csock_uri ]
+		self.log.debug "  control socket URI is: %p" % [ csock_uri ]
 		return csock_uri
 	end
 
@@ -91,7 +91,7 @@ class Mongrel2::Config::Server < Mongrel2::Config( :server )
 		def host( name, &block )
 			self.target.save( :validate => false )
 
-			Mongrel2.log.debug "Host [%s] (block: %p)" % [ name, block ]
+			self.log.debug "Host [%s] (block: %p)" % [ name, block ]
 			adapter = Mongrel2::Config::DSL::Adapter.new( Mongrel2::Config::Host, name: name )
 			adapter.target.matching = name
 			adapter.instance_eval( &block ) if block
@@ -104,7 +104,7 @@ class Mongrel2::Config::Server < Mongrel2::Config( :server )
 		def filter( path, settings={} )
 			self.target.save( :validate => false )
 
-			Mongrel2.log.debug "Filter [%s]: %p" % [ path, settings ]
+			self.log.debug "Filter [%s]: %p" % [ path, settings ]
 			self.target.add_filter( name: path, settings: settings )
 		end
 

@@ -11,7 +11,7 @@ BEGIN {
 }
 
 require 'mongrel2'
-require 'logger'
+require 'loggability'
 
 
 def http_response( body, code, status, headers )
@@ -21,7 +21,7 @@ def http_response( body, code, status, headers )
     return HTTP_FORMAT % [ code, status, headers, body ]
 end
 
-Mongrel2.log.level = Logger::DEBUG
+Loggability.level = :debug
 
 uuid = 'D613E7EE-E2EB-4699-A200-5C8ECAB45D5E'
 recv_port = 'tcp://127.0.0.1:6565'

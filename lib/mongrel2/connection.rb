@@ -4,9 +4,9 @@ require 'socket'
 require 'zmq'
 require 'yajl'
 require 'digest/sha1'
+require 'loggability'
 
 require 'mongrel2' unless defined?( Mongrel2 )
-require 'mongrel2/mixins'
 
 
 # The Mongrel2 connection class. Connection objects serve as a front end for 
@@ -17,7 +17,10 @@ require 'mongrel2/mixins'
 # == References
 # * http://mongrel2.org/static/mongrel2-manual.html#x1-700005.3
 class Mongrel2::Connection
-	include Mongrel2::Loggable
+	extend Loggability
+
+	# Loggability API -- set up logging under the 'mongrel2' log host
+	log_to :mongrel2
 
 
 	### Create a new Connection identified by +app_id+ (a UUID or other unique string) that

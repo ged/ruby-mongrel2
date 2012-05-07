@@ -13,7 +13,7 @@ require 'rspec'
 
 require 'spec/lib/helpers'
 
-require 'logger'
+require 'loggability'
 require 'mongrel2'
 
 

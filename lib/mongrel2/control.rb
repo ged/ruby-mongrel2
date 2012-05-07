@@ -3,9 +3,9 @@
 require 'zmq'
 require 'yajl'
 require 'tnetstring'
+require 'loggability'
 
 require 'mongrel2' unless defined?( Mongrel2 )
-require 'mongrel2/mixins'
 
 
 # An interface to the Mongrel2 control port.
@@ -13,7 +13,11 @@ require 'mongrel2/mixins'
 # == References
 # (http://mongrel2.org/static/mongrel2-manual.html#x1-380003.8)
 class Mongrel2::Control
-	include Mongrel2::Loggable
+	extend Loggability
+
+	# Loggability API -- set up logging under the 'mongrel2' log host
+	log_to :mongrel2
+
 
 	# The default zmq connection spec to use when talking to a mongrel2 server
 	DEFAULT_PORT = 'ipc://run/control'

@@ -5,6 +5,7 @@ require 'yaml'
 require 'pathname'
 require 'uri'
 require 'tnetstring'
+require 'loggability'
 
 require 'sequel'
 
@@ -26,26 +27,29 @@ end
 
 
 require 'mongrel2' unless defined?( Mongrel2 )
-require 'mongrel2/mixins'
 
 module Mongrel2
 
 	# The base Mongrel2 database-backed configuration class. It's a subclass of Sequel::Model, so
-	# you'll first need to be familiar with Sequel (http://sequel.rubyforge.org/) and 
-	# especially its Sequel::Model ORM. 
+	# you'll first need to be familiar with Sequel (http://sequel.rubyforge.org/) and
+	# especially its Sequel::Model ORM.
 	#
-	# You will also probably want to refer to the Sequel::Plugins documentation for the 
+	# You will also probably want to refer to the Sequel::Plugins documentation for the
 	# validation_helpers[http://sequel.rubyforge.org/rdoc-plugins/classes/Sequel/Plugins/ValidationHelpers.html]
-	# and 
+	# and
 	# subclasses[http://sequel.rubyforge.org/rdoc-plugins/classes/Sequel/Plugins/Subclasses.html]
 	# plugins.
-	# 
+	#
 	# == References
 	# * http://mongrel2.org/static/mongrel2-manual.html#x1-250003.4
 	#
 	class Config < Sequel::Model
-		include Mongrel2::Loggable
+		extend Loggability
 
+		# Loggability API -- set up logging under the 'mongrel2' log host
+		log_to :mongrel2
+
+		# Sequel API -- load some plugins
 		plugin :validation_helpers
 		plugin :subclasses
 		plugin :json_serializer
@@ -129,9 +133,9 @@ module Mongrel2
 			end
 
 			if self == Mongrel2::Config
-				Mongrel2.log.debug "Resetting database connection for %d config classes to: %p" %
+				self.log.debug "Resetting database connection for %d config classes to: %p" %
 					[ self.descendents.length, newdb ]
-				newdb.logger = Mongrel2.logger
+				newdb.logger = Loggability[ Mongrel2 ].proxy_for( newdb )
 				newdb.sql_log_level = :debug
 
 				self.descendents.each {|subclass| subclass.db = newdb }
@@ -191,7 +195,7 @@ module Mongrel2
 			sql = self.load_config_schema
 			mimetypes_sql = self.load_mimetypes_sql
 
-			Mongrel2.log.warn "Installing config schema."
+			self.log.warn "Installing config schema."
 
 			self.db.execute_ddl( sql )
 			self.db.run( mimetypes_sql )

@@ -5,6 +5,7 @@ require 'pathname'
 require 'shellwords'
 require 'fileutils'
 require 'tnetstring'
+require 'loggability'
 
 require 'trollop'
 require 'highline'
@@ -45,10 +46,14 @@ require 'mongrel2/config'
 # mongrel2.
 #
 class Mongrel2::M2SHCommand
-	extend ::Sysexits
+	extend ::Sysexits,
+	       Loggability
 	include Sysexits,
-	        Mongrel2::Loggable,
 	        Mongrel2::Constants
+
+	# Loggability API -- set up logging under the 'strelka' log host
+	log_to :mongrel2
+
 
 	# Make a HighLine color scheme
 	COLOR_SCHEME = HighLine::ColorScheme.new do |scheme|
@@ -125,8 +130,8 @@ class Mongrel2::M2SHCommand
 		exit :ok
 
 	rescue => err
-		Mongrel2.logger.fatal "Oops: %s: %s" % [ err.class.name, err.message ]
-		Mongrel2.logger.debug { '  ' + err.backtrace.join("\n  ") }
+		self.fatal "Oops: %s: %s" % [ err.class.name, err.message ]
+		self.debug { '  ' + err.backtrace.join("\n  ") }
 
 		exit :software_error
 	end
@@ -167,7 +172,7 @@ class Mongrel2::M2SHCommand
 			default_configdb = Mongrel2::DEFAULT_CONFIG_URI
 
 			# Make a list of the log level names and the available commands
-			loglevels = Mongrel2::Logging::LOG_LEVELS.
+			loglevels = Loggability::LOG_LEVELS.
 				sort_by {|name,lvl| lvl }.
 				collect {|name,lvl| name.to_s }.
 				join( ', ' )
@@ -191,7 +196,7 @@ class Mongrel2::M2SHCommand
 				text 'Other Options:'
 				opt :debug, "Turn debugging on. Also sets the --loglevel to 'debug'."
 				opt :loglevel, "Set the logging level. Must be one of: #{loglevels}",
-					:default => Mongrel2::Logging::LOG_LEVEL_NAMES[ Mongrel2.logger.level ]
+					:default => Mongrel2.logger.level.to_s
 			end
 		end
 
@@ -206,16 +211,16 @@ class Mongrel2::M2SHCommand
 	### Create a new instance of the command and set it up with the given
 	### +options+.
 	def initialize( options )
-		Mongrel2.logger.formatter = Mongrel2::Logging::ColorFormatter.new( Mongrel2.logger )
+		Loggability.format_as( :color ) if $stderr.tty?
 		@options = options
 		@shellmode = false
 
 		if @options.debug
 			$DEBUG = true
 			$VERBOSE = true
-			Mongrel2.logger.level = Logger::DEBUG
+			Loggability.level = Logger::DEBUG
 		elsif @options.loglevel
-			Mongrel2.logger.level = Mongrel2::Logging::LOG_LEVELS[ @options.loglevel ]
+			Loggability.level = @options.loglevel
 		end
 
 		Mongrel2::Config.configure( :configdb => @options.config )

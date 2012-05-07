@@ -2,16 +2,19 @@
 #encoding: utf-8
 
 require 'time'
+require 'loggability'
 
 require 'mongrel2/response' unless defined?( Mongrel2::Response )
-require 'mongrel2/mixins'
 require 'mongrel2/constants'
 
 
 # The Mongrel2 HTTP Response class.
 class Mongrel2::HTTPResponse < Mongrel2::Response
-	include Mongrel2::Loggable,
-	        Mongrel2::Constants
+	extend Loggability
+	include Mongrel2::Constants
+
+	# Loggability API -- set up logging under the 'mongrel2' log host
+	log_to :mongrel2
 
 	# The format for building valid HTTP responses
 	STATUS_LINE_FORMAT = "HTTP/1.1 %03d %s".freeze

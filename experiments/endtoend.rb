@@ -11,10 +11,10 @@ BEGIN {
 }
 
 require 'mongrel2'
-require 'logger'
+require 'loggability'
 
 
-Mongrel2.log.level = Logger::DEBUG
+Loggability.level = :debug
 
 # uuid = 'F6C47DAA-0ECD-4B90-91F9-9F12547657C2'
 uuid = 'D613E7EE-E2EB-4699-A200-5C8ECAB45D5E'

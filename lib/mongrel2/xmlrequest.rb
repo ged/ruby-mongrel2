@@ -1,16 +1,20 @@
 #!/usr/bin/ruby
 
 require 'nokogiri'
+require 'loggability'
 
 require 'mongrel2/request' unless defined?( Mongrel2::Request )
-require 'mongrel2/mixins'
 
 
 # The Mongrel2 XML Request class. Instances of this class represent a request for an XML route from
 # a Mongrel2 server.
 class Mongrel2::XMLRequest < Mongrel2::Request
-	include Mongrel2::Loggable
+	extend Loggability
 
+	# Loggability API -- set up logging under the 'mongrel2' log host
+	log_to :mongrel2
+
+	# Mongrel2::Request API -- register this class as handling 'XML' requests
 	register_request_type( self, :XML )
 
 

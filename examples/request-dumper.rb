@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 require 'pathname'
-require 'logger'
+require 'loggability'
 require 'mongrel2/config'
 require 'mongrel2/handler'
 
@@ -38,8 +38,8 @@ class RequestDumper < Mongrel2::Handler
 
 end # class RequestDumper
 
-Mongrel2.log.level = Logger::DEBUG
-Inversion.log.level = Logger::INFO
+Loggability.level = :debug
+Loggability[ Inversion ].level = :info
 
 # Point to the config database, which will cause the handler to use
 # its ID to look up its own socket info.

@@ -1,5 +1,5 @@
 # .gems generated gem export file. Note that any env variable settings will be missing. Append these after using a ';' field separator
-amalgalite -v1.1.2
+amalgalite -v1.2.0.pre.1
 configurability -v1.0.10
 hoe-deveiate -v0.1.1
 nokogiri -v1.5.2
@@ -10,3 +10,4 @@ tnetstring -v0.3.4
 trollop -v1.16.2
 yajl-ruby -v1.1.0
 zmq -v2.1.4
+loggability -v0.0.1

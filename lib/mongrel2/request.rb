@@ -2,17 +2,19 @@
 
 require 'tnetstring'
 require 'yajl'
+require 'loggability'
 
 require 'mongrel2' unless defined?( Mongrel2 )
-require 'mongrel2/mixins'
 require 'mongrel2/table'
 
 
 # The Mongrel2 Request base class. Derivatives of this class represent a request from
 # a Mongrel2 server.
 class Mongrel2::Request
-	include Mongrel2::Loggable
+	extend Loggability
 
+	# Loggability API -- set up logging under the 'mongrel2' log host
+	log_to :mongrel2
 
 	# METHOD header -> request class mapping
 	@request_types = Hash.new {|h,k| h[k] = Mongrel2::Request }
@@ -23,7 +25,7 @@ class Mongrel2::Request
 	### request object.
 	def self::parse( raw_request )
 		sender, conn_id, path, rest = raw_request.split( ' ', 4 )
-		Mongrel2.log.debug "Parsing request for %p from %s:%s (rest: %p)" %
+		self.log.debug "Parsing request for %p from %s:%s (rest: %p)" %
 			[ path, sender, conn_id, rest ]
 
 		# Extract the headers and the body, ignore the rest
@@ -32,7 +34,7 @@ class Mongrel2::Request
 
 		# Headers will be a JSON String when not using the TNetString protocol
 		if headers.is_a?( String )
-			Mongrel2.log.debug "  parsing old-style headers"
+			self.log.debug "  parsing old-style headers"
 			headers = Yajl::Parser.parse( headers )
 		end
 
@@ -40,7 +42,7 @@ class Mongrel2::Request
 		headers['METHOD'] =~ /^(\w+)$/ or
 			raise Mongrel2::UnhandledMethodError, headers['METHOD']
 		req_method = $1.untaint.to_sym
-		Mongrel2.log.debug "Request method is: %p" % [ req_method ]
+		self.log.debug "Request method is: %p" % [ req_method ]
 		concrete_class = self.subclass_for_method( req_method )
 
 		return concrete_class.new( sender, conn_id, path, headers, body, raw_request )
@@ -72,15 +74,15 @@ class Mongrel2::Request
 	### If you wish one of your subclasses to be used instead of Mongrel2::Request
 	### for the default request class, register it with a METHOD of :__default.
 	def self::register_request_type( subclass, *req_methods )
-		Mongrel2.log.debug "Registering %p for %p requests" % [ subclass, req_methods ]
+		self.log.debug "Registering %p for %p requests" % [ subclass, req_methods ]
 		req_methods.each do |methname|
 			if methname == :__default
 				# Clear cached lookups
-				Mongrel2.log.info "Registering %p as the default request type." % [ subclass ]
+				self.log.info "Registering %p as the default request type." % [ subclass ]
 				Mongrel2::Request.request_types.delete_if {|_, klass| klass == Mongrel2::Request }
 				Mongrel2::Request.request_types.default_proc = lambda {|h,k| h[k] = subclass }
 			else
-				Mongrel2.log.info "Registering %p for the %p method." % [ subclass, methname ]
+				self.log.info "Registering %p for the %p method." % [ subclass, methname ]
 				Mongrel2::Request.request_types[ methname.to_sym ] = subclass
 			end
 		end

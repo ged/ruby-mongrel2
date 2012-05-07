@@ -1,8 +1,8 @@
 #!/usr/bin/env ruby
 # encoding: utf-8
 
+require 'loggability'
 require 'pathname'
-require 'logger'
 require 'mongrel2/config'
 require 'mongrel2/logging'
 require 'mongrel2/handler'
@@ -241,8 +241,8 @@ class WebSocketEchoServer < Mongrel2::Handler
 
 end # class RequestDumper
 
-Mongrel2.log.level = $DEBUG||$VERBOSE ? Logger::DEBUG : Logger::INFO
-Mongrel2.log.formatter = Mongrel2::Logging::ColorFormatter.new( Mongrel2.log ) if $stdin.tty?
+Loggability.level = $DEBUG||$VERBOSE ? :debug : :info
+Loggability.format_as( :color ) if $stdin.tty?
 
 # Point to the config database, which will cause the handler to use
 # its ID to look up its own socket info.

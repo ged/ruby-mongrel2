@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
 
+require 'loggability'
 require 'zmq'
 
 #
@@ -10,6 +11,11 @@ require 'zmq'
 # * Michael Granger <ged@FaerieMUD.org>
 #
 module Mongrel2
+	extend Loggability
+
+	# Loggability API -- set up Mongrel2 as a log host
+	log_as :mongrel2
+
 
 	abort "\n\n>>> Mongrel2 requires Ruby 1.9.2 or later. <<<\n\n" if RUBY_VERSION < '1.9.2'
 
@@ -19,9 +25,6 @@ module Mongrel2
 	# Version-control revision constant
 	REVISION = %q$Revision$
 
-
-	require 'mongrel2/logging'
-	extend Mongrel2::Logging
 
 	require 'mongrel2/constants'
 	include Mongrel2::Constants
@@ -42,7 +45,7 @@ module Mongrel2
 	### Fetch the ZMQ::Context for sockets, creating it if necessary.
 	def self::zmq_context
 		if @zmq_ctx.nil?
-			Mongrel2.log.info "Using 0MQ %d.%d.%d" % ZMQ.version
+			self.log.info "Using 0MQ %d.%d.%d" % ZMQ.version
 			@zmq_ctx = ZMQ::Context.new
 		end
 

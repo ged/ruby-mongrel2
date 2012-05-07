@@ -30,7 +30,7 @@ class Mongrel2::Config::Host < Mongrel2::Config( :host )
 		### Add a Mongrel2::Config::Route to the Host object.
 		def route( path, target, opts={} )
 			self.target.save
-			Mongrel2.log.debug "Route %s -> %p [%p]" % [ path, target, opts ]
+			self.log.debug "Route %s -> %p [%p]" % [ path, target, opts ]
 
 			args = { :path => path, :target => target }
 			args.merge!( opts )
@@ -87,11 +87,11 @@ class Mongrel2::Config::Host < Mongrel2::Config( :host )
 
 			existing = Mongrel2::Config::Handler.filter( :send_ident => send_ident )
 			unless existing.select( :id ).empty?
-				Mongrel2.log.debug "Dropping existing %p handler." % [ send_ident ]
+				self.log.debug "Dropping existing %p handler." % [ send_ident ]
 				existing.delete
 			end
 
-			Mongrel2.log.debug "Creating handler with options: %p" % [ options ]
+			self.log.debug "Creating handler with options: %p" % [ options ]
 			return Mongrel2::Config::Handler.create( options )
 		end
 
