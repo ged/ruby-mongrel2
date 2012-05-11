@@ -22,7 +22,6 @@ hoespec = Hoe.spec 'mongrel2' do
 	self.readme_file = 'README.rdoc'
 	self.history_file = 'History.rdoc'
 	self.extra_rdoc_files = Rake::FileList[ '*.rdoc' ]
-	self.spec_extras[:rdoc_options] = ['-t', 'Ruby-Mongrel2']
 
 	self.developer 'Michael Granger', 'ged@FaerieMUD.org'
 
@@ -34,7 +33,7 @@ hoespec = Hoe.spec 'mongrel2' do
 	self.dependency 'trollop',    '~> 1.16'
 	self.dependency 'sysexits',   '~> 1.0'
 	self.dependency 'zmq',        '~> 2.1'
-	self.dependency 'loggability','~> 0.0'
+	self.dependency 'loggability','~> 0.2'
 
 	self.dependency 'configurability', '~> 1.0', :developer
 	self.dependency 'simplecov',       '~> 0.6', :developer
