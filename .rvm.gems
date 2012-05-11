@@ -10,4 +10,4 @@ tnetstring -v0.3.4
 trollop -v1.16.2
 yajl-ruby -v1.1.0
 zmq -v2.1.4
-loggability -v0.0.1
+loggability -v0.2.0
