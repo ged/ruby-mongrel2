@@ -119,7 +119,8 @@ class Mongrel2::Handler
 	### Create a new instance of the handler with the specified +app_id+, +send_spec+,
 	### and +recv_spec+.
 	def initialize( app_id, send_spec, recv_spec ) # :notnew:
-		@conn = Mongrel2::Connection.new( app_id, send_spec, recv_spec )
+		@app_id = app_id
+		@conn   = Mongrel2::Connection.new( app_id, send_spec, recv_spec )
 	end
 
 
@@ -129,6 +130,9 @@ class Mongrel2::Handler
 
 	# The handler's Mongrel2::Connection object.
 	attr_reader :conn
+
+	# The app ID the app was created with
+	attr_reader :app_id
 
 
 	### Run the handler.
@@ -141,6 +145,13 @@ class Mongrel2::Handler
 	ensure
 		self.restore_signal_handlers
 		self.log.info "Done: %p" % [ self ]
+	end
+
+
+	### Return the Mongrel2::Config::Handler that corresponds to this app's
+	### appid.
+	def handler_config
+		return Mongrel2::Config::Handler.by_send_ident( self.app_id ).first
 	end
 
 
