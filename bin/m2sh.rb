@@ -130,8 +130,8 @@ class Mongrel2::M2SHCommand
 		exit :ok
 
 	rescue => err
-		self.fatal "Oops: %s: %s" % [ err.class.name, err.message ]
-		self.debug { '  ' + err.backtrace.join("\n  ") }
+		self.log.fatal "Oops: %s: %s" % [ err.class.name, err.message ]
+		self.log.debug { '  ' + err.backtrace.join("\n  ") }
 
 		exit :software_error
 	end
