@@ -121,7 +121,7 @@ class Mongrel2::Connection
 	### Write raw +data+ to the given connection ID (+conn_id+) at the given +sender_id+.
 	def send( sender_id, conn_id, data )
 		self.check_closed
-        header = "%s %d:%s," % [ sender_id, conn_id.to_s.length, conn_id ]
+		header = "%s %d:%s," % [ sender_id, conn_id.to_s.length, conn_id ]
 		buf = header + ' ' + data
 		self.log.debug "Sending response (PUB): %p" % [ buf ]
 		self.response_sock.send( buf )

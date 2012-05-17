@@ -106,6 +106,17 @@ describe Mongrel2::Handler do
 			res.conn.pub_addr.should == TEST_RECV_SPEC
 		end
 
+		it "knows what handler config corresponds to its" do
+			req = make_request()
+			@request_sock.should_receive( :recv ).and_return( req )
+
+			res = OneShotHandler.run( TEST_UUID )
+
+			res.handler_config.should be_a( Mongrel2::Config::Handler )
+			res.handler_config.send_spec.should == TEST_SEND_SPEC
+			res.handler_config.recv_spec.should == TEST_RECV_SPEC
+		end
+
 	end
 
 
