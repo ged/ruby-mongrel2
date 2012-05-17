@@ -1,3 +1,11 @@
+== v0.23.0 [2012-05-17] Michael Granger <ged@FaerieMUD.org>
+
+- Add a convenience method to Mongrel2::Handler for fetching its
+  associated config object.
+- Fix typos in m2sh.rb's exception handler
+- Bumping dependency on Loggability to 0.2.
+
+
 == v0.22.1 [2012-05-07] Michael Granger <ged@FaerieMUD.org>
 
 Fix loggability dependency version.
