@@ -101,7 +101,7 @@ __END__
 		<input type="file" name="uploaded-file" value="">
 
 		<p>Upload will be async if it's larger than:
-			<%= settings['limits.content_length'] %></p>
+			<%= settings['limits.content_length'] %> bytes.</p>
 
 		<p><input type="submit" value="Upload &rarr;"></p>
 	</form>

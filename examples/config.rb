@@ -46,7 +46,7 @@ server 'examples' do
 end
 
 setting "zeromq.threads", 1
-setting "limits.content-length", 4096
+setting "limits.content_length", 4096
 setting "upload.temp_store", upload_dir + 'mongrel2.upload.XXXXXX'
 
 mkdir_p 'var/run'
