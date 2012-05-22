@@ -1,17 +1,22 @@
 #!/bin/sh
 
+if [ "$(type foreman 2>/dev/null)" == "" ]; then
+	echo "You need Foreman installed to start the examples (gem install foreman)"
+	exit 1
+fi
+
 examplesdir=$(dirname $0)
 
-echo "Creating the config database..."
-ruby -rubygems -Ilib $examplesdir/config.rb
+echo "Creating/updating the config database..."
+ruby -rubygems -I${examplesdir}/../lib $examplesdir/../bin/m2sh.rb \
+	-c examples.sqlite load $examplesdir/config.rb
 
-echo "Starting Mongrel2..."
-m2sh start -db examples.sqlite -host localhost &
-
-echo "Starting the 'helloworld' handler..."
-ruby -rubygems -Ilib $examplesdir/helloworld-handler.rb &
-
-echo "Starting the request dumper..."
-ruby -rubygems -Ilib $examplesdir/request-dumper.rb &
+if [ $? != 0 ]; then
+	echo "Oops, problems installing the config DB. Aborting."
+	exit 1
+fi
 
 echo "Okay, now point a browser to http://localhost:8113/."
+cd $examplesdir
+foreman start
+
