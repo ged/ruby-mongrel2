@@ -1,7 +1,7 @@
 # Settings
 projectDirectory     = "$CWD"
 windowTitle          = "${CWD/^.*\///} ${?TM_SCM_BRANCH:[$TM_SCM_BRANCH]} — «$TM_DISPLAYNAME»"
-excludeInFileChooser = "{$exclude,.hg}"
+excludeInFileChooser = "{$exclude,pkg,.hg}"
 
 TM_RUBY = "/Users/mgranger/.rvm/bin/rvm-auto-ruby"
 

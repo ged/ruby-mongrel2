@@ -53,6 +53,10 @@ module Mongrel2
 
 	end # class ControlError
 
+	# An exception type raised by Mongrel2::HTTPRequest if an async upload request is
+	# received, but has different Mongrel2 upload headers.
+	class UploadError < Mongrel2::Exception; end
+
 end # module Mongrel2
 
 
