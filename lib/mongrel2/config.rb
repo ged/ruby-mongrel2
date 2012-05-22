@@ -27,6 +27,7 @@ end
 
 
 require 'mongrel2' unless defined?( Mongrel2 )
+require 'mongrel2/table'
 
 module Mongrel2
 
@@ -154,11 +155,7 @@ module Mongrel2
 		### Symbols.
 		def self::settings
 			setting_hash = Mongrel2::Config::Setting.to_hash( :key, :value )
-			setting_hash.keys.each do |k|
-				setting_hash[ k.to_sym ] = setting_hash.delete( k )
-			end
-
-			return setting_hash
+			return Mongrel2::Table.new( setting_hash )
 		end
 
 

@@ -73,7 +73,7 @@ describe Mongrel2::Config do
 		Mongrel2::Config.init_database
 		Mongrel2::Config::Setting.dataset.truncate
 		Mongrel2::Config::Setting.create( key: 'control_port', value: 'ipc://var/run/control.sock' )
-		Mongrel2::Config.settings.should be_a( Hash )
+		Mongrel2::Config.settings.should respond_to( :[] )
 		Mongrel2::Config.settings.should have( 1 ).member
 		Mongrel2::Config.settings[ :control_port ].should == 'ipc://var/run/control.sock'
 	end

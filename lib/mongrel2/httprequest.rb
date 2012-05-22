@@ -107,7 +107,7 @@ class Mongrel2::HTTPRequest < Mongrel2::Request
 
 	### The Pathname, relative to Mongrel2's chroot path, of the uploaded entity body.
 	def uploaded_file
-		raise ArgumentError, "invalid upload: upload headers don't match" unless
+		raise Mongrel2::UploadError, "invalid upload: upload headers don't match" unless
 			self.upload_headers_match?
 		return Pathname( self.headers.x_mongrel2_upload_done )
 	end
