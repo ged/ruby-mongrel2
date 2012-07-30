@@ -9,3 +9,4 @@ ChangeLog$
 \.log$
 \.DS_Store
 ^pkg/
+var/
