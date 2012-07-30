@@ -1,3 +1,13 @@
+== v0.31.0 [2012-07-30] Michael Granger <ged@FaerieMUD.org>
+
+Improve Server control-socket pathing.
+
+Mongrel2::Config::Server#control_socket will now check for it
+under the chroot, and relative to the pwd, and will raise an
+exception if no socket is found instead of just returning a
+socket that's doomed to block forever.
+
+
 == v0.30.1 [2012-07-27] Michael Granger <ged@FaerieMUD.org>
 
 Documentation and packaging fixes. Switch to sqlite3 until
