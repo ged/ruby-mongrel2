@@ -704,8 +704,8 @@ class Mongrel2::M2SHCommand
 				error = "but it isn't executable."
 			end
 
-			raise "MONGREL2 was set to %p, #{error}" if error
-			
+			raise "MONGREL2 was set to #{m2}, #{error}" if error
+
 			return m2
 		else
 			m2 = ENV['PATH'].split( File::PATH_SEPARATOR ).
