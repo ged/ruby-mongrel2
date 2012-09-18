@@ -5,6 +5,7 @@ require 'pathname'
 require 'fileutils'
 require 'tnetstring'
 require 'loggability'
+require 'shellwords'
 
 require 'trollop'
 require 'highline'
@@ -450,9 +451,12 @@ class Mongrel2::M2SHCommand
 
 		# Change into the server's chroot directory so paths line up whether or not
 		# it's started as root
+
+		header "Starting mongrel2 at: #{url}."
 		Dir.chdir( server.chroot ) do
+			message "  changed PWD to: #{Dir.pwd}"
 			Mongrel2::Config.log_action( "Starting server: #{server}", self.options.why )
-			header "Starting mongrel2 at: #{url}"
+			self.log.debug "  command is: #{Shellwords.shelljoin(cmd)}"
 			exec( *cmd )
 		end
 
@@ -586,6 +590,17 @@ class Mongrel2::M2SHCommand
 	end
 	help :quickstart, "Set up a basic mongrel2 server and run it."
 	usage :quickstart
+
+
+	### The 'settings' command
+	def settings_command( *args )
+		header "Advanced Server Settings"
+		Mongrel2::Config.settings.each do |key,val|
+			message( %{<%= color "#{key}:", :subheader %> #{val}} )
+		end
+	end
+	help :settings, "Show the 'advanced' server settings."
+	usage :settings
 
 
 	### The 'version' command
