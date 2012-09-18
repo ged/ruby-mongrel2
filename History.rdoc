@@ -1,3 +1,9 @@
+== v0.32.0 [2012-09-18] Michael Granger <ged@FaerieMUD.org>
+
+- Add a settings command for showing "expert" settings to m2sh.rb.
+- Updating dependencies
+
+
 == v0.31.1 [2012-08-20] Michael Granger <ged@FaerieMUD.org>
 
 - Fix an error message in m2sh.rb.
