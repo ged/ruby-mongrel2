@@ -10,3 +10,4 @@ ChangeLog$
 \.DS_Store
 ^pkg/
 var/
+\.foreman$
