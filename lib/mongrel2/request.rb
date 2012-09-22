@@ -27,8 +27,8 @@ class Mongrel2::Request
 	### request object.
 	def self::parse( raw_request )
 		sender, conn_id, path, rest = raw_request.split( ' ', 4 )
-		self.log.debug "Parsing request for %p from %s:%s (rest: %p)" %
-			[ path, sender, conn_id, rest ]
+		self.log.debug "Parsing request for %p from %s:%s (rest: %p...)" %
+			[ path, sender, conn_id, rest[0,20] ]
 
 		# Extract the headers and the body, ignore the rest
 		headers, rest = TNetstring.parse( rest )
