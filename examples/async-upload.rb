@@ -26,7 +26,7 @@ class AsyncUploadHandler < Mongrel2::Handler
 
 
 	### Mongrel2 async upload callback -- allow uploads to proceed.
-	def handle_upload_start( request )
+	def handle_async_upload_start( request )
 		self.log.info "Upload started: %s" % [ request.header.x_mongrel2_upload_start ]
 		return nil # Do nothing
 	end
@@ -52,12 +52,8 @@ class AsyncUploadHandler < Mongrel2::Handler
 
 	### Regular request -- show the upload form.
 	def handle( request )
-		# If it's the 'upload started' notification, use that handler method
-		if request.upload_started?
-			return self.handle_upload_start( request )
-
 		# If it's a finished upload, use that handler method
-		elsif request.upload_done?
+		if request.upload_done?
 			return self.handle_upload_done( request )
 
 		else
