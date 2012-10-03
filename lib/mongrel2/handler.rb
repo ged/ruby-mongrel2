@@ -90,6 +90,13 @@ class Mongrel2::Handler
 	log_to :mongrel2
 
 
+	# Signals we handle
+	QUEUE_SIGS = [
+		:INT, :TERM, :HUP, :USR1,
+		# :TODO: :QUIT, :WINCH, :USR2, :TTIN, :TTOU
+	]
+
+
 	### Create an instance of the handler using the config from the database with
 	### the given +appid+ and run it.
 	def self::run( appid )
@@ -121,6 +128,8 @@ class Mongrel2::Handler
 	def initialize( app_id, send_spec, recv_spec ) # :notnew:
 		@app_id = app_id
 		@conn   = Mongrel2::Connection.new( app_id, send_spec, recv_spec )
+
+		Thread.main[:signal_queue] = []
 	end
 
 
@@ -158,7 +167,9 @@ class Mongrel2::Handler
 	### Shut down the handler.
 	def shutdown
 		self.log.info "Shutting down."
+		self.ignore_signals
 		@conn.close
+		Mongrel2.zmq_context.close
 	end
 
 
@@ -176,21 +187,31 @@ class Mongrel2::Handler
 	### Start a loop, accepting a request and handling it.
 	def start_accepting_requests
 		until @conn.closed?
-			req = @conn.receive
-			self.log.info( req.inspect )
-			res = self.dispatch_request( req )
-
-			if res
-				self.log.info( res.inspect )
-				@conn.reply( res ) unless @conn.closed?
-			end
+			ZMQ.select([ @conn.request_sock ])
+			self.accept_request unless @conn.closed?
 		end
 	rescue ZMQ::Error => err
+		self.process_signal_queue
+
 		unless @conn.closed?
 			self.log.error "%p while accepting requests: %s" % [ err.class, err.message ]
 			self.log.debug { err.backtrace.join("\n  ") }
 
+			# Restart the method
 			retry
+		end
+	end
+
+
+	### Read a request from the connection and dispatch it.
+	def accept_request
+		req = @conn.receive
+		self.log.info( req.inspect )
+		res = self.dispatch_request( req )
+
+		if res
+			self.log.info( res.inspect )
+			@conn.reply( res ) unless @conn.closed?
 		end
 	end
 
@@ -329,6 +350,10 @@ class Mongrel2::Handler
 	end
 
 
+	#########
+	protected
+	#########
+
 	#
 	# :section: Signal Handling
 	# These methods set up some behavior for starting, restarting, and stopping
@@ -336,41 +361,75 @@ class Mongrel2::Handler
 	# be handled, override #set_signal_handlers with an empty method.
 	#
 
-	### Set up signal handlers for SIGINT, SIGTERM, SIGINT, and SIGUSR1 that will call the
-	### #on_hangup_signal, #on_termination_signal, #on_interrupt_signal, and
-	### #on_user1_signal methods, respectively.
+	### Set up signal handlers for common signals that will shut down, restart, etc.
 	def set_signal_handlers
-		Signal.trap( :HUP,  &self.method(:on_hangup_signal) )
-		Signal.trap( :TERM, &self.method(:on_termination_signal) )
-		Signal.trap( :INT,  &self.method(:on_interrupt_signal) )
-		Signal.trap( :USR1, &self.method(:on_user1_signal) )
+		self.log.debug "Setting up deferred signal handlers."
+		QUEUE_SIGS.each do |sig|
+			Signal.trap( sig ) { Thread.main[:signal_queue] << sig }
+		end
 	end
 
 
-	### Restore the default signal handlers
+	### Set all signal handlers to ignore.
+	def ignore_signals
+		self.log.debug "Ignoring signals."
+		QUEUE_SIGS.each do |sig|
+			Signal.trap( sig, :IGNORE )
+		end
+	end
+
+
+	### Set the signal handlers back to their defaults.
 	def restore_signal_handlers
-		Signal.trap( :HUP,  :DEFAULT )
-		Signal.trap( :TERM, :DEFAULT )
-		Signal.trap( :INT,  :DEFAULT )
-		Signal.trap( :USR1, :DEFAULT )
+		self.log.debug "Restoring default signal handlers."
+		QUEUE_SIGS.each do |sig|
+			Signal.trap( sig, :DEFAULT )
+		end
+	end
+
+	### Handle any queued signals.
+	def process_signal_queue
+		# Look for any signals that arrived and handle them
+		while sig = Thread.main[:signal_queue].shift
+			self.handle_signal( sig )
+		end
 	end
 
 
-	### Handle a HUP signal. The default is to restart the handler.
-	def on_hangup_signal( signo )
-		self.log.warn "Hangup: reconnecting."
-		self.restart
+	### Handle signals.
+	def handle_signal( sig )
+		self.log.debug "Handling signal %s" % [ sig ]
+		case sig
+		when :INT, :TERM
+			self.on_termination_signal( sig )
+
+		when :HUP
+			self.on_hangup_signal( sig )
+
+		when :USR1
+			self.on_user1_signal( sig )
+
+		else
+			self.log.warn "Unhandled signal %s" % [ sig ]
+		end
+
 	end
 
 
 	### Handle a TERM signal. Shuts the handler down after handling any current request/s. Also
 	### aliased to #on_interrupt_signal.
 	def on_termination_signal( signo )
-		self.log.warn "Halting on signal #{signo} (Thread: %p vs. main: %p)" %
-			[ Thread.current, Thread.main ]
+		self.log.warn "Terminated (%p)" % [ signo ]
 		self.shutdown
 	end
 	alias_method :on_interrupt_signal, :on_termination_signal
+
+
+	### Handle a HUP signal. The default is to restart the handler.
+	def on_hangup_signal( signo )
+		self.log.warn "Hangup (%p)" % [ signo ]
+		self.restart
+	end
 
 
 	### Handle a USR1 signal. Writes a message to the log by default.
