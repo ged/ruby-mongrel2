@@ -73,10 +73,7 @@ class Mongrel2::HTTPResponse < Mongrel2::Response
 
 	### Send the response status to the client
 	def status_line
-		self.log.debug "Building status line for status: %p" % [ self.status ]
-
 		st = self.status || (self.body.size.zero? ? HTTP::NO_CONTENT : HTTP::OK)
-
 		return STATUS_LINE_FORMAT % [ st, HTTP::STATUS_NAME[st] ]
 	end
 
