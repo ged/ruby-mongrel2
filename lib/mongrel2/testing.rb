@@ -69,16 +69,17 @@ module Mongrel2
 
 		# The default set of headers used for HTTP requests
 		DEFAULT_TESTING_HEADERS  = {
-			"x-forwarded-for" => "127.0.0.1",
-			"accept-language" => "en-US,en;q=0.8",
-			"accept-encoding" => "gzip,deflate,sdch",
-			"connection"      => "keep-alive",
-			"accept-charset"  => "UTF-8,*;q=0.5",
-			"accept"          => "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-			"user-agent"      => "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_1) " +
-			                     "AppleWebKit/535.1 (KHTML, like Gecko) Chrome/13.0.782.112 " +
-			                     "Safari/535.1",
-			"VERSION"         => "HTTP/1.1",
+			'x-forwarded-for' => '127.0.0.1',
+			'accept-language' => 'en-US,en;q=0.8',
+			'accept-encoding' => 'gzip,deflate,sdch',
+			'connection'      => 'keep-alive',
+			'accept-charset'  => 'UTF-8,*;q=0.5',
+			'accept'          => 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+			'user-agent'      => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_1) ' +
+			                     'AppleWebKit/535.1 (KHTML, like Gecko) Chrome/13.0.782.112 ' +
+			                     'Safari/535.1',
+			'url-scheme'      => 'http',
+			'VERSION'         => 'HTTP/1.1',
 		}
 
 		# The defaults used by the HTTP request factory
