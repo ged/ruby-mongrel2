@@ -88,6 +88,21 @@ class Mongrel2::HTTPRequest < Mongrel2::Request
 	end
 
 
+	### Convenience method for getting the request's 'url-scheme' header.
+	def scheme
+		return self.headers.url_scheme
+	end
+
+
+	### Returns +true+ if the request's URL scheme indicates that it used an HTTPS connection. This
+	### only works on versions of Mongrel2 *after* 1.8.0.
+	def ssl?
+		return self.scheme == 'https'
+	end
+	alias_method :used_ssl?, :ssl?
+	alias_method :secure?, :ssl?
+
+
 	#########
 	protected
 	#########
