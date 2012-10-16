@@ -13,7 +13,7 @@ basedir = examples_dir.parent
 upload_dir = Pathname( Dir.tmpdir )
 
 # samples server
-server 'examples' do
+s = server 'examples' do
 
 	name         'Examples'
 	default_host 'localhost'
@@ -55,4 +55,6 @@ mkdir_p 'var/mongrel2'
 mkdir_p 'logs'
 mkdir_p '/tmp/mongrel2-uploads'
 
+puts "Will chroot to: #{s.chroot}"
 puts "Upload dir is: #{upload_dir}"
+

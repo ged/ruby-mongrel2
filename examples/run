@@ -9,7 +9,7 @@ examplesdir=$(dirname $0)
 
 echo "Creating/updating the config database..."
 ruby -rubygems -I${examplesdir}/../lib $examplesdir/../bin/m2sh.rb \
-	-c examples.sqlite load $examplesdir/config.rb
+	-c ${examplesdir}/examples.sqlite load $examplesdir/config.rb
 
 if [ $? != 0 ]; then
 	echo "Oops, problems installing the config DB. Aborting."
