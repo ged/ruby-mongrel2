@@ -79,6 +79,16 @@ describe Mongrel2::HTTPRequest do
 		@req.should be_keepalive()
 	end
 
+	it "knows what its URL scheme was" do
+		@req.scheme.should == 'http'
+	end
+
+	it "knows that it was an SSL-encrypted request if its scheme was 'https'" do
+		@req.headers.url_scheme = 'https'
+		@req.should be_secure()
+	end
+
+
 	describe "header convenience methods" do
 
 		before( :each ) do
