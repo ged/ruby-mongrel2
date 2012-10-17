@@ -1,3 +1,14 @@
+== v0.34.0 [2012-10-17] Michael Granger <ged@FaerieMUD.org>
+
+- Fix the multiple-server case in 'm2sh.rb start'
+- Add support for the new (edge) 'url-scheme' header and add an #ssl?
+  predicate build on it.
+- Try to make examples more tolerant of being run from other
+  directories
+- Add (1.8.0ish) url-scheme header to the defaults in mongrel2/testing
+- Remove some more chatty debug logging.
+
+
 == v0.33.0 [2012-10-02] Michael Granger <ged@FaerieMUD.org>
 
 - Implement deferred signal-handling for Mongrel2::Handler
