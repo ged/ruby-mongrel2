@@ -83,6 +83,11 @@ describe Mongrel2::HTTPRequest do
 		@req.scheme.should == 'http'
 	end
 
+	it "falls back to 'http' if the url_scheme isn't provided (mongrel2 <= 1.8.0)" do
+		@req.headers.url_scheme = nil
+		@req.scheme.should == 'http'
+	end
+
 	it "knows that it was an SSL-encrypted request if its scheme was 'https'" do
 		@req.headers.url_scheme = 'https'
 		@req.should be_secure()

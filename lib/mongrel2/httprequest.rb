@@ -90,7 +90,7 @@ class Mongrel2::HTTPRequest < Mongrel2::Request
 
 	### Convenience method for getting the request's 'url-scheme' header.
 	def scheme
-		return self.headers.url_scheme
+		return self.headers.url_scheme || 'http'
 	end
 
 
