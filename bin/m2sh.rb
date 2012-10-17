@@ -678,7 +678,7 @@ class Mongrel2::M2SHCommand
 		# that it would have matched.
 		if servers.length == 1
 			server = servers.first if !serverspec ||
-				servers.first.values_at( :uuid, :default_host, :name ).include?( serverspec )
+				servers.first.values.values_at( :uuid, :default_host, :name ).include?( serverspec )
 
 		# Otherwise, require an argument and search for the desired server if there is one
 		else
