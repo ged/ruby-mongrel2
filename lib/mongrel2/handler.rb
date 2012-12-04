@@ -154,6 +154,8 @@ class Mongrel2::Handler
 	ensure
 		self.restore_signal_handlers
 		self.log.info "Done: %p" % [ self ]
+		@conn.close
+		Mongrel2.zmq_context.close
 	end
 
 
@@ -169,7 +171,6 @@ class Mongrel2::Handler
 		self.log.info "Shutting down."
 		self.ignore_signals
 		@conn.close
-		Mongrel2.zmq_context.close
 	end
 
 
