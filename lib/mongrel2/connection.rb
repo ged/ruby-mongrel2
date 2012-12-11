@@ -191,6 +191,7 @@ class Mongrel2::Connection
 		]
 	end
 
+
 	### Returns a string containing a human-readable representation of the Connection,
 	### suitable for debugging.
 	def inspect

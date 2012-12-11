@@ -27,6 +27,11 @@ require 'mongrel2/constants'
 #           ...
 #       end
 #   end
+#
+# == References
+#
+# * http://tools.ietf.org/html/rfc6455
+#
 module Mongrel2::WebSocket
 
 	# WebSocket-related header and status constants
@@ -200,9 +205,21 @@ module Mongrel2::WebSocket
 	class HandshakeError < Mongrel2::WebSocket::Error; end
 
 
+	# A mixin containing methods common to WebSocket frame classes.
+	module Methods
+
+		### Get a string identifying the websocket the frame belongs to.
+		def socket_id
+			return [ self.sender_id, self.conn_id ].join( ':' )
+		end
+
+	end # module Methods
+
+
 	# The client (request) handshake for a WebSocket opening handshake.
 	class ClientHandshake < Mongrel2::HTTPRequest
-		include Mongrel2::WebSocket::Constants
+		include Mongrel2::WebSocket::Constants,
+		        Mongrel2::WebSocket::Methods
 
 		# Set this class as the one that will handle WEBSOCKET_HANDSHAKE requests
 		register_request_type( self, :WEBSOCKET_HANDSHAKE )
@@ -228,8 +245,8 @@ module Mongrel2::WebSocket
 		end
 
 
-		### Create a Mongrel2::WebSocket::Handshake that will respond to the same server/connection as
-		### the receiver.
+		### Create a Mongrel2::WebSocket::Handshake that will respond to the same
+		### server/connection as the receiver.
 		def response( protocol=nil )
 			@response = super() unless @response
 			if protocol
@@ -247,7 +264,8 @@ module Mongrel2::WebSocket
 
 	# The server (response) handshake for a WebSocket opening handshake.
 	class ServerHandshake < Mongrel2::HTTPResponse
-		include Mongrel2::WebSocket::Constants
+		include Mongrel2::WebSocket::Constants,
+		        Mongrel2::WebSocket::Methods
 
 		### Create a server handshake frame from the given client +handshake+.
 		def self::from_request( handshake )
@@ -287,7 +305,8 @@ module Mongrel2::WebSocket
 	# WebSocket frame class; this is used for both requests and responses in
 	# WebSocket services.
 	class Frame < Mongrel2::Request
-		include Mongrel2::WebSocket::Constants
+		include Mongrel2::WebSocket::Constants,
+		        Mongrel2::WebSocket::Methods
 
 		# The default frame header flags: FIN + CLOSE
 		DEFAULT_FLAGS = FIN_FLAG | OPCODE[:close]
@@ -542,12 +561,7 @@ module Mongrel2::WebSocket
 
 
 		### Create a frame in response to the receiving Frame (i.e., with the same
-		### Mongrel2 connection ID and sender). This automatically sets up the correct
-		### status, Sec-WebSocket-Accept:, Connection, and Upgrade: headers based on the
-		### receiver. If +protocol+ is non-nil, and it matches one of the
-		### values listed in 'Sec-WebSocket-Protocol', it will be set as the
-		### Handshake's Sec-WebSocket-Protocol header. If it is non-nil, but doesn't
-		### match one of the request's values, a Mongrel2::WebSocket::Error is raised.
+		### Mongrel2 connection ID and sender).
 		def response( *flags )
 			unless @response
 				@response = super()

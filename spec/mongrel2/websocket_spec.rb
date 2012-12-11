@@ -112,6 +112,11 @@ describe Mongrel2::WebSocket do
 			}.to raise_error( Mongrel2::WebSocket::HandshakeError, /map_updates/i )
 		end
 
+		it "has a socket identifier" do
+			handshake = @factory.handshake( '/websock', 'echo', 'superecho' )
+			handshake.socket_id.should == "#{handshake.sender_id}:#{handshake.conn_id}"
+		end
+
 	end
 
 
@@ -249,6 +254,11 @@ describe Mongrel2::WebSocket do
 				"\x82\x7F\x00\x00\x00\x00\x00\x01\x00\x00\a\xBD\xB3\xFE\x87\xEB".force_encoding('binary'),
 				"\xA9\x0En2q\xCE\x85\xAF)\x88w_d\xD6M\x9E".force_encoding('binary'),
 			]
+		end
+
+		it "has a socket identifier" do
+			frame = @factory.text( '/websock', "data" )
+			frame.socket_id.should == "#{frame.sender_id}:#{frame.conn_id}"
 		end
 
 	end
