@@ -428,8 +428,14 @@ module Mongrel2::WebSocket
 		### Set the frame's opcode to +code+, which should be either a numeric opcode or
 		### its equivalent name (i.e., :continuation, :text, :binary, :close, :ping, :pong)
 		def opcode=( code )
-			opcode = OPCODE[ code.to_sym ] or
-				raise ArgumentError, "unknown opcode %p" % [ code ]
+			opcode = nil
+
+			if code.is_a?( Numeric )
+				opcode = Integer( code )
+			else
+				opcode = OPCODE[ code.to_sym ] or
+					raise ArgumentError, "unknown opcode %p" % [ code ]
+			end
 
 			self.flags ^= ( self.flags & OPCODE_BITMASK )
 			self.flags |= opcode
@@ -572,7 +578,7 @@ module Mongrel2::WebSocket
 					@response.opcode = :pong
 					IO.copy_stream( self.payload, @response.payload, 4096 )
 				else
-					@response.opcode = self.opcode
+					@response.opcode = self.numeric_opcode
 				end
 
 				# Set flags in the response
@@ -606,7 +612,7 @@ module Mongrel2::WebSocket
 				when :continuation, :text, :binary, :close, :ping, :pong
 					self.opcode = flag
 				when Integer
-					self.log.debug "  setting Integer flags directly: 0b%08b" % [ integer ]
+					self.log.debug "  setting Integer flags directly: 0b%08b" % [ flag ]
 					self.flags |= flag
 				else
 					raise ArgumentError, "Don't know what the %p flag is." % [ flag ]
