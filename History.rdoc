@@ -1,7 +1,13 @@
-== v0.34.1 [2012-12-04] Michael Granger <ged@FaerieMUD.org>
+== v0.35.0 [2012-12-11] Michael Granger <ged@FaerieMUD.org>
 
-- Ensure the ZMQ context is closed when Handler#run exits.
-
+- Allow WebSocket frames to be set to reserved opcodes
+- Allow WebSocket opcodes to be set numerically
+- Add a #socket_id method to all WebSocket frame types.
+  * Created a Mongrel2::WebSocket::Methods mixin with the
+    implementation of the method.
+  * Included the new mixin in WebSocket::Frame,
+    WebSocket::ClientHandshake, and WebSocket::ServerHandshake
+- Ensure the ZMQ context is closed when #run exits.
 
 == v0.34.0 [2012-10-17] Michael Granger <ged@FaerieMUD.org>
 
