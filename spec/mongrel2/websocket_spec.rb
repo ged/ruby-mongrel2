@@ -174,6 +174,45 @@ describe Mongrel2::WebSocket do
 			@factory.pong( '/websock' ).opcode.should == :pong
 		end
 
+		it "knows that its opcode is one of the reserved ones if it's 0x3" do
+			@factory.create( '/websocket', '', 0x3 ).opcode.should == :reserved
+		end
+
+		it "knows that its opcode is one of the reserved ones if it's 0x4" do
+			@factory.create( '/websocket', '', 0x4 ).opcode.should == :reserved
+		end
+
+		it "knows that its opcode is one of the reserved ones if it's 0xB" do
+			@factory.create( '/websocket', '', 0xB ).opcode.should == :reserved
+		end
+
+		it "knows that its opcode is one of the reserved ones if it's 0xD" do
+			@factory.create( '/websocket', '', 0xD ).opcode.should == :reserved
+		end
+
+		it "knows that its opcode is one of the reserved ones if it's 0xF" do
+			@factory.create( '/websocket', '', 0xF ).opcode.should == :reserved
+		end
+
+		it "allows its opcode to be set Symbolically" do
+			frame = @factory.text( '/websocket', 'data' )
+			frame.opcode = :binary
+			frame.numeric_opcode.should == OPCODE[:binary]
+		end
+
+		it "allows its opcode to be set Numerically" do
+			frame = @factory.binary( '/websocket', 'data' )
+			frame.opcode = :text
+			frame.numeric_opcode.should == OPCODE[:text]
+		end
+
+		it "allows its opcode to be set to one of the reserved opcodes Numerically" do
+			frame = @factory.binary( '/websocket', 'data' )
+			frame.opcode = 0xC
+			frame.opcode.should == :reserved
+			frame.numeric_opcode.should == 0xC
+		end
+
 		it "knows that its RSV1 flag is set if its FLAG header includes that bit" do
 			@factory.ping( '/websock', 'test', :rsv1 ).should be_rsv1()
 		end
@@ -240,6 +279,21 @@ describe Mongrel2::WebSocket do
 			result.conn_id.should == frame.conn_id
 			result.opcode.should == :close
 			result.should be_fin()
+
+			result.payload.rewind
+			result.payload.read.should == ''
+		end
+
+		it "allows reserved opcodes to be specified when creating a response" do
+			frame = @factory.text( '/websock', "some bad data" )
+
+			result = frame.response( 0xB )
+
+			result.should be_a( Mongrel2::WebSocket::Frame )
+			result.sender_id.should == frame.sender_id
+			result.conn_id.should == frame.conn_id
+			result.opcode.should == :reserved
+			result.numeric_opcode.should == 0xB
 
 			result.payload.rewind
 			result.payload.read.should == ''

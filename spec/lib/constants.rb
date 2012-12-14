@@ -277,7 +277,7 @@ module Mongrel2::TestConstants # :nodoc:all
 
 		# Freeze all testing constants
 		constants.each do |cname|
-			const_get(cname).freeze
+			const_get(cname).freeze if cname.to_s.start_with?( 'TEST' )
 		end
 	end
 
