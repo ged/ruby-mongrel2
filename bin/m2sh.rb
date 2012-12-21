@@ -452,18 +452,17 @@ class Mongrel2::M2SHCommand
 		# Change into the server's chroot directory so paths line up whether or not
 		# it's started as root
 
-		header "Starting mongrel2 at: #{url}."
-		Dir.chdir( server.chroot ) do
-			message "  changed PWD to: #{Dir.pwd}"
-			Mongrel2::Config.log_action( "Starting server: #{server}", self.options.why )
-			self.log.debug "  command is: #{Shellwords.shelljoin(cmd)}"
-			exec( *cmd )
-		end
-
-		Mongrel2::Config.log_action( "Starting server: #{server}", self.options.why )
 		message '*' * 70
 		header "Starting mongrel2 at: #{url}"
 		message '*' * 70
+
+		if server.chroot && server.chroot != '' && server.chroot != '.'
+			Dir.chdir( server.chroot )
+			message "  changed PWD to: #{Dir.pwd}"
+		end
+
+		Mongrel2::Config.log_action( "Starting server: #{server}", self.options.why )
+		self.log.debug "  command is: #{Shellwords.shelljoin(cmd)}"
 		exec( *cmd )
 	end
 	help :start, "Starts a server."
