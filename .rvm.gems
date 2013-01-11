@@ -3,7 +3,7 @@
 configurability -v1.2.0
 hoe-deveiate -v0.1.1
 nokogiri -v1.5.5
-sequel -v3.39.0
+sequel -v3.43.0
 simplecov -v0.6.4
 sysexits -v1.1.0
 tnetstring -v0.3.4

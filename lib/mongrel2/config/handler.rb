@@ -42,8 +42,10 @@ class Mongrel2::Config::Handler < Mongrel2::Config( :handler )
 	# :method: by_send_ident( uuid )
 	#
 	# Look up a Handler by its send_ident, which should be a +uuid+ or similar String.
-	def_dataset_method( :by_send_ident ) do |send_ident|
-		filter( :send_ident => send_ident )
+	dataset_module do
+		def by_send_ident( ident )
+			return self.filter( :send_ident => ident )
+		end
 	end
 
 
