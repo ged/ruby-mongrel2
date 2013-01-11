@@ -30,7 +30,9 @@ class Mongrel2::Config::Server < Mongrel2::Config( :server )
 	# :singleton-method: by_uuid
 	# :call-seq:
 	#    by_uuid( uuid )
-	def_dataset_method( :by_uuid ) {|uuid| filter(:uuid => uuid).limit(1) }
+	dataset_module do
+		subset( :by_uuid ) {|uuid| filter(:uuid => uuid).limit(1) }
+	end
 
 
 	##
