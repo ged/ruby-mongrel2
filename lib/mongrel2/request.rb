@@ -275,7 +275,8 @@ class Mongrel2::Request
 			return spoolfile.open( 'r', encoding: enc )
 
 		elsif !( body.respond_to?(:read) && body.respond_to?(:pos) && body.respond_to?(:seek) )
-			self.log.info "Wrapping non-IO (%p) body in a StringIO" % [ body.class ]
+			self.log.info "Wrapping non-IO (%p) body in a StringIO" % [ body.class ] unless
+				body.is_a?( String )
 
 			# Get the object as a String, set the encoding
 			str = body.to_s
