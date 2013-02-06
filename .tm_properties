@@ -5,7 +5,7 @@ excludeInFileChooser = "{$exclude,pkg,.hg}"
 
 TM_RUBY = "/Users/mgranger/.rvm/bin/rvm-auto-ruby"
 
-[ source.ruby ]
+[ source.ruby, source.ruby.rspec ]
 softTabs         = false
 tabSize          = 4
 
