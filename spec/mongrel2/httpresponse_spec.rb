@@ -241,6 +241,19 @@ describe Mongrel2::HTTPResponse do
 	end
 
 
+	it "doesn't reset the status to 204 NO CONTENT if there's an explicit content-length header" do
+
+		# Simulate a response to a HEAD request
+		request_factory = Mongrel2::RequestFactory.new( route: '/foo' )
+		@response.request = request_factory.head( '/foo' )
+
+		@response.header.content_length = 2048
+		@response.body = ''
+
+		@response.status_line.should =~ /200 OK/i
+	end
+
+
 	it "can build a valid HTTP status line for its status" do
 		@response.status = HTTP::SEE_OTHER
 		@response.status_line.should == "HTTP/1.1 303 See Other"
