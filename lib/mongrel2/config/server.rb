@@ -31,7 +31,9 @@ class Mongrel2::Config::Server < Mongrel2::Config( :server )
 	# :call-seq:
 	#    by_uuid( uuid )
 	dataset_module do
-		subset( :by_uuid ) {|uuid| filter(:uuid => uuid).limit(1) }
+		def by_uuid( uuid )
+			filter(:uuid => uuid).limit(1)
+		end
 	end
 
 
