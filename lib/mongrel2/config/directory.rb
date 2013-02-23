@@ -6,12 +6,12 @@ require 'mongrel2/config' unless defined?( Mongrel2::Config )
 # Mongrel2 Directory (Dir) configuration class
 class Mongrel2::Config::Directory < Mongrel2::Config( :directory )
 
-	### As of Mongrel2/1.7.5:
+	### As of Mongrel2/1.8.0:
 	# CREATE TABLE directory (id INTEGER PRIMARY KEY,
-	#    base TEXT,
-	#    index_file TEXT,
-	#    default_ctype TEXT,
-	#    cache_ttl INTEGER DEFAULT 0);
+	#     base TEXT,
+	#     index_file TEXT,
+	#     default_ctype TEXT,
+	#     cache_ttl INTEGER DEFAULT 0);
 
 	### Sequel validation callback: add errors if the record is invalid.
 	def validate

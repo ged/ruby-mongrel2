@@ -6,14 +6,14 @@ require 'mongrel2/config' unless defined?( Mongrel2::Config )
 # Mongrel2 Handler configuration class
 class Mongrel2::Config::Handler < Mongrel2::Config( :handler )
 
-	### As of Mongrel2/1.7.5:
+	### As of Mongrel2/1.8.0:
 	# CREATE TABLE handler (id INTEGER PRIMARY KEY,
 	#     send_spec TEXT,
 	#     send_ident TEXT,
 	#     recv_spec TEXT,
 	#     recv_ident TEXT,
-	#    raw_payload INTEGER DEFAULT 0,
-	#    protocol TEXT DEFAULT 'json');
+	#     raw_payload INTEGER DEFAULT 0,
+	#     protocol TEXT DEFAULT 'json');
 
 
 	#

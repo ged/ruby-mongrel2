@@ -6,11 +6,11 @@ require 'mongrel2/config' unless defined?( Mongrel2::Config )
 # Mongrel2 configuration statistic class
 class Mongrel2::Config::Statistic < Mongrel2::Config( :statistic )
 
-	### As of Mongrel2/1.7.5:
-	# CREATE TABLE statistic (id SERIAL, 
+	# As of Mongrel2-1.8.0:
+	# CREATE TABLE statistic (id SERIAL,
 	#     other_type TEXT,
 	#     other_id INTEGER,
-	#     name text,
+	#     name TEXT,
 	#     sum REAL,
 	#     sumsq REAL,
 	#     n INTEGER,

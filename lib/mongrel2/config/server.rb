@@ -12,7 +12,7 @@ require 'mongrel2/constants'
 class Mongrel2::Config::Server < Mongrel2::Config( :server )
 	include Mongrel2::Constants
 
-	### As of Mongrel2/1.7.5:
+	### As of Mongrel2/1.8.0:
 	# CREATE TABLE server (id INTEGER PRIMARY KEY,
 	#     uuid TEXT,
 	#     access_log TEXT,
