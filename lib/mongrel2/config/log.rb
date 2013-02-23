@@ -9,7 +9,7 @@ require 'mongrel2/config' unless defined?( Mongrel2::Config )
 # Mongrel2 configuration Log class
 class Mongrel2::Config::Log < Mongrel2::Config( :log )
 
-	### As of Mongrel2/1.7.5:
+	### As of Mongrel2/1.8.0:
 	# CREATE TABLE log(id INTEGER PRIMARY KEY,
 	#     who TEXT,
 	#     what TEXT,

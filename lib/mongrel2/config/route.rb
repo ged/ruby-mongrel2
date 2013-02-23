@@ -6,7 +6,7 @@ require 'mongrel2/config' unless defined?( Mongrel2::Config )
 # Mongrel2 Route configuration class
 class Mongrel2::Config::Route < Mongrel2::Config( :route )
 
-	### As of Mongrel2/1.7.5:
+	### As of Mongrel2/1.8.0:
 	# CREATE TABLE route (id INTEGER PRIMARY KEY,
 	#     path TEXT,
 	#     reversed BOOLEAN DEFAULT 0,

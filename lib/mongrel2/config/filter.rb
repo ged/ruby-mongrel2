@@ -30,7 +30,7 @@ require 'mongrel2/config' unless defined?( Mongrel2::Config )
 #
 class Mongrel2::Config::Filter < Mongrel2::Config( :filter )
 
-	### As of Mongrel2/1.7.5:
+	### As of Mongrel2/1.8.0:
 	# CREATE TABLE filter (id INTEGER PRIMARY KEY,
 	#     server_id INTEGER,
 	#     name TEXT,
