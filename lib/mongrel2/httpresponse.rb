@@ -73,7 +73,7 @@ class Mongrel2::HTTPResponse < Mongrel2::Response
 
 	### Send the response status to the client
 	def status_line
-		st = self.status || (self.body.size.zero? ? HTTP::NO_CONTENT : HTTP::OK)
+		st = self.status || self.derived_status_code
 		return STATUS_LINE_FORMAT % [ st, HTTP::STATUS_NAME[st] ]
 	end
 
@@ -220,6 +220,21 @@ class Mongrel2::HTTPResponse < Mongrel2::Response
 			(self.get_content_length / 1024.0),
 			self.body,
 		]
+	end
+
+	### Return the numeric HTTP status code for the response bsaed on what has already been
+	### set
+	def derived_status_code
+		# If there's a non-empty entity body, or the content length has been set explicitly
+		# to something non-zero, assume the response is OK
+		if self.body.size.nonzero? || 
+		   (self.header.content_length && self.header.content_length.nonzero?)
+			return HTTP::OK
+
+		# otherwise set it to 204
+		else
+			return HTTP::NO_CONTENT
+		end
 	end
 
 end # class Mongrel2::Response
