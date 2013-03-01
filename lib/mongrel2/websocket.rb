@@ -1,4 +1,5 @@
-#!/usr/bin/ruby
+# -*- ruby -*-
+#encoding: utf-8
 
 require 'mongrel2/request' unless defined?( Mongrel2::Request )
 require 'mongrel2/constants'
@@ -543,8 +544,8 @@ module Mongrel2::WebSocket
 					self.payload.set_encoding( 'binary' )
 					self.payload.rewind
 
-					header_i = self.make_header.bytes
-					body_i   = self.payload.bytes
+					header_i = self.make_header.each_byte
+					body_i   = self.payload.each_byte
 
 					header_i.each_with_index {|byte, i| yielder.yield(byte) }
 					body_i.each_with_index   {|byte, i| yielder.yield(byte) }

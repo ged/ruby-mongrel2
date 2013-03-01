@@ -1,4 +1,5 @@
-#!/usr/bin/ruby
+# -*- ruby -*-
+#encoding: utf-8
 
 require 'socket'
 require 'zmq'
@@ -123,7 +124,7 @@ class Mongrel2::Connection
 		self.check_closed
 		header = "%s %d:%s," % [ sender_id, conn_id.to_s.length, conn_id ]
 		buf = header + ' ' + data
-		self.log.debug "Sending response (PUB): %p" % [ buf ]
+		self.log.debug "Sending response (PUB)"
 		self.response_sock.send( buf )
 		self.log.debug "  done with send (%d bytes)" % [ buf.bytesize ]
 	end
