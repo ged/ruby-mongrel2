@@ -1,4 +1,5 @@
-#!/usr/bin/env ruby
+# -*- ruby -*-
+#encoding: utf-8
 
 require 'loggability'
 require 'zmq'
@@ -20,7 +21,7 @@ module Mongrel2
 	abort "\n\n>>> Mongrel2 requires Ruby 1.9.2 or later. <<<\n\n" if RUBY_VERSION < '1.9.2'
 
 	# Library version constant
-	VERSION = '0.35.0'
+	VERSION = '0.36.0'
 
 	# Version-control revision constant
 	REVISION = %q$Revision$
