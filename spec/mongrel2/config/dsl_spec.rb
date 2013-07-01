@@ -173,7 +173,7 @@ describe Mongrel2::Config::DSL do
 		end
 
 		after( :each ) do
-			Mongrel2::Config::Setting.dataset.filter( ~:id => @ids ).delete
+			Mongrel2::Config::Setting.dataset.exclude( :id => @ids ).delete
 		end
 
 		it "can set the expert tweakable settings en masse" do
