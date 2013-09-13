@@ -68,7 +68,7 @@ module Mongrel2
 		# The Pathname of the SQL file used to create the config database
 		CONFIG_SQL    = DATA_DIR + 'config.sql'
 
-		# The Pathname of the SQL file used to add default mimetypes mappings to the config 
+		# The Pathname of the SQL file used to add default mimetypes mappings to the config
 		# database
 		MIMETYPES_SQL = DATA_DIR + 'mimetypes.sql'
 

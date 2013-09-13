@@ -103,7 +103,7 @@ module Mongrel2::SpecHelpers
 	end
 
 
-	### Make a new-style (TNetstring headers) raw Mongrel2 request from the specified +opts+ 
+	### Make a new-style (TNetstring headers) raw Mongrel2 request from the specified +opts+
 	### and return it as a String.
 	def make_tn_request( opts={} )
 		opts = TEST_REQUEST_OPTS.merge( opts )

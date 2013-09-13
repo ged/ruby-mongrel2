@@ -88,7 +88,8 @@ class Mongrel2::HTTPResponse < Mongrel2::Response
 	### Returns true if the response status means the response
 	### shouldn't have a body.
 	def bodiless?
-		return HTTP::BODILESS_HTTP_RESPONSE_CODES.include?( self.status )
+		return self.body.nil? ||
+			HTTP::BODILESS_HTTP_RESPONSE_CODES.include?( self.status )
 	end
 
 
@@ -182,6 +183,8 @@ class Mongrel2::HTTPResponse < Mongrel2::Response
 	### Get the length of the body IO. If the IO's offset is somewhere other than
 	### the beginning or end, the size of the remainder is used.
 	def get_content_length
+		return 0 if self.bodiless?
+
 		if self.body.pos.nonzero? && !self.body.eof?
 			self.log.info "Calculating content length based on an offset of %d" % [ self.body.pos ]
 			return self.body.size - self.body.pos
@@ -227,7 +230,7 @@ class Mongrel2::HTTPResponse < Mongrel2::Response
 	def derived_status_code
 		# If there's a non-empty entity body, or the content length has been set explicitly
 		# to something non-zero, assume the response is OK
-		if self.body.size.nonzero? || 
+		if self.body.size.nonzero? ||
 		   (self.header.content_length && self.header.content_length.nonzero?)
 			return HTTP::OK
 

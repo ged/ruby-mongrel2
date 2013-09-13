@@ -214,6 +214,13 @@ describe Mongrel2::HTTPResponse do
 	end
 
 
+	it "knows that a response with a body explicitly set to nil is bodiless" do
+		@response.status = HTTP::CREATED
+		@response.body = nil
+		@response.should be_bodiless()
+	end
+
+
 	it "knows what the response content type is" do
 		@response.headers['Content-Type'] = 'text/erotica'
 		@response.content_type.should == 'text/erotica'
@@ -235,8 +242,16 @@ describe Mongrel2::HTTPResponse do
 	end
 
 
-	it "returns a body length of 0 if it's a bodiless reponse" do
+	it "returns a body length of 0 if it's a bodiless status code" do
+		@response.puts "Some stuff"
 		@response.status = HTTP::NO_CONTENT
+		@response.get_content_length.should == 0
+	end
+
+
+	it "returns a body length of 0 if it has a nil body" do
+		@response.body = nil
+		@response.status = HTTP::CREATED
 		@response.get_content_length.should == 0
 	end
 

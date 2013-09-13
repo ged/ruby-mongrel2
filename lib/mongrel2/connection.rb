@@ -10,8 +10,8 @@ require 'loggability'
 require 'mongrel2' unless defined?( Mongrel2 )
 
 
-# The Mongrel2 connection class. Connection objects serve as a front end for 
-# the ZMQ sockets which talk to the mongrel2 server/s for your handler. It receives 
+# The Mongrel2 connection class. Connection objects serve as a front end for
+# the ZMQ sockets which talk to the mongrel2 server/s for your handler. It receives
 # TNetString requests and wraps Mongrel2::Request objects around them, and
 # then encodes and sends Mongrel2::Response objects back to the server.
 #
@@ -25,7 +25,7 @@ class Mongrel2::Connection
 
 
 	### Create a new Connection identified by +app_id+ (a UUID or other unique string) that
-	### will connect to a Mongrel2 server on the +sub_addr+ and +pub_addr+ (e.g., 
+	### will connect to a Mongrel2 server on the +sub_addr+ and +pub_addr+ (e.g.,
 	### 'tcp://127.0.0.1:9998').
 	def initialize( app_id, sub_addr, pub_addr )
 		@app_id       = app_id
@@ -161,7 +161,7 @@ class Mongrel2::Connection
 	end
 
 
-	### Tell the server associated with +sender_id+ to close the connections associated 
+	### Tell the server associated with +sender_id+ to close the connections associated
 	### with +conn_ids+.
 	def broadcast_close( sender_id, *conn_ids )
 		self.broadcast( sender_id, conn_ids.flatten, '' )

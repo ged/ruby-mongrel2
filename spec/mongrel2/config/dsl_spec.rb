@@ -179,8 +179,8 @@ describe Mongrel2::Config::DSL do
 		it "can set the expert tweakable settings en masse" do
 			result = settings(
 				"zeromq.threads"         => 8,
-				"upload.temp_store"      => "/home/zedshaw/projects/mongrel2/tmp/upload.XXXXXX", 
-				"upload.temp_store_mode" => "0666" 
+				"upload.temp_store"      => "/home/zedshaw/projects/mongrel2/tmp/upload.XXXXXX",
+				"upload.temp_store_mode" => "0666"
 			)
 
 			result.should be_an( Array )
