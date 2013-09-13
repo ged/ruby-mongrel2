@@ -1,3 +1,9 @@
+== v0.37.0 [2013-09-13] Michael Granger <ged@FaerieMUD.org>
+
+- Make explicitly-set 'nil' body also a bodiless response.
+- Add support for Sequel 4.x
+
+
 == v0.36.0 [2013-02-28] Michael Granger <ged@FaerieMUD.org>
 
 - Fixes for Ruby 2.
