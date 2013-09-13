@@ -258,7 +258,7 @@ module Mongrel2::TestConstants # :nodoc:all
 		# month        = "Jan" | "Feb" | "Mar" | "Apr"
 		#              | "May" | "Jun" | "Jul" | "Aug"
 		#              | "Sep" | "Oct" | "Nov" | "Dec"
-		MONTH = Regexp.union( %w[Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec] ) 
+		MONTH = Regexp.union( %w[Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec] )
 
 		# Match an RFC1123 "HTTP date"
 		# rfc1123-date = wkday "," SP date1 SP time SP "GMT"

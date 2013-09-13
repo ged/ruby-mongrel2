@@ -154,23 +154,23 @@ describe Mongrel2::WebSocket do
 			@factory.continuation( '/websock' ).opcode.should == :continuation
 		end
 
-		it "knows that is opcode is 'text' if its opcode is 0x1" do 
+		it "knows that is opcode is 'text' if its opcode is 0x1" do
 			@factory.text( '/websock', 'Hello!' ).opcode.should == :text
 		end
 
-		it "knows that is opcode is 'binary' if its opcode is 0x2" do 
+		it "knows that is opcode is 'binary' if its opcode is 0x2" do
 			@factory.binary( '/websock', 'Hello!' ).opcode.should == :binary
 		end
 
-		it "knows that is opcode is 'close' if its opcode is 0x8" do 
+		it "knows that is opcode is 'close' if its opcode is 0x8" do
 			@factory.close( '/websock' ).opcode.should == :close
 		end
 
-		it "knows that is opcode is 'ping' if its opcode is 0x9" do 
+		it "knows that is opcode is 'ping' if its opcode is 0x9" do
 			@factory.ping( '/websock' ).opcode.should == :ping
 		end
 
-		it "knows that is opcode is 'pong' if its opcode is 0xA" do 
+		it "knows that is opcode is 'pong' if its opcode is 0xA" do
 			@factory.pong( '/websock' ).opcode.should == :pong
 		end
 

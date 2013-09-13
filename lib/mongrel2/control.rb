@@ -128,7 +128,7 @@ class Mongrel2::Control
 	###
 	### Example:
 	###   [
-	###     {:id=>9, :fd=>27, :type=>1, :last_ping=>0, :last_read=>0, :last_write=>0, 
+	###     {:id=>9, :fd=>27, :type=>1, :last_ping=>0, :last_read=>0, :last_write=>0,
 	###      :bytes_read=>319, :bytes_written=>1065}
 	###   ]
 	def conn_status
@@ -150,7 +150,7 @@ class Mongrel2::Control
 	end
 
 
-	### Shuts down the control port permanently in case you want to keep it from 
+	### Shuts down the control port permanently in case you want to keep it from
 	### being accessed for some reason.
 	def control_stop
 		self.request( :control_stop )

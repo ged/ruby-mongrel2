@@ -76,7 +76,7 @@ class Mongrel2::Config::Host < Mongrel2::Config( :host )
 		end
 
 
-		### Create a new Mongrel2::Config::Handler object with the specified +send_spec+, 
+		### Create a new Mongrel2::Config::Handler object with the specified +send_spec+,
 		### +send_ident+, +recv_spec+, +recv_ident+, and +options+ and return it.
 		def handler( send_spec, send_ident, recv_spec=nil, recv_ident='', options={} )
 			# Shift the opts hash over if the other optional args were omitted

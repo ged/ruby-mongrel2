@@ -35,7 +35,7 @@ class Mongrel2::JSONRequest < Mongrel2::Request
 	attr_reader :data
 
 
-	### Returns +true+ if the request is a special Mongrel2 'disconnect' 
+	### Returns +true+ if the request is a special Mongrel2 'disconnect'
 	### notification.
 	def is_disconnect?
 		return true if self.data['type'] == 'disconnect'

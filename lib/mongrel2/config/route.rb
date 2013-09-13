@@ -31,7 +31,7 @@ class Mongrel2::Config::Route < Mongrel2::Config( :route )
 	many_to_one :host
 
 
-	### Fetch the route's target, which is either a Mongrel2::Config::Directory, 
+	### Fetch the route's target, which is either a Mongrel2::Config::Directory,
 	### Mongrel2::Config::Proxy, or Mongrel2::Config::Handler object.
 	def target
 		case self.target_type
