@@ -848,7 +848,6 @@ insert into mimetype (extension, mimetype) values ('.jpgv', 'video/jpeg');
 insert into mimetype (extension, mimetype) values ('.ftc', 'application/vnd.fluxtime.clip');
 insert into mimetype (extension, mimetype) values ('.pqa', 'application/vnd.palm');
 insert into mimetype (extension, mimetype) values ('.java', 'text/x-java');
-insert into mimetype (extension, mimetype) values ('.apk', 'application/vnd.android.package-archive');
 insert into mimetype (extension, mimetype) values ('.vms', 'chemical/x-vamas-iso14976');
 insert into mimetype (extension, mimetype) values ('.asx', 'video/x-ms-asf');
 

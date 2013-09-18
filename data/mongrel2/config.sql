@@ -1,3 +1,5 @@
+begin transaction;
+
 DROP TABLE IF EXISTS server;
 DROP TABLE IF EXISTS host;
 DROP TABLE IF EXISTS handler;
@@ -15,11 +17,12 @@ CREATE TABLE server (id INTEGER PRIMARY KEY,
     error_log TEXT,
     chroot TEXT DEFAULT '/var/www',
     pid_file TEXT,
+    control_port TEXT DEFAULT "",
     default_host TEXT,
-    name TEXT DEFAULT '',
+    name TEXT DEFAULT "",
     bind_addr TEXT DEFAULT "0.0.0.0",
     port INTEGER,
-    use_ssl INTEGER default 0);
+    use_ssl INTEGER DEFAULT 0);
 
 CREATE TABLE host (id INTEGER PRIMARY KEY,
     server_id INTEGER,
@@ -52,7 +55,9 @@ CREATE TABLE route (id INTEGER PRIMARY KEY,
     target_id INTEGER,
     target_type TEXT);
 
+
 CREATE TABLE setting (id INTEGER PRIMARY KEY, key TEXT, value TEXT);
+
 
 CREATE TABLE statistic (id SERIAL,
     other_type TEXT,
@@ -67,12 +72,12 @@ CREATE TABLE statistic (id SERIAL,
     sd REAL,
     primary key (other_type, other_id, name));
 
-CREATE TABLE mimetype (id INTEGER PRIMARY KEY, mimetype TEXT, extension TEXT);
-
-CREATE TABLE filter (id INTEGER PRIMARY KEY,
-    server_id INTEGER,
-    name TEXT,
+CREATE TABLE filter (id INTEGER PRIMARY KEY, 
+    server_id INTEGER, 
+    name TEXT, 
     settings TEXT);
+
+CREATE TABLE mimetype (id INTEGER PRIMARY KEY, mimetype TEXT, extension TEXT);
 
 CREATE TABLE IF NOT EXISTS log(id INTEGER PRIMARY KEY,
     who TEXT,
@@ -82,3 +87,4 @@ CREATE TABLE IF NOT EXISTS log(id INTEGER PRIMARY KEY,
     how TEXT,
     why TEXT);
 
+commit;
