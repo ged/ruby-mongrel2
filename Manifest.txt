@@ -38,6 +38,7 @@ lib/mongrel2/config/route.rb
 lib/mongrel2/config/server.rb
 lib/mongrel2/config/setting.rb
 lib/mongrel2/config/statistic.rb
+lib/mongrel2/config/xrequest.rb
 lib/mongrel2/connection.rb
 lib/mongrel2/constants.rb
 lib/mongrel2/control.rb
@@ -66,6 +67,7 @@ spec/mongrel2/config/route_spec.rb
 spec/mongrel2/config/server_spec.rb
 spec/mongrel2/config/setting_spec.rb
 spec/mongrel2/config/statistic_spec.rb
+spec/mongrel2/config/xrequest_spec.rb
 spec/mongrel2/config_spec.rb
 spec/mongrel2/connection_spec.rb
 spec/mongrel2/constants_spec.rb

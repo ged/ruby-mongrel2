@@ -72,12 +72,17 @@ CREATE TABLE statistic (id SERIAL,
     sd REAL,
     primary key (other_type, other_id, name));
 
+CREATE TABLE mimetype (id INTEGER PRIMARY KEY, mimetype TEXT, extension TEXT);
+
 CREATE TABLE filter (id INTEGER PRIMARY KEY, 
     server_id INTEGER, 
     name TEXT, 
     settings TEXT);
 
-CREATE TABLE mimetype (id INTEGER PRIMARY KEY, mimetype TEXT, extension TEXT);
+CREATE TABLE xrequest (id INTEGER PRIMARY KEY,
+    server_id INTEGER,
+    name TEXT,
+    settings TEXT);
 
 CREATE TABLE IF NOT EXISTS log(id INTEGER PRIMARY KEY,
     who TEXT,

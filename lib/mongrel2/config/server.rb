@@ -46,6 +46,11 @@ class Mongrel2::Config::Server < Mongrel2::Config( :server )
 	# The filters[rdoc-ref:Mongrel2::Config::Filter] that will be loaded by this server.
 	one_to_many :filters
 
+	##
+	# The xrequest handlers[rdoc-ref:Mongrel2::Config::XRequest] that will be loaded by this server.
+	one_to_many :xrequests,
+		:class => 'Mongrel2::Config::XRequest'
+
 
 	##
 	# :method: uuid
@@ -205,6 +210,16 @@ class Mongrel2::Config::Server < Mongrel2::Config( :server )
 
 			self.log.debug "Filter [%s]: %p" % [ path, settings ]
 			self.target.add_filter( name: path, settings: settings )
+		end
+
+
+		### Add a Mongrel2::Config::XRequest to the Server object with the specified
+		### +path+ (name) and +settings+ hash.
+		def xrequest( path, settings={} )
+			self.target.save( :validate => false )
+
+			self.log.debug "XRequest [%s]: %p" % [ path, settings ]
+			self.target.add_xrequest( name: path, settings: settings )
 		end
 
 	end # module DSLMethods

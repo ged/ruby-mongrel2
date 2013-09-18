@@ -267,6 +267,7 @@ module Mongrel2
 	require 'mongrel2/config/mimetype'
 	require 'mongrel2/config/log'
 	require 'mongrel2/config/statistic'
+	require 'mongrel2/config/xrequest'
 
 	require 'mongrel2/config/dsl'
 

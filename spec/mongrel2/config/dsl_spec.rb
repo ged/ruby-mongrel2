@@ -36,6 +36,7 @@ describe Mongrel2::Config::DSL do
 		Mongrel2::Config::Host.truncate
 		Mongrel2::Config::Route.truncate
 		Mongrel2::Config::Filter.truncate
+		Mongrel2::Config::XRequest.truncate
 	end
 
 	after( :all ) do
@@ -47,8 +48,8 @@ describe Mongrel2::Config::DSL do
 		it "can generate a default server config using the 'server' declarative" do
 			result = server '965A7196-99BC-46FA-945B-3478AE92BFB5'
 
-			result.should be_a( Mongrel2::Config::Server )
-			result.uuid.should == '965A7196-99BC-46FA-945B-3478AE92BFB5'
+			expect( result ).to be_a( Mongrel2::Config::Server )
+			expect( result.uuid ).to eq( '965A7196-99BC-46FA-945B-3478AE92BFB5' )
 		end
 
 
@@ -61,13 +62,13 @@ describe Mongrel2::Config::DSL do
 				control_port '/var/run/intranet.sock'
 			end
 
-			result.should be_a( Mongrel2::Config::Server )
-			result.uuid.should == '965A7196-99BC-46FA-945B-3478AE92BFB5'
-			result.name.should == 'Intranet'
-			result.chroot.should == '/service/mongrel2'
-			result.access_log.should == '/var/log/access'
-			result.error_log.should == '/var/log/errors'
-			result.control_port.should == '/var/run/intranet.sock'
+			expect( result ).to be_a( Mongrel2::Config::Server )
+			expect( result.uuid ).to eq( '965A7196-99BC-46FA-945B-3478AE92BFB5' )
+			expect( result.name ).to eq( 'Intranet' )
+			expect( result.chroot ).to eq( '/service/mongrel2' )
+			expect( result.access_log ).to eq( '/var/log/access' )
+			expect( result.error_log ).to eq( '/var/log/errors' )
+			expect( result.control_port ).to eq( '/var/run/intranet.sock' )
 		end
 	end
 
@@ -80,12 +81,12 @@ describe Mongrel2::Config::DSL do
 
 			end
 
-			result.should be_a( Mongrel2::Config::Server )
-			result.hosts.should have( 1 ).member
+			expect( result ).to be_a( Mongrel2::Config::Server )
+			expect( result.hosts ).to have( 1 ).member
 			host = result.hosts.first
 
-			host.should be_a( Mongrel2::Config::Host )
-			host.name.should == 'localhost'
+			expect( host ).to be_a( Mongrel2::Config::Host )
+			expect( host.name ).to eq( 'localhost' )
 		end
 
 		it "can add several elaborately-configured hosts to a server via a block" do
@@ -118,51 +119,51 @@ describe Mongrel2::Config::DSL do
 
 			end
 
-			result.should be_a( Mongrel2::Config::Server )
-			result.hosts.should have( 2 ).members
+			expect( result ).to be_a( Mongrel2::Config::Server )
+			expect( result.hosts ).to have( 2 ).members
 			host1, host2 = result.hosts
 
-			host1.should be_a( Mongrel2::Config::Host )
-			host1.name.should == 'brillianttaste'
-			host1.matching.should == '*.brillianttasteinthefoodmouth.com'
-			host1.routes.should have( 6 ).members
-			host1.routes.should all_be_a( Mongrel2::Config::Route )
+			expect( host1 ).to be_a( Mongrel2::Config::Host )
+			expect( host1.name ).to eq( 'brillianttaste' )
+			expect( host1.matching ).to eq( '*.brillianttasteinthefoodmouth.com' )
+			expect( host1.routes ).to have( 6 ).members
+			expect( host1.routes ).to all_be_a( Mongrel2::Config::Route )
 
-			host1.routes[0].path.should == '/images'
-			host1.routes[0].target.should be_a( Mongrel2::Config::Directory )
-			host1.routes[0].target.base.should == 'var/www/images/'
+			expect( host1.routes[0].path ).to eq( '/images' )
+			expect( host1.routes[0].target ).to be_a( Mongrel2::Config::Directory )
+			expect( host1.routes[0].target.base ).to eq( 'var/www/images/' )
 
-			host1.routes[1].path.should == '/css'
-			host1.routes[1].target.should be_a( Mongrel2::Config::Directory )
-			host1.routes[1].target.base.should == 'var/www/css/'
+			expect( host1.routes[1].path ).to eq( '/css' )
+			expect( host1.routes[1].target ).to be_a( Mongrel2::Config::Directory )
+			expect( host1.routes[1].target.base ).to eq( 'var/www/css/' )
 
-			host1.routes[2].path.should == '/vote'
-			host1.routes[2].target.should be_a( Mongrel2::Config::Proxy )
-			host1.routes[2].target.addr.should == 'localhost'
-			host1.routes[2].target.port.should == 6667
+			expect( host1.routes[2].path ).to eq( '/vote' )
+			expect( host1.routes[2].target ).to be_a( Mongrel2::Config::Proxy )
+			expect( host1.routes[2].target.addr ).to eq( 'localhost' )
+			expect( host1.routes[2].target.port ).to eq( 6667 )
 
-			host1.routes[3].path.should == '/admin'
-			host1.routes[3].target.should be_a( Mongrel2::Config::Handler )
-			host1.routes[3].target.send_ident.should == 'D613E7EE-E2EB-4699-A200-5C8ECAB45D5E'
-			host1.routes[3].target.send_spec.should == 'tcp://127.0.0.1:9998'
-			host1.routes[3].target.recv_ident.should == ''
-			host1.routes[3].target.recv_spec.should == 'tcp://127.0.0.1:9997'
+			expect( host1.routes[3].path ).to eq( '/admin' )
+			expect( host1.routes[3].target ).to be_a( Mongrel2::Config::Handler )
+			expect( host1.routes[3].target.send_ident ).to eq( 'D613E7EE-E2EB-4699-A200-5C8ECAB45D5E' )
+			expect( host1.routes[3].target.send_spec ).to eq( 'tcp://127.0.0.1:9998' )
+			expect( host1.routes[3].target.recv_ident ).to eq( '' )
+			expect( host1.routes[3].target.recv_spec ).to eq( 'tcp://127.0.0.1:9997' )
 
-			host1.routes[4].path.should == '@directory'
-			host1.routes[4].target.should be_a( Mongrel2::Config::Handler )
-			host1.routes[4].target.send_ident.should == 'B7EFA46D-FEE4-432B-B80F-E8A9A2CC6FDB'
-			host1.routes[4].target.send_spec.should == 'tcp://127.0.0.1:9996'
-			host1.routes[4].target.recv_spec.should == 'tcp://127.0.0.1:9992'
-			host1.routes[4].target.recv_ident.should == ''
-			host1.routes[4].target.protocol.should == 'tnetstring'
+			expect( host1.routes[4].path ).to eq( '@directory' )
+			expect( host1.routes[4].target ).to be_a( Mongrel2::Config::Handler )
+			expect( host1.routes[4].target.send_ident ).to eq( 'B7EFA46D-FEE4-432B-B80F-E8A9A2CC6FDB' )
+			expect( host1.routes[4].target.send_spec ).to eq( 'tcp://127.0.0.1:9996' )
+			expect( host1.routes[4].target.recv_spec ).to eq( 'tcp://127.0.0.1:9992' )
+			expect( host1.routes[4].target.recv_ident ).to eq( '' )
+			expect( host1.routes[4].target.protocol ).to eq( 'tnetstring' )
 
-			host1.routes[5].path.should == '/directory'
-			host1.routes[5].target.should == host1.routes[4].target
+			expect( host1.routes[5].path ).to eq( '/directory' )
+			expect( host1.routes[5].target ).to eq( host1.routes[4].target )
 
-			host2.should be_a( Mongrel2::Config::Host )
-			host2.name.should == 'deveiate.org'
-			host2.routes.should have( 1 ).member
-			host2.routes.first.should be_a( Mongrel2::Config::Route )
+			expect( host2 ).to be_a( Mongrel2::Config::Host )
+			expect( host2.name ).to eq( 'deveiate.org' )
+			expect( host2.routes ).to have( 1 ).member
+			expect( host2.routes.first ).to be_a( Mongrel2::Config::Route )
 		end
 
 
@@ -185,22 +186,22 @@ describe Mongrel2::Config::DSL do
 				"upload.temp_store_mode" => "0666"
 			)
 
-			result.should be_an( Array )
-			result.should have( 3 ).members
-			result.should all_be_a( Mongrel2::Config::Setting )
-			result[0].key.should == 'zeromq.threads'
-			result[0].value.should == '8'
-			result[1].key.should == 'upload.temp_store'
-			result[1].value.should == '/home/zedshaw/projects/mongrel2/tmp/upload.XXXXXX'
-			result[2].key.should == 'upload.temp_store_mode'
-			result[2].value.should == '0666'
+			expect( result ).to be_an( Array )
+			expect( result ).to have( 3 ).members
+			expect( result ).to all_be_a( Mongrel2::Config::Setting )
+			expect( result[0].key ).to eq( 'zeromq.threads' )
+			expect( result[0].value ).to eq( '8' )
+			expect( result[1].key ).to eq( 'upload.temp_store' )
+			expect( result[1].value ).to eq( '/home/zedshaw/projects/mongrel2/tmp/upload.XXXXXX' )
+			expect( result[2].key ).to eq( 'upload.temp_store_mode' )
+			expect( result[2].value ).to eq( '0666' )
 		end
 
 		it "can set a single expert setting" do
 			result = setting "zeromq.threads", 16
-			result.should be_a( Mongrel2::Config::Setting )
-			result.key.should == 'zeromq.threads'
-			result.value.should == '16'
+			expect( result ).to be_a( Mongrel2::Config::Setting )
+			expect( result.key ).to eq( 'zeromq.threads' )
+			expect( result.value ).to eq( '16' )
 		end
 
 	end
@@ -213,20 +214,20 @@ describe Mongrel2::Config::DSL do
 				'.textile' => 'text/x-textile'
 			)
 
-			result.should be_an( Array )
-			result.should have( 2 ).members
-			result.should all_be_a( Mongrel2::Config::Mimetype )
-			result[0].extension.should == '.md'
-			result[0].mimetype.should == 'text/x-markdown'
-			result[1].extension.should == '.textile'
-			result[1].mimetype.should == 'text/x-textile'
+			expect( result ).to be_an( Array )
+			expect( result ).to have( 2 ).members
+			expect( result ).to all_be_a( Mongrel2::Config::Mimetype )
+			expect( result[0].extension ).to eq( '.md' )
+			expect( result[0].mimetype ).to eq( 'text/x-markdown' )
+			expect( result[1].extension ).to eq( '.textile' )
+			expect( result[1].mimetype ).to eq( 'text/x-textile' )
 		end
 
 		it "can set a single mimetype mapping" do
 			result = mimetype '.tmpl', 'text/x-inversion-template'
-			result.should be_a( Mongrel2::Config::Mimetype )
-			result.extension.should == '.tmpl'
-			result.mimetype.should == 'text/x-inversion-template'
+			expect( result ).to be_a( Mongrel2::Config::Mimetype )
+			expect( result.extension ).to eq( '.tmpl' )
+			expect( result.mimetype ).to eq( 'text/x-inversion-template' )
 		end
 
 	end
@@ -238,9 +239,9 @@ describe Mongrel2::Config::DSL do
 				filter '/usr/lib/mongrel2/null.so'
 			end
 
-			result.filters.should have( 1 ).member
-			result.filters.first.should be_a( Mongrel2::Config::Filter )
-			result.filters.first.settings.should == {}
+			expect( result.filters ).to have( 1 ).member
+			expect( result.filters.first ).to be_a( Mongrel2::Config::Filter )
+			expect( result.filters.first.settings ).to eq( {} )
 		end
 
 		it "can add a filter with settings to a server" do
@@ -250,10 +251,37 @@ describe Mongrel2::Config::DSL do
 					min_size: 1000
 			end
 
-			result.filters.should have( 1 ).member
-			result.filters.first.should be_a( Mongrel2::Config::Filter )
-			result.filters.first.settings.should ==
-				{ 'extensions' => ["*.html", "*.txt"], 'min_size' => 1000 }
+			expect( result.filters ).to have( 1 ).member
+			expect( result.filters.first ).to be_a( Mongrel2::Config::Filter )
+			expect( result.filters.first.settings ).
+				to eq({ 'extensions' => ["*.html", "*.txt"], 'min_size' => 1000 })
+		end
+
+	end
+
+	describe 'xrequests' do
+
+		it "can add an xrequest to a server" do
+			result = server '965A7196-99BC-46FA-945B-3478AE92BFB5' do
+				xrequest '/usr/lib/mongrel2/null.so'
+			end
+
+			expect( result.xrequests ).to have( 1 ).member
+			expect( result.xrequests.first ).to be_a( Mongrel2::Config::XRequest )
+			expect( result.xrequests.first.settings ).to eq( {} )
+		end
+
+		it "can add a filter with settings to a server" do
+			result = server '965A7196-99BC-46FA-945B-3478AE92BFB5' do
+				xrequest '/usr/lib/mongrel2/null.so',
+					extensions: ["*.html", "*.txt"],
+					min_size: 1000
+			end
+
+			expect( result.xrequests ).to have( 1 ).member
+			expect( result.xrequests.first ).to be_a( Mongrel2::Config::XRequest )
+			expect( result.xrequests.first.settings ).
+				to eq({ 'extensions' => ["*.html", "*.txt"], 'min_size' => 1000 })
 		end
 
 	end
