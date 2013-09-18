@@ -1,14 +1,16 @@
-# .gems generated gem export file. Note that any env variable settings will be missing. Append these after using a ';' field separator
 amalgalite -v1.3.0
-configurability -v2.0.0
-hoe-deveiate -v0.1.1
-nokogiri -v1.5.5
-sequel -v4.0.0
+configurability -v2.1.0
+hoe -v3.7.1
+hoe-bundler -v1.2.0
+hoe-deveiate -v0.3.0
+loggability -v0.7.0
+nokogiri -v1.6.0
+rdoc -v4.0.1
+sequel -v3.48.0
 simplecov -v0.7.1
+sqlite3 -v1.3.8
 sysexits -v1.1.0
 tnetstring -v0.3.4
 trollop -v2.0
 yajl-ruby -v1.1.0
 zmq -v2.1.4
-loggability -v0.5.0
-inversion -v0.12.2

@@ -11,3 +11,4 @@ ChangeLog$
 ^pkg/
 var/
 \.foreman$
+Gemfile.lock

@@ -15,6 +15,7 @@ end
 Hoe.plugin :mercurial
 Hoe.plugin :signing
 Hoe.plugin :deveiate
+Hoe.plugin :bundler
 
 Hoe.plugins.delete :rubyforge
 
@@ -22,6 +23,7 @@ hoespec = Hoe.spec 'mongrel2' do
 	self.readme_file = 'README.rdoc'
 	self.history_file = 'History.rdoc'
 	self.extra_rdoc_files = Rake::FileList[ '*.rdoc' ]
+	self.license 'BSD'
 
 	self.developer 'Michael Granger', 'ged@FaerieMUD.org'
 
@@ -35,11 +37,12 @@ hoespec = Hoe.spec 'mongrel2' do
 	self.dependency 'loggability','~> 0.5'
 	self.dependency 'sqlite3',    '~> 1.3'
 
+	self.dependency 'amalgalite',      '~> 1.3', :developer
 	self.dependency 'configurability', '~> 2.0', :developer
 	self.dependency 'simplecov',       '~> 0.7', :developer
-	self.dependency 'hoe-deveiate',    '~> 0.1', :developer
+	self.dependency 'hoe-deveiate',    '~> 0.3', :developer
+	self.dependency 'hoe-bundler',     '~> 1.2', :developer
 
-	self.spec_extras[:licenses] = ["BSD"]
 	self.spec_extras[:rdoc_options] = ['-f', 'fivefish', '-t', 'Mongrel2 Ruby Connector']
 	self.require_ruby_version( '>= 1.9.2' )
 
