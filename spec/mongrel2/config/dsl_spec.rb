@@ -58,6 +58,7 @@ describe Mongrel2::Config::DSL do
 				chroot '/service/mongrel2'
 				access_log '/var/log/access'
 				error_log '/var/log/errors'
+				control_port '/var/run/intranet.sock'
 			end
 
 			result.should be_a( Mongrel2::Config::Server )
@@ -66,6 +67,7 @@ describe Mongrel2::Config::DSL do
 			result.chroot.should == '/service/mongrel2'
 			result.access_log.should == '/var/log/access'
 			result.error_log.should == '/var/log/errors'
+			result.control_port.should == '/var/run/intranet.sock'
 		end
 	end
 

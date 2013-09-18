@@ -12,18 +12,19 @@ require 'mongrel2/constants'
 class Mongrel2::Config::Server < Mongrel2::Config( :server )
 	include Mongrel2::Constants
 
-	### As of Mongrel2/1.8.0:
+	### As of Mongrel2/1.8.1:
 	# CREATE TABLE server (id INTEGER PRIMARY KEY,
 	#     uuid TEXT,
 	#     access_log TEXT,
 	#     error_log TEXT,
 	#     chroot TEXT DEFAULT '/var/www',
 	#     pid_file TEXT,
+	#     control_port TEXT DEFAULT "",
 	#     default_host TEXT,
-	#     name TEXT DEFAULT '',
+	#     name TEXT DEFAULT "",
 	#     bind_addr TEXT DEFAULT "0.0.0.0",
 	#     port INTEGER,
-	#     use_ssl INTEGER default 0);
+	#     use_ssl INTEGER DEFAULT 0);
 
 	##
 	# Return the dataset for looking up a server by its UUID.
