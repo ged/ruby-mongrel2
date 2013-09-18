@@ -1,3 +1,9 @@
+== v0.38.0 [2013-09-18] Michael Granger <ged@FaerieMUD.org>
+
+- Update dependencies, add Gemfile.
+- Update to Mongrel2 1.8.1 config schema.
+
+
 == v0.37.0 [2013-09-13] Michael Granger <ged@FaerieMUD.org>
 
 - Make explicitly-set 'nil' body also a bodiless response.
