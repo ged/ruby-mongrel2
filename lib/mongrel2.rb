@@ -1,6 +1,9 @@
 # -*- ruby -*-
 #encoding: utf-8
 
+# Ensure this is used instead of 'zmq' if it's also installed
+gem 'rbczmq'
+
 require 'loggability'
 require 'zmq'
 
