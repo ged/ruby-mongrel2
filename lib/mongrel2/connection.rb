@@ -76,7 +76,6 @@ class Mongrel2::Connection
 
 		self.log.info "Connecting PUB response socket (%s)" % [ self.pub_addr ]
 		@response_sock = ctx.socket( :PUB )
-		@response_sock.identity = self.identifier
 		@response_sock.linger = 0
 		@response_sock.connect( self.pub_addr )
 	end

@@ -48,7 +48,7 @@ describe Mongrel2::Handler do
 	before( :each ) do
 		@ctx = double( '0mq context', close: nil )
 		@request_sock = double( "request socket", :linger= => nil, :connect => nil, :close => nil )
-		@response_sock = double( "response socket", :linger= => nil, :identity= => nil, :connect => nil, :close => nil )
+		@response_sock = double( "response socket", :linger= => nil, :connect => nil, :close => nil )
 
 		allow( @ctx ).to receive( :socket ).with( :PULL ).and_return( @request_sock )
 		allow( @ctx ).to receive( :socket ).with( :PUB ).and_return( @response_sock )

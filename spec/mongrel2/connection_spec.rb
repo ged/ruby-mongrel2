@@ -49,7 +49,7 @@ describe Mongrel2::Connection do
 
 		expect( @ctx ).to receive( :socket ).with( :PUB ).and_return( response_sock )
 		expect( response_sock ).to receive( :linger= ).with( 0 )
-		expect( response_sock ).to receive( :identity= ).with( /^[[:xdigit:]]{40}$/ )
+		expect( response_sock ).to_not receive( :identity= )
 		expect( response_sock ).to receive( :connect ).with( TEST_RECV_SPEC )
 
 		expect( @conn.request_sock ).to eq( request_sock )
@@ -64,7 +64,7 @@ describe Mongrel2::Connection do
 
 		before( :each ) do
 			@request_sock = double( "request socket", :linger= => nil, :connect => nil )
-			@response_sock = double( "response socket", :linger= => nil, :identity= => nil, :connect => nil )
+			@response_sock = double( "response socket", :linger= => nil, :connect => nil )
 
 			allow( @ctx ).to receive( :socket ).with( :PULL ).and_return( @request_sock )
 			allow( @ctx ).to receive( :socket ).with( :PUB ).and_return( @response_sock )
@@ -93,7 +93,7 @@ describe Mongrel2::Connection do
 
 		it "doesn't keep its request and response sockets when duped" do
 			request_sock2 = double( "request socket", :linger= => nil, :connect => nil )
-			response_sock2 = double( "response socket", :linger= => nil, :identity= => nil, :connect => nil )
+			response_sock2 = double( "response socket", :linger= => nil, :connect => nil )
 			allow( @ctx ).to receive( :socket ).with( :PULL ).and_return( request_sock2 )
 			allow( @ctx ).to receive( :socket ).with( :PUB ).and_return( response_sock2 )
 
