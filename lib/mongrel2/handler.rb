@@ -156,7 +156,7 @@ class Mongrel2::Handler
 		self.restore_signal_handlers
 		self.log.info "Done: %p" % [ self ]
 		@conn.close
-		Mongrel2.zmq_context.close
+		Mongrel2.zmq_context.close if Mongrel2.zmq_context.respond_to?( :close )
 	end
 
 
