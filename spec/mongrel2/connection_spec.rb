@@ -1,18 +1,6 @@
 #!/usr/bin/env ruby
 
-BEGIN {
-	require 'pathname'
-	basedir = Pathname.new( __FILE__ ).dirname.parent.parent
-
-	libdir = basedir + "lib"
-
-	$LOAD_PATH.unshift( basedir ) unless $LOAD_PATH.include?( basedir )
-	$LOAD_PATH.unshift( libdir ) unless $LOAD_PATH.include?( libdir )
-}
-
-require 'rspec'
-
-require 'spec/lib/helpers'
+require_relative '../helpers'
 
 require 'mongrel2'
 require 'mongrel2/connection'
@@ -47,29 +35,29 @@ describe Mongrel2::Connection do
 
 
 	it "doesn't connect to the endpoints when it's created" do
-		@conn.instance_variable_get( :@request_sock ).should be_nil()
-		@conn.instance_variable_get( :@response_sock ).should be_nil()
+		expect( @conn.instance_variable_get( :@request_sock ) ).to be_nil()
+		expect( @conn.instance_variable_get( :@response_sock ) ).to be_nil()
 	end
 
 	it "connects to the endpoints specified on demand" do
 		request_sock = double( "request socket" )
 		response_sock = double( "response socket" )
 
-		@ctx.should_receive( :socket ).with( :PULL ).and_return( request_sock )
-		request_sock.should_receive( :linger= ).with( 0 )
-		request_sock.should_receive( :connect ).with( TEST_SEND_SPEC )
+		expect( @ctx ).to receive( :socket ).with( :PULL ).and_return( request_sock )
+		expect( request_sock ).to receive( :linger= ).with( 0 )
+		expect( request_sock ).to receive( :connect ).with( TEST_SEND_SPEC )
 
-		@ctx.should_receive( :socket ).with( :PUB ).and_return( response_sock )
-		response_sock.should_receive( :linger= ).with( 0 )
-		response_sock.should_receive( :identity= ).with( /^[[:xdigit:]]{40}$/ )
-		response_sock.should_receive( :connect ).with( TEST_RECV_SPEC )
+		expect( @ctx ).to receive( :socket ).with( :PUB ).and_return( response_sock )
+		expect( response_sock ).to receive( :linger= ).with( 0 )
+		expect( response_sock ).to receive( :identity= ).with( /^[[:xdigit:]]{40}$/ )
+		expect( response_sock ).to receive( :connect ).with( TEST_RECV_SPEC )
 
-		@conn.request_sock.should == request_sock
-		@conn.response_sock.should == response_sock
+		expect( @conn.request_sock ).to eq( request_sock )
+		expect( @conn.response_sock ).to eq( response_sock )
 	end
 
 	it "stringifies as a description of the appid and both sockets" do
-		@conn.to_s.should == "{#{TEST_UUID}} #{TEST_SEND_SPEC} <-> #{TEST_RECV_SPEC}"
+		expect( @conn.to_s ).to eq( "{#{TEST_UUID}} #{TEST_SEND_SPEC} <-> #{TEST_RECV_SPEC}" )
 	end
 
 	context "after a connection has been established" do
@@ -78,23 +66,23 @@ describe Mongrel2::Connection do
 			@request_sock = double( "request socket", :linger= => nil, :connect => nil )
 			@response_sock = double( "response socket", :linger= => nil, :identity= => nil, :connect => nil )
 
-			@ctx.stub( :socket ).with( :PULL ).and_return( @request_sock )
-			@ctx.stub( :socket ).with( :PUB ).and_return( @response_sock )
+			allow( @ctx ).to receive( :socket ).with( :PULL ).and_return( @request_sock )
+			allow( @ctx ).to receive( :socket ).with( :PUB ).and_return( @response_sock )
 
 			@conn.connect
 		end
 
 
 		it "closes both of its sockets when closed" do
-			@request_sock.should_receive( :close )
-			@response_sock.should_receive( :close )
+			expect( @request_sock ).to receive( :close )
+			expect( @response_sock ).to receive( :close )
 
 			@conn.close
 		end
 
 		it "raises an exception if asked to fetch data after being closed" do
-			@request_sock.stub( :close )
-			@response_sock.stub( :close )
+			allow( @request_sock ).to receive( :close )
+			allow( @response_sock ).to receive( :close )
 
 			@conn.close
 
@@ -106,67 +94,67 @@ describe Mongrel2::Connection do
 		it "doesn't keep its request and response sockets when duped" do
 			request_sock2 = double( "request socket", :linger= => nil, :connect => nil )
 			response_sock2 = double( "response socket", :linger= => nil, :identity= => nil, :connect => nil )
-			@ctx.stub( :socket ).with( :PULL ).and_return( request_sock2 )
-			@ctx.stub( :socket ).with( :PUB ).and_return( response_sock2 )
+			allow( @ctx ).to receive( :socket ).with( :PULL ).and_return( request_sock2 )
+			allow( @ctx ).to receive( :socket ).with( :PUB ).and_return( response_sock2 )
 
 			duplicate = @conn.dup
 
-			duplicate.request_sock.should == request_sock2
-			duplicate.response_sock.should == response_sock2
+			expect( duplicate.request_sock ).to eq( request_sock2 )
+			expect( duplicate.response_sock ).to eq( response_sock2 )
 		end
 
 		it "doesn't keep its closed state when duped" do
-			@request_sock.should_receive( :close )
-			@response_sock.should_receive( :close )
+			expect( @request_sock ).to receive( :close )
+			expect( @response_sock ).to receive( :close )
 
 			@conn.close
 
 			duplicate = @conn.dup
-			duplicate.should_not be_closed()
+			expect( duplicate ).to_not be_closed()
 		end
 
 		it "can read raw request messages off of the request_sock" do
-			@request_sock.should_receive( :recv ).and_return( "the data" )
-			@conn.recv.should == "the data"
+			expect( @request_sock ).to receive( :recv ).and_return( "the data" )
+			expect( @conn.recv ).to eq( "the data" )
 		end
 
 		it "can read request messages off of the request_sock as Mongrel2::Request objects" do
 			msg = make_request()
-			@request_sock.should_receive( :recv ).and_return( msg )
-			@conn.receive.should be_a( Mongrel2::Request )
+			expect( @request_sock ).to receive( :recv ).and_return( msg )
+			expect( @conn.receive ).to be_a( Mongrel2::Request )
 		end
 
 		it "can write raw response messages with a TNetString header onto the response_sock" do
-			@response_sock.should_receive( :send ).with( "#{TEST_UUID} 1:8, the data" )
+			expect( @response_sock ).to receive( :send ).with( "#{TEST_UUID} 1:8, the data" )
 			@conn.send( TEST_UUID, 8, "the data" )
 		end
 
 		it "can write Mongrel2::Responses to the response_sock" do
-			@response_sock.should_receive( :send ).with( "#{TEST_UUID} 1:8, the data" )
+			expect( @response_sock ).to receive( :send ).with( "#{TEST_UUID} 1:8, the data" )
 
 			response = Mongrel2::Response.new( TEST_UUID, 8, 'the data' )
 			@conn.reply( response )
 		end
 
 		it "can write raw response messages to more than one conn_id at the same time" do
-			@response_sock.should_receive( :send ).with( "#{TEST_UUID} 15:8 16 44 45 1833, the data" )
+			expect( @response_sock ).to receive( :send ).with( "#{TEST_UUID} 15:8 16 44 45 1833, the data" )
 			@conn.broadcast( TEST_UUID, [8, 16, 44, 45, 1833], 'the data' )
 		end
 
 		it "can write raw response messages to more than one conn_id at the same time" do
-			@response_sock.should_receive( :send ).with( "#{TEST_UUID} 15:8 16 44 45 1833, the data" )
+			expect( @response_sock ).to receive( :send ).with( "#{TEST_UUID} 15:8 16 44 45 1833, the data" )
 			@conn.broadcast( TEST_UUID, [8, 16, 44, 45, 1833], 'the data' )
 		end
 
 		it "can tell the connection a request or a response was from to close" do
-			@response_sock.should_receive( :send ).with( "#{TEST_UUID} 1:8, " )
+			expect( @response_sock ).to receive( :send ).with( "#{TEST_UUID} 1:8, " )
 
 			response = Mongrel2::Response.new( TEST_UUID, 8 )
 			@conn.reply_close( response )
 		end
 
 		it "can broadcast a close to multiple connection IDs" do
-			@response_sock.should_receive( :send ).with( "#{TEST_UUID} 15:8 16 44 45 1833, " )
+			expect( @response_sock ).to receive( :send ).with( "#{TEST_UUID} 15:8 16 44 45 1833, " )
 			@conn.broadcast_close( TEST_UUID, [8, 16, 44, 45, 1833] )
 		end
 

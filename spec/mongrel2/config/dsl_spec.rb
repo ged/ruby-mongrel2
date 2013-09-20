@@ -1,19 +1,8 @@
 #!/usr/bin/env ruby
 
-BEGIN {
-	require 'pathname'
-	basedir = Pathname.new( __FILE__ ).dirname.parent.parent.parent
-
-	libdir = basedir + "lib"
-
-	$LOAD_PATH.unshift( basedir ) unless $LOAD_PATH.include?( basedir )
-	$LOAD_PATH.unshift( libdir ) unless $LOAD_PATH.include?( libdir )
-}
+require_relative '../../helpers'
 
 require 'rspec'
-
-require 'spec/lib/helpers'
-
 require 'mongrel2'
 require 'mongrel2/config'
 
@@ -27,7 +16,7 @@ describe Mongrel2::Config::DSL do
 	include described_class
 
 	before( :all ) do
-		setup_logging( :fatal )
+		setup_logging()
 		setup_config_db()
 	end
 

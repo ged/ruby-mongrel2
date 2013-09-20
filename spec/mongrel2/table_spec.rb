@@ -1,18 +1,6 @@
 #!/usr/bin/env ruby
 
-BEGIN {
-	require 'pathname'
-	basedir = Pathname.new( __FILE__ ).dirname.parent.parent
-
-	libdir = basedir + "lib"
-
-	$LOAD_PATH.unshift( basedir ) unless $LOAD_PATH.include?( basedir )
-	$LOAD_PATH.unshift( libdir ) unless $LOAD_PATH.include?( libdir )
-}
-
-require 'rspec'
-
-require 'spec/lib/helpers'
+require_relative '../helpers'
 
 require 'mongrel2'
 require 'mongrel2/table'
@@ -26,7 +14,7 @@ describe Mongrel2::Table do
 
 
 	before( :all ) do
-		setup_logging( :fatal )
+		setup_logging()
 	end
 
 	before( :each ) do
@@ -46,38 +34,38 @@ describe Mongrel2::Table do
 		@table[:accept_encoding] = :accept_encoding
 		@table.accept_encoding = :accept_encoding
 
-		@table['accept'].should == :accept
-		@table['ACCEPT'].should == :accept
-		@table['Accept'].should == :accept
-		@table[:accept].should == :accept
-		@table.accept.should == :accept
+		expect( @table['accept'] ).to eq( :accept )
+		expect( @table['ACCEPT'] ).to eq( :accept )
+		expect( @table['Accept'] ).to eq( :accept )
+		expect( @table[:accept] ).to eq( :accept )
+		expect( @table.accept ).to eq( :accept )
 
-		@table['USER-AGENT'].should == :user_agent
-		@table['User-Agent'].should == :user_agent
-		@table['user-agent'].should == :user_agent
-		@table[:user_agent].should == :user_agent
-		@table.user_agent.should == :user_agent
+		expect( @table['USER-AGENT'] ).to eq( :user_agent )
+		expect( @table['User-Agent'] ).to eq( :user_agent )
+		expect( @table['user-agent'] ).to eq( :user_agent )
+		expect( @table[:user_agent] ).to eq( :user_agent )
+		expect( @table.user_agent ).to eq( :user_agent )
 
-		@table['ACCEPT-ENCODING'].should == :accept_encoding
-		@table['Accept-Encoding'].should == :accept_encoding
-		@table['accept-encoding'].should == :accept_encoding
-		@table[:accept_encoding].should == :accept_encoding
-		@table.accept_encoding.should == :accept_encoding
+		expect( @table['ACCEPT-ENCODING'] ).to eq( :accept_encoding )
+		expect( @table['Accept-Encoding'] ).to eq( :accept_encoding )
+		expect( @table['accept-encoding'] ).to eq( :accept_encoding )
+		expect( @table[:accept_encoding] ).to eq( :accept_encoding )
+		expect( @table.accept_encoding ).to eq( :accept_encoding )
 	end
 
 
 	it "should assign a new value when appending to a non-existing key" do
 		@table.append( 'indian-meal' => 'pinecones' )
-		@table['Indian-Meal'].should == 'pinecones'
+		expect( @table['Indian-Meal'] ).to eq( 'pinecones' )
 	end
 
 
 	it "should create an array value and append when appending to an existing key" do
 		@table[:indian_meal] = 'pork sausage'
 		@table.append( 'Indian-MEAL' => 'pinecones' )
-		@table['Indian-Meal'].should have(2).members
-		@table['Indian-Meal'].should include('pinecones')
-		@table['Indian-Meal'].should include('pork sausage')
+		expect( @table['Indian-Meal'] ).to have(2).members
+		expect( @table['Indian-Meal'] ).to include('pinecones')
+		expect( @table['Indian-Meal'] ).to include('pork sausage')
 	end
 
 
@@ -86,9 +74,9 @@ describe Mongrel2::Table do
 
 		table = Mongrel2::Table.new({ :bob => :dan, 'Bob' => :dan_too })
 
-		table[:bob].should have(2).members
-		table['Bob'].should include( :dan )
-		table['bob'].should include( :dan_too )
+		expect( table[:bob] ).to have(2).members
+		expect( table['Bob'] ).to include( :dan )
+		expect( table['bob'] ).to include( :dan_too )
 		end
 
 
@@ -100,9 +88,9 @@ describe Mongrel2::Table do
 
 		table.append( 'x-ice-cream-flavor' => 'banana' )
 
-		table.to_s.should =~ %r{Accept: text/html\r\n}
-		table.to_s.should =~ %r{X-Ice-Cream-Flavor: mango\r\n}
-		table.to_s.should =~ %r{X-Ice-Cream-Flavor: banana\r\n}
+		expect( table.to_s ).to match( %r{Accept: text/html\r\n} )
+		expect( table.to_s ).to match( %r{X-Ice-Cream-Flavor: mango\r\n} )
+		expect( table.to_s ).to match( %r{X-Ice-Cream-Flavor: banana\r\n} )
 	end
 
 
@@ -115,8 +103,8 @@ describe Mongrel2::Table do
 		othertable['cookie'] = 'peanut butter'
 
 		ot = @table.merge( othertable )
-		ot['accept'].should == 'thing'
-		ot['cookie'].should == 'peanut butter'
+		expect( ot['accept'] ).to eq( 'thing' )
+		expect( ot['cookie'] ).to eq( 'peanut butter' )
 	end
 
 
@@ -127,8 +115,8 @@ describe Mongrel2::Table do
 		hash = { 'CookiE_FLAVOR' => 'peanut butter' }
 
 		ot = @table.merge( hash )
-		ot['accept'].should == 'thing'
-		ot['cookie-flavor'].should == 'peanut butter'
+		expect( ot['accept'] ).to eq( 'thing' )
+		expect( ot['cookie-flavor'] ).to eq( 'peanut butter' )
 	end
 
 
@@ -141,9 +129,9 @@ describe Mongrel2::Table do
 		newtable[:foom] << " and another string"
 		newtable[:frong][3].replace( "mississipi" )
 
-		@table.should_not include( 'idkfa' )
-		@table[:foom].should == 'a string'
-		@table[:frong][3].should == 'moe'
+		expect( @table ).to_not include( 'idkfa' )
+		expect( @table[:foom] ).to eq( 'a string' )
+		expect( @table[:frong][3] ).to eq( 'moe' )
 	end
 
 
@@ -153,7 +141,7 @@ describe Mongrel2::Table do
 		@table['porntipsguzzardo'] = 'cha-ching'
 
 		results = @table.values_at( :idspispopd, 'PornTipsGuzzARDO' )
-		results.should == [ 'ghosty', 'cha-ching' ]
+		expect( results ).to eq( [ 'ghosty', 'cha-ching' ] )
 	end
 
 
@@ -168,14 +156,14 @@ describe Mongrel2::Table do
 			values << [ header, value ]
 		end
 
-		values.flatten.should have(8).members
-		values.transpose[0].should include( 'Thai-Food', 'With-Absinthe', 'A-Number-Of-Some-Sort' )
-		values.transpose[1].should include( 'normally good', 'seldom hot enough', 'questionable', '2' )
+		expect( values.flatten ).to have(8).members
+		expect( values.transpose[0] ).to include( 'Thai-Food', 'With-Absinthe', 'A-Number-Of-Some-Sort' )
+		expect( values.transpose[1] ).to include( 'normally good', 'seldom hot enough', 'questionable', '2' )
 	end
 
 
 	it "can yield an Enumerator for its header iterator" do
-		@table.each_header.should be_a( Enumerator )
+		expect( @table.each_header ).to be_a( Enumerator )
 	end
 end
 

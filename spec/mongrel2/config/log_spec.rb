@@ -1,21 +1,10 @@
 #!/usr/bin/env ruby
 
-BEGIN {
-	require 'pathname'
-	basedir = Pathname.new( __FILE__ ).dirname.parent.parent.parent
+require_relative '../../helpers'
 
-	libdir = basedir + "lib"
-
-	$LOAD_PATH.unshift( basedir ) unless $LOAD_PATH.include?( basedir )
-	$LOAD_PATH.unshift( libdir ) unless $LOAD_PATH.include?( libdir )
-}
-
-require 'socket'
 require 'rspec'
 
-require 'spec/lib/constants'
-require 'spec/lib/helpers'
-
+require 'socket'
 require 'mongrel2'
 require 'mongrel2/config'
 
@@ -27,7 +16,7 @@ require 'mongrel2/config'
 describe Mongrel2::Config::Log do
 
 	before( :all ) do
-		setup_logging( :fatal )
+		setup_logging()
 		setup_config_db()
 	end
 
@@ -44,10 +33,10 @@ describe Mongrel2::Config::Log do
 
 		log = Mongrel2::Config::Log.log_action( what, why, where, how )
 
-		log.what.should == what
-		log.why.should == why
-		log.location.should == where
-		log.how.should == how
+		expect( log.what ).to eq( what )
+		expect( log.why ).to eq( why )
+		expect( log.location ).to eq( where )
+		expect( log.how ).to eq( how )
 	end
 
 	it "has reasonable defaults for 'where' and 'how'" do
@@ -56,8 +45,8 @@ describe Mongrel2::Config::Log do
 
 		log = Mongrel2::Config::Log.log_action( what, why )
 
-		log.location.should == Socket.gethostname
-		log.how.should == File.basename( $0 )
+		expect( log.location ).to eq( Socket.gethostname )
+		expect( log.how ).to eq( File.basename( $0 ) )
 	end
 
 	describe "an entry" do
@@ -76,7 +65,7 @@ describe Mongrel2::Config::Log do
 		it "stringifies as a readable log file line" do
 
 			# 2011-09-09 20:29:47 -0700 [mgranger] @localhost m2sh: load etc/mongrel2.conf (updating)
-			@log.to_s.should =~ %r{
+			expect( @log.to_s ).to match(%r{
 				^
 				(?-x:\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} [\+\-]\d{4} )
 				\[who\] \s
@@ -84,14 +73,14 @@ describe Mongrel2::Config::Log do
 				how: \s
 				what
 				$
-			}x
+			}x)
 		end
 
 		it "stringifies with a reason if it has one" do
 			@log.why = 'Because'
 
 			# 2011-09-09 20:29:47 -0700 [mgranger] @localhost m2sh: load etc/mongrel2.conf (updating)
-			@log.to_s.should =~ %r{
+			expect( @log.to_s ).to match(%r{
 				^
 				(?-x:\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} [\+\-]\d{4} )
 				\[who\] \s
@@ -100,7 +89,7 @@ describe Mongrel2::Config::Log do
 				what \s
 				\(Because\)
 				$
-			}x
+			}x)
 		end
 
 	end

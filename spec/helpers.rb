@@ -1,15 +1,8 @@
 #!/usr/bin/ruby
 # coding: utf-8
 
-BEGIN {
-	require 'pathname'
-	basedir = Pathname.new( __FILE__ ).dirname.parent
-
-	libdir = basedir + "lib"
-
-	$LOAD_PATH.unshift( basedir.to_s ) unless $LOAD_PATH.include?( basedir.to_s )
-	$LOAD_PATH.unshift( libdir.to_s ) unless $LOAD_PATH.include?( libdir.to_s )
-}
+require_relative 'constants'
+require_relative 'matchers'
 
 # SimpleCov test coverage reporting; enable this using the :coverage rake task
 if ENV['COVERAGE']
@@ -44,8 +37,6 @@ require 'loggability/spechelpers'
 require 'sequel'
 require 'sequel/model'
 
-require 'spec/lib/constants'
-require 'spec/lib/matchers'
 
 
 ### RSpec helper functions that are used to test Mongrel2 itself.
@@ -226,7 +217,13 @@ end
 RSpec.configure do |c|
 	include Mongrel2::TestConstants
 
-	c.mock_with :rspec
+	c.treat_symbols_as_metadata_keys_with_true_values = true
+	c.run_all_when_everything_filtered = true
+	c.filter_run :focus
+	c.order = 'random'
+	c.mock_with( :rspec ) do |config|
+		config.syntax = :expect
+	end
 
 	c.extend( Mongrel2::TestConstants )
 	c.include( Mongrel2::TestConstants )
