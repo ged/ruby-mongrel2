@@ -13,4 +13,4 @@ sysexits -v1.1.0
 tnetstring -v0.3.4
 trollop -v2.0
 yajl-ruby -v1.1.0
-zmq -v2.1.4
+rbczmq -v1.7.1

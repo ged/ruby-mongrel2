@@ -26,7 +26,7 @@ describe Mongrel2::Connection do
 	include Mongrel2::Config::DSL
 
 	before( :all ) do
-		setup_logging( :fatal )
+		setup_logging()
 	end
 
 	# Ensure 0MQ never actually gets called
@@ -55,13 +55,13 @@ describe Mongrel2::Connection do
 		request_sock = double( "request socket" )
 		response_sock = double( "response socket" )
 
-		@ctx.should_receive( :socket ).with( ZMQ::PULL ).and_return( request_sock )
-		request_sock.should_receive( :setsockopt ).with( ZMQ::LINGER, 0 )
+		@ctx.should_receive( :socket ).with( :PULL ).and_return( request_sock )
+		request_sock.should_receive( :linger= ).with( 0 )
 		request_sock.should_receive( :connect ).with( TEST_SEND_SPEC )
 
-		@ctx.should_receive( :socket ).with( ZMQ::PUB ).and_return( response_sock )
-		response_sock.should_receive( :setsockopt ).with( ZMQ::LINGER, 0 )
-		response_sock.should_receive( :setsockopt ).with( ZMQ::IDENTITY, /^[[:xdigit:]]{40}$/ )
+		@ctx.should_receive( :socket ).with( :PUB ).and_return( response_sock )
+		response_sock.should_receive( :linger= ).with( 0 )
+		response_sock.should_receive( :identity= ).with( /^[[:xdigit:]]{40}$/ )
 		response_sock.should_receive( :connect ).with( TEST_RECV_SPEC )
 
 		@conn.request_sock.should == request_sock
@@ -75,11 +75,11 @@ describe Mongrel2::Connection do
 	context "after a connection has been established" do
 
 		before( :each ) do
-			@request_sock = double( "request socket", :setsockopt => nil, :connect => nil )
-			@response_sock = double( "response socket", :setsockopt => nil, :connect => nil )
+			@request_sock = double( "request socket", :linger= => nil, :connect => nil )
+			@response_sock = double( "response socket", :linger= => nil, :identity= => nil, :connect => nil )
 
-			@ctx.stub( :socket ).with( ZMQ::PULL ).and_return( @request_sock )
-			@ctx.stub( :socket ).with( ZMQ::PUB ).and_return( @response_sock )
+			@ctx.stub( :socket ).with( :PULL ).and_return( @request_sock )
+			@ctx.stub( :socket ).with( :PUB ).and_return( @response_sock )
 
 			@conn.connect
 		end
@@ -104,10 +104,10 @@ describe Mongrel2::Connection do
 		end
 
 		it "doesn't keep its request and response sockets when duped" do
-			request_sock2 = double( "request socket", :setsockopt => nil, :connect => nil )
-			response_sock2 = double( "response socket", :setsockopt => nil, :connect => nil )
-			@ctx.stub( :socket ).with( ZMQ::PULL ).and_return( request_sock2 )
-			@ctx.stub( :socket ).with( ZMQ::PUB ).and_return( response_sock2 )
+			request_sock2 = double( "request socket", :linger= => nil, :connect => nil )
+			response_sock2 = double( "response socket", :linger= => nil, :identity= => nil, :connect => nil )
+			@ctx.stub( :socket ).with( :PULL ).and_return( request_sock2 )
+			@ctx.stub( :socket ).with( :PUB ).and_return( response_sock2 )
 
 			duplicate = @conn.dup
 

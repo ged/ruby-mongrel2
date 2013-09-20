@@ -59,11 +59,11 @@ describe Mongrel2::Handler do
 	# Ensure 0MQ never actually gets called
 	before( :each ) do
 		@ctx = double( '0mq context', close: nil )
-		@request_sock = double( "request socket", setsockopt: nil, connect: nil, close: nil )
-		@response_sock = double( "response socket", setsockopt: nil, connect: nil, close: nil )
+		@request_sock = double( "request socket", :linger= => nil, :connect => nil, :close => nil )
+		@response_sock = double( "response socket", :linger= => nil, :identity= => nil, :connect => nil, :close => nil )
 
-		@ctx.stub( :socket ).with( ZMQ::PULL ).and_return( @request_sock )
-		@ctx.stub( :socket ).with( ZMQ::PUB ).and_return( @response_sock )
+		@ctx.stub( :socket ).with( :PULL ).and_return( @request_sock )
+		@ctx.stub( :socket ).with( :PUB ).and_return( @response_sock )
 
 		ZMQ.stub( :select ).and_return([ [@request_sock], [], [] ])
 
