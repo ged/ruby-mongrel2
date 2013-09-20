@@ -1,19 +1,9 @@
 #!/usr/bin/env ruby
 
-BEGIN {
-	require 'pathname'
-	basedir = Pathname.new( __FILE__ ).dirname.parent.parent
-
-	libdir = basedir + "lib"
-
-	$LOAD_PATH.unshift( basedir ) unless $LOAD_PATH.include?( basedir )
-	$LOAD_PATH.unshift( libdir ) unless $LOAD_PATH.include?( libdir )
-}
+require_relative '../helpers'
 
 require 'rspec'
 require 'tnetstring'
-
-require 'spec/lib/helpers'
 
 require 'mongrel2'
 require 'mongrel2/httprequest'
@@ -27,7 +17,7 @@ require 'mongrel2/httpresponse'
 describe Mongrel2::HTTPRequest do
 
 	before( :all ) do
-		setup_logging( :fatal )
+		setup_logging()
 		@factory = Mongrel2::RequestFactory.new( route: '/glamour' )
 	end
 
@@ -42,55 +32,55 @@ describe Mongrel2::HTTPRequest do
 
 	it "can create an HTTPResponse for itself" do
 		result = @req.response
-		result.should be_a( Mongrel2::HTTPResponse )
-		result.sender_id.should == @req.sender_id
-		result.conn_id.should == @req.conn_id
+		expect( result ).to be_a( Mongrel2::HTTPResponse )
+		expect( result.sender_id ).to eq( @req.sender_id )
+		expect( result.conn_id ).to eq( @req.conn_id )
 	end
 
 	it "remembers its corresponding HTTPResponse if it's created it already" do
 		result = @req.response
-		result.should be_a( Mongrel2::HTTPResponse )
-		result.sender_id.should == @req.sender_id
-		result.conn_id.should == @req.conn_id
+		expect( result ).to be_a( Mongrel2::HTTPResponse )
+		expect( result.sender_id ).to eq( @req.sender_id )
+		expect( result.conn_id ).to eq( @req.conn_id )
 	end
 
 	it "knows that its connection isn't persistent if it's an HTTP/1.0 request" do
 		@req.headers.version = 'HTTP/1.0'
-		@req.should_not be_keepalive()
+		expect( @req ).to_not be_keepalive()
 	end
 
 	it "knows that its connection isn't persistent if has a 'close' token in its Connection header" do
 		@req.headers.version = 'HTTP/1.1'
 		@req.headers[ :connection ] = 'violent, close'
-		@req.should_not be_keepalive()
+		expect( @req ).to_not be_keepalive()
 	end
 
 	it "knows that its connection could be persistent if doesn't have a Connection header, " +
 	   "and it's an HTTP/1.1 request" do
 		@req.headers.version = 'HTTP/1.1'
 		@req.headers.delete( :connection )
-		@req.should be_keepalive()
+		expect( @req ).to be_keepalive()
 	end
 
 	it "knows that its connection is persistent if has a Connection header without a 'close' " +
 	   "token and it's an HTTP/1.1 request" do
 		@req.headers.version = 'HTTP/1.1'
 		@req.headers.connection = 'keep-alive'
-		@req.should be_keepalive()
+		expect( @req ).to be_keepalive()
 	end
 
 	it "knows what its URL scheme was" do
-		@req.scheme.should == 'http'
+		expect( @req.scheme ).to eq( 'http' )
 	end
 
 	it "falls back to 'http' if the url_scheme isn't provided (mongrel2 <= 1.8.0)" do
 		@req.headers.url_scheme = nil
-		@req.scheme.should == 'http'
+		expect( @req.scheme ).to eq( 'http' )
 	end
 
 	it "knows that it was an SSL-encrypted request if its scheme was 'https'" do
 		@req.headers.url_scheme = 'https'
-		@req.should be_secure()
+		expect( @req ).to be_secure()
 	end
 
 
@@ -105,30 +95,30 @@ describe Mongrel2::HTTPRequest do
 		end
 
 		it "provides a convenience method for fetching the 'Content-type' header" do
-			@req.content_type.should == 'application/x-pdf'
+			expect( @req.content_type ).to eq( 'application/x-pdf' )
 		end
 
 		it "provides a convenience method for resetting the 'Content-type' header" do
 			@req.content_type = 'application/json'
-			@req.content_type.should == 'application/json'
+			expect( @req.content_type ).to eq( 'application/json' )
 		end
 
 		it "provides a convenience method for fetching the 'Content-encoding' header" do
-			@req.content_encoding.should == 'gzip'
+			expect( @req.content_encoding ).to eq( 'gzip' )
 		end
 
 		it "provides a convenience method for resetting the 'Content-encoding' header" do
 			@req.content_encoding = 'identity'
-			@req.content_encoding.should == 'identity'
+			expect( @req.content_encoding ).to eq( 'identity' )
 		end
 
 		it "provides a convenience method for fetching the request's Content-length header" do
-			@req.content_length.should == 28113
+			expect( @req.content_length ).to eq( 28113 )
 		end
 
 		it "returns 0 as the content_length if the request doesn't have a Content-length header" do
 			@req.headers.delete( :content_length )
-			@req.content_length.should == 0
+			expect( @req.content_length ).to eq( 0 )
 		end
 
 		it "raises an exception if the Content-length header contains something other than an integer" do

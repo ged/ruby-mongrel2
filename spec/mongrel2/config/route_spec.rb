@@ -1,19 +1,8 @@
 #!/usr/bin/env ruby
 
-BEGIN {
-	require 'pathname'
-	basedir = Pathname.new( __FILE__ ).dirname.parent.parent.parent
-
-	libdir = basedir + "lib"
-
-	$LOAD_PATH.unshift( basedir ) unless $LOAD_PATH.include?( basedir )
-	$LOAD_PATH.unshift( libdir ) unless $LOAD_PATH.include?( libdir )
-}
+require_relative '../../helpers'
 
 require 'rspec'
-
-require 'spec/lib/helpers'
-
 require 'mongrel2'
 require 'mongrel2/config'
 
@@ -37,6 +26,7 @@ describe Mongrel2::Config::Route do
 		reset_logging()
 	end
 
+
 	it "returns a Mongrel2::Config::Directory if its target_type is 'dir'" do
 		dir = Mongrel2::Config::Directory.create(
 			:base => 'var/www/',
@@ -46,7 +36,7 @@ describe Mongrel2::Config::Route do
 		@route.target_type = 'dir'
 		@route.target_id = dir.id
 
-		@route.target.should == dir
+		expect( @route.target ).to eq( dir )
 	end
 
 	it "returns a Mongrel2::Config::Proxy if its target_type is 'proxy'" do
@@ -55,7 +45,7 @@ describe Mongrel2::Config::Route do
 		@route.target_type = 'proxy'
 		@route.target_id = proxy.id
 
-		@route.target.should == proxy
+		expect( @route.target ).to eq( proxy )
 	end
 
 	it "returns a Mongrel2::Config::Handler if its target_type is 'handler'" do
@@ -67,7 +57,7 @@ describe Mongrel2::Config::Route do
 		@route.target_type = 'handler'
 		@route.target_id = handler.id
 
-		@route.target.should == handler
+		expect( @route.target ).to eq( handler )
 	end
 
 	it "raises an exception if its target_type is set to something invalid" do

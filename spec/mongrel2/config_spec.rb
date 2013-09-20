@@ -1,18 +1,6 @@
 #!/usr/bin/env ruby
 
-BEGIN {
-	require 'pathname'
-	basedir = Pathname.new( __FILE__ ).dirname.parent.parent
-
-	libdir = basedir + "lib"
-
-	$LOAD_PATH.unshift( basedir ) unless $LOAD_PATH.include?( basedir )
-	$LOAD_PATH.unshift( libdir ) unless $LOAD_PATH.include?( libdir )
-}
-
-require 'rspec'
-
-require 'spec/lib/helpers'
+require_relative '../helpers'
 
 require 'mongrel2'
 require 'mongrel2/config'
@@ -25,7 +13,7 @@ require 'mongrel2/config'
 describe Mongrel2::Config do
 
 	before( :all ) do
-		setup_logging( :fatal )
+		setup_logging()
 		setup_config_db()
 	end
 
@@ -38,8 +26,8 @@ describe Mongrel2::Config do
 	it "has a factory method for creating derivative classes" do
 		begin
 			model_class = Mongrel2::Config( :hookers )
-			model_class.should < Mongrel2::Config
-			model_class.dataset.first_source.should == :hookers
+			expect( model_class ).to satisfy {|klass| klass < Mongrel2::Config }
+			expect( model_class.dataset.first_source ).to eq( :hookers )
 		ensure
 			# Remove the example class from the list of subclasses so it
 			# doesn't affect later tests
@@ -50,7 +38,7 @@ describe Mongrel2::Config do
 	it "can reset the database handle for the config classes" do
 		db = Mongrel2::Config.in_memory_db
 		Mongrel2::Config.db = db
-		Mongrel2::Config::Directory.db.should equal( db )
+		expect( Mongrel2::Config::Directory.db ).to equal( db )
 	end
 
 	it "has a convenience method for fetching an Array of all of its configured servers" do
@@ -65,47 +53,47 @@ describe Mongrel2::Config do
 			default_host: 'localhost',
 			port: 8275
 		  )
-		Mongrel2::Config.servers.should have( 1 ).member
-		Mongrel2::Config.servers.first.uuid.should == TEST_UUID
+		expect( Mongrel2::Config.servers ).to have( 1 ).member
+		expect( Mongrel2::Config.servers.first.uuid ).to eq( TEST_UUID )
 	end
 
 	it "has a convenience method for getting a setting's value" do
 		Mongrel2::Config.init_database
 		Mongrel2::Config::Setting.dataset.truncate
 		Mongrel2::Config::Setting.create( key: 'control_port', value: 'ipc://var/run/control.sock' )
-		Mongrel2::Config.settings.should respond_to( :[] )
-		Mongrel2::Config.settings.should have( 1 ).member
-		Mongrel2::Config.settings[ :control_port ].should == 'ipc://var/run/control.sock'
+		expect( Mongrel2::Config.settings ).to respond_to( :[] )
+		expect( Mongrel2::Config.settings ).to have( 1 ).member
+		expect( Mongrel2::Config.settings[ :control_port ] ).to eq( 'ipc://var/run/control.sock' )
 	end
 
 	it "can read the configuration schema from a data file" do
-		Mongrel2::Config.load_config_schema.should =~ /create table server/i
+		expect( Mongrel2::Config.load_config_schema ).to match( /create table server/i )
 	end
 
 	it "knows whether or not its database has been initialized" do
 		Mongrel2::Config.db = Mongrel2::Config.in_memory_db
-		Mongrel2::Config.database_initialized?.should be_false()
+		expect( Mongrel2::Config.database_initialized? ).to be_false()
 		Mongrel2::Config.init_database!
-		Mongrel2::Config.database_initialized?.should be_true()
+		expect( Mongrel2::Config.database_initialized? ).to be_true()
 	end
 
 	it "doesn't re-initialize the database if the non-bang version of init_database is used" do
 		Mongrel2::Config.db = Mongrel2::Config.in_memory_db
 		Mongrel2::Config.init_database
 
-		Mongrel2::Config.should_not_receive( :load_config_schema )
+		expect( Mongrel2::Config ).to_not receive( :load_config_schema )
 		Mongrel2::Config.init_database
 	end
 
 	it "can return the path to the config DB as a Pathname if it's pointing at a file" do
 		Mongrel2::Config.db = Sequel.
 			connect( adapter: Mongrel2::Config.sqlite_adapter, database: 'config-spec.sqlite' )
-		Mongrel2::Config.dbname.should == 'config-spec.sqlite'
+		expect( Mongrel2::Config.dbname ).to eq( 'config-spec.sqlite' )
 	end
 
 	it "returns nil if asked for the pathname to an in-memory database" do
 		Mongrel2::Config.db = Mongrel2::Config.in_memory_db
-		Mongrel2::Config.dbname.should be_nil()
+		expect( Mongrel2::Config.dbname ).to be_nil()
 	end
 
 	describe "Configurability support", :if => defined?( Configurability ) do
@@ -114,7 +102,7 @@ describe Mongrel2::Config do
 		it_should_behave_like "an object with Configurability"
 
 		it "uses the 'mongrel2' config section" do
-			Mongrel2::Config.config_key.should == :mongrel2
+			expect( Mongrel2::Config.config_key ).to eq( :mongrel2 )
 		end
 
 	end

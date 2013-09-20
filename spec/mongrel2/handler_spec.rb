@@ -1,18 +1,6 @@
 #!/usr/bin/env ruby
 
-BEGIN {
-	require 'pathname'
-	basedir = Pathname.new( __FILE__ ).dirname.parent.parent
-
-	libdir = basedir + "lib"
-
-	$LOAD_PATH.unshift( basedir ) unless $LOAD_PATH.include?( basedir )
-	$LOAD_PATH.unshift( libdir ) unless $LOAD_PATH.include?( libdir )
-}
-
-require 'rspec'
-
-require 'spec/lib/helpers'
+require_relative '../helpers'
 
 require 'mongrel2'
 require 'mongrel2/config'
@@ -47,7 +35,7 @@ describe Mongrel2::Handler do
 
 
 	before( :all ) do
-		setup_logging( :fatal )
+		setup_logging()
 		setup_config_db()
 	end
 
@@ -62,10 +50,10 @@ describe Mongrel2::Handler do
 		@request_sock = double( "request socket", :linger= => nil, :connect => nil, :close => nil )
 		@response_sock = double( "response socket", :linger= => nil, :identity= => nil, :connect => nil, :close => nil )
 
-		@ctx.stub( :socket ).with( :PULL ).and_return( @request_sock )
-		@ctx.stub( :socket ).with( :PUB ).and_return( @response_sock )
+		allow( @ctx ).to receive( :socket ).with( :PULL ).and_return( @request_sock )
+		allow( @ctx ).to receive( :socket ).with( :PUB ).and_return( @response_sock )
 
-		ZMQ.stub( :select ).and_return([ [@request_sock], [], [] ])
+		allow( ZMQ ).to receive( :select ).and_return([ [@request_sock], [], [] ])
 
 		Mongrel2.instance_variable_set( :@zmq_ctx, @ctx )
 	end
@@ -98,25 +86,25 @@ describe Mongrel2::Handler do
 		   "application ID" do
 
 			req = make_request()
-			@request_sock.should_receive( :recv ).and_return( req )
+			expect( @request_sock ).to receive( :recv ).and_return( req )
 
 			res = OneShotHandler.run( TEST_UUID )
 
 			# It should have pulled its connection info from the Handler entry in the database
-			res.conn.app_id.should == TEST_UUID
-			res.conn.sub_addr.should == TEST_SEND_SPEC
-			res.conn.pub_addr.should == TEST_RECV_SPEC
+			expect( res.conn.app_id ).to eq( TEST_UUID )
+			expect( res.conn.sub_addr ).to eq( TEST_SEND_SPEC )
+			expect( res.conn.pub_addr ).to eq( TEST_RECV_SPEC )
 		end
 
 		it "knows what handler config corresponds to its" do
 			req = make_request()
-			@request_sock.should_receive( :recv ).and_return( req )
+			expect( @request_sock ).to receive( :recv ).and_return( req )
 
 			res = OneShotHandler.run( TEST_UUID )
 
-			res.handler_config.should be_a( Mongrel2::Config::Handler )
-			res.handler_config.send_spec.should == TEST_SEND_SPEC
-			res.handler_config.recv_spec.should == TEST_RECV_SPEC
+			expect( res.handler_config ).to be_a( Mongrel2::Config::Handler )
+			expect( res.handler_config.send_spec ).to eq( TEST_SEND_SPEC )
+			expect( res.handler_config.recv_spec ).to eq( TEST_RECV_SPEC )
 		end
 
 	end
@@ -132,7 +120,7 @@ describe Mongrel2::Handler do
 			Mongrel2::Config::Handler.dataset.truncate
 			expect {
 				Mongrel2::Handler.connection_info_for( TEST_UUID )
-			}.should raise_error()
+			}.to raise_error()
 		end
 
 	end
@@ -140,27 +128,27 @@ describe Mongrel2::Handler do
 
 	it "dispatches HTTP requests to the #handle method" do
 		req = make_request()
-		@request_sock.should_receive( :recv ).and_return( req )
+		expect( @request_sock ).to receive( :recv ).and_return( req )
 
 		res = OneShotHandler.new( TEST_UUID, TEST_SEND_SPEC, TEST_RECV_SPEC ).run
 
-		res.transactions.should have( 1 ).member
+		expect( res.transactions ).to have( 1 ).member
 		request, response = res.transactions.first
-		request.should be_a( Mongrel2::HTTPRequest )
-		response.should be_a( Mongrel2::HTTPResponse )
-		response.status.should == 204
+		expect( request ).to be_a( Mongrel2::HTTPRequest )
+		expect( response ).to be_a( Mongrel2::HTTPResponse )
+		expect( response.status ).to eq( 204 )
 	end
 
 	it "ignores JSON messages by default" do
 		req = make_json_request()
-		@request_sock.should_receive( :recv ).and_return( req )
+		expect( @request_sock ).to receive( :recv ).and_return( req )
 
 		res = OneShotHandler.new( TEST_UUID, TEST_SEND_SPEC, TEST_RECV_SPEC ).run
 
-		res.transactions.should have( 1 ).member
+		expect( res.transactions ).to have( 1 ).member
 		request, response = res.transactions.first
-		request.should be_a( Mongrel2::JSONRequest )
-		response.should be_nil()
+		expect( request ).to be_a( Mongrel2::JSONRequest )
+		expect( response ).to be_nil()
 	end
 
 	it "dispatches JSON message to the #handle_json method" do
@@ -171,26 +159,26 @@ describe Mongrel2::Handler do
 		end
 
 		req = make_json_request()
-		@request_sock.should_receive( :recv ).and_return( req )
+		expect( @request_sock ).to receive( :recv ).and_return( req )
 
 		res = json_handler.new( TEST_UUID, TEST_SEND_SPEC, TEST_RECV_SPEC ).run
 
-		res.transactions.should have( 1 ).member
+		expect( res.transactions ).to have( 1 ).member
 		request, response = res.transactions.first
-		request.should be_a( Mongrel2::JSONRequest )
-		response.should be_a( Mongrel2::Response )
+		expect( request ).to be_a( Mongrel2::JSONRequest )
+		expect( response ).to be_a( Mongrel2::Response )
 	end
 
 	it "ignores XML messages by default" do
 		req = make_xml_request()
-		@request_sock.should_receive( :recv ).and_return( req )
+		expect( @request_sock ).to receive( :recv ).and_return( req )
 
 		res = OneShotHandler.new( TEST_UUID, TEST_SEND_SPEC, TEST_RECV_SPEC ).run
 
-		res.transactions.should have( 1 ).member
+		expect( res.transactions ).to have( 1 ).member
 		request, response = res.transactions.first
-		request.should be_a( Mongrel2::XMLRequest )
-		response.should be_nil()
+		expect( request ).to be_a( Mongrel2::XMLRequest )
+		expect( response ).to be_nil()
 	end
 
 	it "dispatches XML message to the #handle_xml method" do
@@ -201,14 +189,14 @@ describe Mongrel2::Handler do
 		end
 
 		req = make_xml_request()
-		@request_sock.should_receive( :recv ).and_return( req )
+		expect( @request_sock ).to receive( :recv ).and_return( req )
 
 		res = xml_handler.new( TEST_UUID, TEST_SEND_SPEC, TEST_RECV_SPEC ).run
 
-		res.transactions.should have( 1 ).member
+		expect( res.transactions ).to have( 1 ).member
 		request, response = res.transactions.first
-		request.should be_a( Mongrel2::XMLRequest )
-		response.should be_a( Mongrel2::Response )
+		expect( request ).to be_a( Mongrel2::XMLRequest )
+		expect( response ).to be_a( Mongrel2::Response )
 	end
 
 	it "dispatches WebSocket opening handshakes to the #handle_websocket_handshake method" do
@@ -219,14 +207,14 @@ describe Mongrel2::Handler do
 		end
 
 		req = make_websocket_handshake()
-		@request_sock.should_receive( :recv ).and_return( req )
+		expect( @request_sock ).to receive( :recv ).and_return( req )
 
 		res = ws_handler.new( TEST_UUID, TEST_SEND_SPEC, TEST_RECV_SPEC ).run
 
-		res.transactions.should have( 1 ).member
+		expect( res.transactions ).to have( 1 ).member
 		request, response = res.transactions.first
-		request.should be_a( Mongrel2::WebSocket::ClientHandshake )
-		response.should be_a( Mongrel2::WebSocket::ServerHandshake )
+		expect( request ).to be_a( Mongrel2::WebSocket::ClientHandshake )
+		expect( response ).to be_a( Mongrel2::WebSocket::ServerHandshake )
 	end
 
 	it "dispatches WebSocket protocol frames to the #handle_websocket method" do
@@ -237,41 +225,41 @@ describe Mongrel2::Handler do
 		end
 
 		req = make_websocket_frame()
-		@request_sock.should_receive( :recv ).and_return( req )
+		expect( @request_sock ).to receive( :recv ).and_return( req )
 
 		res = ws_handler.new( TEST_UUID, TEST_SEND_SPEC, TEST_RECV_SPEC ).run
 
-		res.transactions.should have( 1 ).member
+		expect( res.transactions ).to have( 1 ).member
 		request, response = res.transactions.first
-		request.should be_a( Mongrel2::WebSocket::Frame )
-		response.should be_a( Mongrel2::WebSocket::Frame )
+		expect( request ).to be_a( Mongrel2::WebSocket::Frame )
+		expect( response ).to be_a( Mongrel2::WebSocket::Frame )
 	end
 
 	it "continues when a ZMQ::Error is received but the connection remains open" do
 		req = make_request()
 
-		@request_sock.should_receive( :recv ).and_raise( ZMQ::Error.new("Interrupted system call.") )
-		@request_sock.should_receive( :recv ).and_return( req )
+		expect( @request_sock ).to receive( :recv ).and_raise( ZMQ::Error.new("Interrupted system call.") )
+		expect( @request_sock ).to receive( :recv ).and_return( req )
 
 		res = OneShotHandler.new( TEST_UUID, TEST_SEND_SPEC, TEST_RECV_SPEC ).run
 
-		res.transactions.should have( 1 ).member
+		expect( res.transactions ).to have( 1 ).member
 		request, response = res.transactions.first
-		request.should be_a( Mongrel2::HTTPRequest )
-		response.should be_a( Mongrel2::HTTPResponse )
-		response.status.should == 204
+		expect( request ).to be_a( Mongrel2::HTTPRequest )
+		expect( response ).to be_a( Mongrel2::HTTPResponse )
+		expect( response.status ).to eq( 204 )
 	end
 
 	it "ignores disconnect notices by default" do
 		req = make_json_request( :path => '@*', :body => {'type' => 'disconnect'} )
-		@request_sock.should_receive( :recv ).and_return( req )
+		expect( @request_sock ).to receive( :recv ).and_return( req )
 
 		res = OneShotHandler.new( TEST_UUID, TEST_SEND_SPEC, TEST_RECV_SPEC ).run
 
-		res.transactions.should have( 1 ).member
+		expect( res.transactions ).to have( 1 ).member
 		request, response = res.transactions.first
-		request.should be_a( Mongrel2::JSONRequest )
-		response.should be_nil()
+		expect( request ).to be_a( Mongrel2::JSONRequest )
+		expect( response ).to be_nil()
 	end
 
 	it "dispatches disconnect notices to the #handle_disconnect method" do
@@ -282,33 +270,33 @@ describe Mongrel2::Handler do
 		end
 
 		req = make_json_request( :path => '@*', :body => {'type' => 'disconnect'} )
-		@request_sock.should_receive( :recv ).and_return( req )
+		expect( @request_sock ).to receive( :recv ).and_return( req )
 
 		res = disconnect_handler.new( TEST_UUID, TEST_SEND_SPEC, TEST_RECV_SPEC ).run
 
-		res.transactions.should have( 1 ).member
+		expect( res.transactions ).to have( 1 ).member
 		request, response = res.transactions.first
-		request.should be_a( Mongrel2::JSONRequest )
-		response.should be_nil()
+		expect( request ).to be_a( Mongrel2::JSONRequest )
+		expect( response ).to be_nil()
 	end
 
 	it "cancels async upload notices by default" do
 		req = make_request( 'METHOD' => 'POST', :headers => {'x-mongrel2-upload-start' => 'uploadfile.XXX'} )
-		@request_sock.should_receive( :recv ).and_return( req )
-		@response_sock.should_receive( :send ).with( "#{TEST_UUID} 1:8, " )
+		expect( @request_sock ).to receive( :recv ).and_return( req )
+		expect( @response_sock ).to receive( :send ).with( "#{TEST_UUID} 1:8, " )
 
 		res = OneShotHandler.new( TEST_UUID, TEST_SEND_SPEC, TEST_RECV_SPEC ).run
 
-		res.transactions.should have( 1 ).member
+		expect( res.transactions ).to have( 1 ).member
 		request, response = res.transactions.first
-		response.should be_nil()
+		expect( response ).to be_nil()
 	end
 
 	it "re-establishes its connection when told to restart" do
 		res = OneShotHandler.new( TEST_UUID, TEST_SEND_SPEC, TEST_RECV_SPEC )
 		original_conn = res.conn
 		res.restart
-		res.conn.should_not equal( original_conn )
+		expect( res.conn ).to_not equal( original_conn )
 	end
 
 end

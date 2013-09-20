@@ -53,9 +53,9 @@ lib/mongrel2/table.rb
 lib/mongrel2/testing.rb
 lib/mongrel2/websocket.rb
 lib/mongrel2/xmlrequest.rb
-spec/lib/constants.rb
-spec/lib/helpers.rb
-spec/lib/matchers.rb
+spec/constants.rb
+spec/helpers.rb
+spec/matchers.rb
 spec/mongrel2/config/directory_spec.rb
 spec/mongrel2/config/dsl_spec.rb
 spec/mongrel2/config/filter_spec.rb

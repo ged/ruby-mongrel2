@@ -1,21 +1,11 @@
 #!/usr/bin/ruby
 # coding: utf-8
 
-BEGIN {
-	require 'pathname'
-	basedir = Pathname.new( __FILE__ ).dirname.parent
-
-	libdir = basedir + "lib"
-
-	$LOAD_PATH.unshift( libdir.to_s ) unless $LOAD_PATH.include?( libdir.to_s )
-}
-
-require 'rspec'
-require 'mongrel2'
+require 'mongrel2' unless defined?( Mongrel2 )
 
 
 ### RSpec matchers for Mongrel2 specs
-module Mongrel2::Matchers
+module Mongrel2::Matchers # :nodoc:
 
     ### A matcher for unordered array contents
 	class EnumerableAllBeMatcher

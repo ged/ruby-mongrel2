@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 
 require 'uri'
-require 'yajl'
-require 'tnetstring'
 
 require 'mongrel2' unless defined?( Mongrel2 )
 
