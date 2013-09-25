@@ -6,7 +6,7 @@ hoe-deveiate -v0.3.0
 loggability -v0.7.0
 nokogiri -v1.6.0
 rdoc -v4.0.1
-sequel -v3.48.0
+sequel -v4.2.0
 simplecov -v0.7.1
 sqlite3 -v1.3.8
 sysexits -v1.1.0
