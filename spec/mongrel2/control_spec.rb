@@ -18,8 +18,8 @@ describe Mongrel2::Control do
 
 	before( :each ) do
 		@ctx = double( "ZMQ::Context" )
-		@socket = double( "ZMQ REQ socket", :connect => nil, :linger= => nil )
-		allow( @ctx ).to receive( :socket ).with( :REQ ).and_return( @socket )
+		@socket = double( "ZMQ REQ socket", :connect => nil, :setsockopt => nil )
+		allow( @ctx ).to receive( :socket ).with( ZMQ::REQ ).and_return( @socket )
 
 		Mongrel2.instance_variable_set( :@zmq_ctx, @ctx )
 

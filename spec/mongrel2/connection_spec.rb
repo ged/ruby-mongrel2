@@ -43,12 +43,12 @@ describe Mongrel2::Connection do
 		request_sock = double( "request socket" )
 		response_sock = double( "response socket" )
 
-		expect( @ctx ).to receive( :socket ).with( :PULL ).and_return( request_sock )
-		expect( request_sock ).to receive( :linger= ).with( 0 )
+		expect( @ctx ).to receive( :socket ).with( ZMQ::PULL ).and_return( request_sock )
+		expect( request_sock ).to receive( :setsockopt ).with( ZMQ::LINGER, 0 )
 		expect( request_sock ).to receive( :connect ).with( TEST_SEND_SPEC )
 
-		expect( @ctx ).to receive( :socket ).with( :PUB ).and_return( response_sock )
-		expect( response_sock ).to receive( :linger= ).with( 0 )
+		expect( @ctx ).to receive( :socket ).with( ZMQ::PUB ).and_return( response_sock )
+		expect( response_sock ).to receive( :setsockopt ).with( ZMQ::LINGER, 0 )
 		expect( response_sock ).to_not receive( :identity= )
 		expect( response_sock ).to receive( :connect ).with( TEST_RECV_SPEC )
 
@@ -63,11 +63,11 @@ describe Mongrel2::Connection do
 	context "after a connection has been established" do
 
 		before( :each ) do
-			@request_sock = double( "request socket", :linger= => nil, :connect => nil )
-			@response_sock = double( "response socket", :linger= => nil, :connect => nil )
+			@request_sock = double( "request socket", :setsockopt => nil, :connect => nil )
+			@response_sock = double( "response socket", :setsockopt => nil, :connect => nil )
 
-			allow( @ctx ).to receive( :socket ).with( :PULL ).and_return( @request_sock )
-			allow( @ctx ).to receive( :socket ).with( :PUB ).and_return( @response_sock )
+			allow( @ctx ).to receive( :socket ).with( ZMQ::PULL ).and_return( @request_sock )
+			allow( @ctx ).to receive( :socket ).with( ZMQ::PUB ).and_return( @response_sock )
 
 			@conn.connect
 		end
@@ -92,10 +92,10 @@ describe Mongrel2::Connection do
 		end
 
 		it "doesn't keep its request and response sockets when duped" do
-			request_sock2 = double( "request socket", :linger= => nil, :connect => nil )
-			response_sock2 = double( "response socket", :linger= => nil, :connect => nil )
-			allow( @ctx ).to receive( :socket ).with( :PULL ).and_return( request_sock2 )
-			allow( @ctx ).to receive( :socket ).with( :PUB ).and_return( response_sock2 )
+			request_sock2 = double( "request socket", :setsockopt => nil, :connect => nil )
+			response_sock2 = double( "response socket", :setsockopt => nil, :connect => nil )
+			allow( @ctx ).to receive( :socket ).with( ZMQ::PULL ).and_return( request_sock2 )
+			allow( @ctx ).to receive( :socket ).with( ZMQ::PUB ).and_return( response_sock2 )
 
 			duplicate = @conn.dup
 

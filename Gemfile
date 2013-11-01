@@ -5,12 +5,12 @@
 source "https://rubygems.org/"
 
 gem "nokogiri", "~>1.5"
-gem "sequel", "~>3.44"
+gem "sequel", "~>4.2"
 gem "tnetstring", "~>0.3"
 gem "yajl-ruby", "~>1.0"
 gem "trollop", "~>2.0"
 gem "sysexits", "~>1.1"
-gem "rbczmq", "~>1.7"
+gem "zmq", "~>2.1"
 gem "loggability", "~>0.5"
 gem "sqlite3", "~>1.3"
 
