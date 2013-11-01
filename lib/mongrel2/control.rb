@@ -28,8 +28,8 @@ class Mongrel2::Control
 	def initialize( port=DEFAULT_PORT )
 		check_port( port )
 		@ctx = Mongrel2.zmq_context
-		@socket = @ctx.socket( :REQ )
-		@socket.linger = 0
+		@socket = @ctx.socket( ZMQ::REQ )
+		@socket.setsockopt( ZMQ::LINGER, 0 )
 		@socket.connect( port.to_s )
 	end
 
