@@ -1,6 +1,6 @@
 #!/usr/bin/ruby
 
-require 'nokogiri'
+require 'libxml'
 require 'loggability'
 
 require 'mongrel2/request' unless defined?( Mongrel2::Request )
@@ -22,7 +22,7 @@ class Mongrel2::XMLRequest < Mongrel2::Request
 	def initialize( sender_id, conn_id, path, headers, body, raw=nil )
 		super
 		self.log.debug "Parsing XML request body"
-		@data = Nokogiri::XML( body )
+		@reader = LibXML::XML::Reader.string( body )
 	end
 
 
@@ -30,8 +30,8 @@ class Mongrel2::XMLRequest < Mongrel2::Request
 	public
 	######
 
-	# The parsed request data (a Nokogiri::XML document)
-	attr_reader :data
+	# The parsed request data (a LibXML::Reader object)
+	attr_reader :reader
 
 
 end # class Mongrel2::XMLRequest
