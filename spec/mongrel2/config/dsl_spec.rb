@@ -71,7 +71,7 @@ describe Mongrel2::Config::DSL do
 			end
 
 			expect( result ).to be_a( Mongrel2::Config::Server )
-			expect( result.hosts ).to have( 1 ).member
+			expect( result.hosts.size ).to eq(  1  )
 			host = result.hosts.first
 
 			expect( host ).to be_a( Mongrel2::Config::Host )
@@ -109,13 +109,13 @@ describe Mongrel2::Config::DSL do
 			end
 
 			expect( result ).to be_a( Mongrel2::Config::Server )
-			expect( result.hosts ).to have( 2 ).members
+			expect( result.hosts.size ).to eq(  2  )
 			host1, host2 = result.hosts
 
 			expect( host1 ).to be_a( Mongrel2::Config::Host )
 			expect( host1.name ).to eq( 'brillianttaste' )
 			expect( host1.matching ).to eq( '*.brillianttasteinthefoodmouth.com' )
-			expect( host1.routes ).to have( 6 ).members
+			expect( host1.routes.size ).to eq(  6  )
 			expect( host1.routes ).to all_be_a( Mongrel2::Config::Route )
 
 			expect( host1.routes[0].path ).to eq( '/images' )
@@ -151,7 +151,7 @@ describe Mongrel2::Config::DSL do
 
 			expect( host2 ).to be_a( Mongrel2::Config::Host )
 			expect( host2.name ).to eq( 'deveiate.org' )
-			expect( host2.routes ).to have( 1 ).member
+			expect( host2.routes.size ).to eq(  1  )
 			expect( host2.routes.first ).to be_a( Mongrel2::Config::Route )
 		end
 
@@ -176,7 +176,7 @@ describe Mongrel2::Config::DSL do
 			)
 
 			expect( result ).to be_an( Array )
-			expect( result ).to have( 3 ).members
+			expect( result.size ).to eq(  3  )
 			expect( result ).to all_be_a( Mongrel2::Config::Setting )
 			expect( result[0].key ).to eq( 'zeromq.threads' )
 			expect( result[0].value ).to eq( '8' )
@@ -204,7 +204,7 @@ describe Mongrel2::Config::DSL do
 			)
 
 			expect( result ).to be_an( Array )
-			expect( result ).to have( 2 ).members
+			expect( result.size ).to eq(  2  )
 			expect( result ).to all_be_a( Mongrel2::Config::Mimetype )
 			expect( result[0].extension ).to eq( '.md' )
 			expect( result[0].mimetype ).to eq( 'text/x-markdown' )
@@ -228,7 +228,7 @@ describe Mongrel2::Config::DSL do
 				filter '/usr/lib/mongrel2/null.so'
 			end
 
-			expect( result.filters ).to have( 1 ).member
+			expect( result.filters.size ).to eq(  1  )
 			expect( result.filters.first ).to be_a( Mongrel2::Config::Filter )
 			expect( result.filters.first.settings ).to eq( {} )
 		end
@@ -240,7 +240,7 @@ describe Mongrel2::Config::DSL do
 					min_size: 1000
 			end
 
-			expect( result.filters ).to have( 1 ).member
+			expect( result.filters.size ).to eq(  1  )
 			expect( result.filters.first ).to be_a( Mongrel2::Config::Filter )
 			expect( result.filters.first.settings ).
 				to eq({ 'extensions' => ["*.html", "*.txt"], 'min_size' => 1000 })
@@ -255,7 +255,7 @@ describe Mongrel2::Config::DSL do
 				xrequest '/usr/lib/mongrel2/null.so'
 			end
 
-			expect( result.xrequests ).to have( 1 ).member
+			expect( result.xrequests.size ).to eq(  1  )
 			expect( result.xrequests.first ).to be_a( Mongrel2::Config::XRequest )
 			expect( result.xrequests.first.settings ).to eq( {} )
 		end
@@ -267,7 +267,7 @@ describe Mongrel2::Config::DSL do
 					min_size: 1000
 			end
 
-			expect( result.xrequests ).to have( 1 ).member
+			expect( result.xrequests.size ).to eq(  1  )
 			expect( result.xrequests.first ).to be_a( Mongrel2::Config::XRequest )
 			expect( result.xrequests.first.settings ).
 				to eq({ 'extensions' => ["*.html", "*.txt"], 'min_size' => 1000 })

@@ -5,19 +5,7 @@ require_relative 'constants'
 require_relative 'matchers'
 
 # SimpleCov test coverage reporting; enable this using the :coverage rake task
-if ENV['COVERAGE']
-	$stderr.puts "\n\n>>> Enabling coverage report.\n\n"
-	require 'simplecov'
-	SimpleCov.start do
-		add_filter 'spec'
-		add_group "Config Classes" do |file|
-			file.filename =~ %r{lib/mongrel2/config(\.rb|/.*)$}
-		end
-		add_group "Needing tests" do |file|
-			file.covered_percent < 90
-		end
-	end
-end
+require 'simplecov' if ENV['COVERAGE']
 
 begin
 	require 'configurability'

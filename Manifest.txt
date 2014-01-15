@@ -1,5 +1,6 @@
 .autotest
 .gemtest
+.simplecov
 ChangeLog
 DSL.rdoc
 History.rdoc
@@ -79,4 +80,5 @@ spec/mongrel2/request_spec.rb
 spec/mongrel2/response_spec.rb
 spec/mongrel2/table_spec.rb
 spec/mongrel2/websocket_spec.rb
+spec/mongrel2/xmlrequest_spec.rb
 spec/mongrel2_spec.rb

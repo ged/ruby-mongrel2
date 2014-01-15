@@ -132,7 +132,7 @@ describe Mongrel2::Handler do
 
 		res = OneShotHandler.new( TEST_UUID, TEST_SEND_SPEC, TEST_RECV_SPEC ).run
 
-		expect( res.transactions ).to have( 1 ).member
+		expect( res.transactions.size ).to eq(  1  )
 		request, response = res.transactions.first
 		expect( request ).to be_a( Mongrel2::HTTPRequest )
 		expect( response ).to be_a( Mongrel2::HTTPResponse )
@@ -145,7 +145,7 @@ describe Mongrel2::Handler do
 
 		res = OneShotHandler.new( TEST_UUID, TEST_SEND_SPEC, TEST_RECV_SPEC ).run
 
-		expect( res.transactions ).to have( 1 ).member
+		expect( res.transactions.size ).to eq(  1  )
 		request, response = res.transactions.first
 		expect( request ).to be_a( Mongrel2::JSONRequest )
 		expect( response ).to be_nil()
@@ -163,7 +163,7 @@ describe Mongrel2::Handler do
 
 		res = json_handler.new( TEST_UUID, TEST_SEND_SPEC, TEST_RECV_SPEC ).run
 
-		expect( res.transactions ).to have( 1 ).member
+		expect( res.transactions.size ).to eq(  1  )
 		request, response = res.transactions.first
 		expect( request ).to be_a( Mongrel2::JSONRequest )
 		expect( response ).to be_a( Mongrel2::Response )
@@ -175,7 +175,7 @@ describe Mongrel2::Handler do
 
 		res = OneShotHandler.new( TEST_UUID, TEST_SEND_SPEC, TEST_RECV_SPEC ).run
 
-		expect( res.transactions ).to have( 1 ).member
+		expect( res.transactions.size ).to eq(  1  )
 		request, response = res.transactions.first
 		expect( request ).to be_a( Mongrel2::XMLRequest )
 		expect( response ).to be_nil()
@@ -193,7 +193,7 @@ describe Mongrel2::Handler do
 
 		res = xml_handler.new( TEST_UUID, TEST_SEND_SPEC, TEST_RECV_SPEC ).run
 
-		expect( res.transactions ).to have( 1 ).member
+		expect( res.transactions.size ).to eq(  1  )
 		request, response = res.transactions.first
 		expect( request ).to be_a( Mongrel2::XMLRequest )
 		expect( response ).to be_a( Mongrel2::Response )
@@ -211,7 +211,7 @@ describe Mongrel2::Handler do
 
 		res = ws_handler.new( TEST_UUID, TEST_SEND_SPEC, TEST_RECV_SPEC ).run
 
-		expect( res.transactions ).to have( 1 ).member
+		expect( res.transactions.size ).to eq(  1  )
 		request, response = res.transactions.first
 		expect( request ).to be_a( Mongrel2::WebSocket::ClientHandshake )
 		expect( response ).to be_a( Mongrel2::WebSocket::ServerHandshake )
@@ -229,7 +229,7 @@ describe Mongrel2::Handler do
 
 		res = ws_handler.new( TEST_UUID, TEST_SEND_SPEC, TEST_RECV_SPEC ).run
 
-		expect( res.transactions ).to have( 1 ).member
+		expect( res.transactions.size ).to eq(  1  )
 		request, response = res.transactions.first
 		expect( request ).to be_a( Mongrel2::WebSocket::Frame )
 		expect( response ).to be_a( Mongrel2::WebSocket::Frame )
@@ -243,7 +243,7 @@ describe Mongrel2::Handler do
 
 		res = OneShotHandler.new( TEST_UUID, TEST_SEND_SPEC, TEST_RECV_SPEC ).run
 
-		expect( res.transactions ).to have( 1 ).member
+		expect( res.transactions.size ).to eq(  1  )
 		request, response = res.transactions.first
 		expect( request ).to be_a( Mongrel2::HTTPRequest )
 		expect( response ).to be_a( Mongrel2::HTTPResponse )
@@ -256,7 +256,7 @@ describe Mongrel2::Handler do
 
 		res = OneShotHandler.new( TEST_UUID, TEST_SEND_SPEC, TEST_RECV_SPEC ).run
 
-		expect( res.transactions ).to have( 1 ).member
+		expect( res.transactions.size ).to eq(  1  )
 		request, response = res.transactions.first
 		expect( request ).to be_a( Mongrel2::JSONRequest )
 		expect( response ).to be_nil()
@@ -274,7 +274,7 @@ describe Mongrel2::Handler do
 
 		res = disconnect_handler.new( TEST_UUID, TEST_SEND_SPEC, TEST_RECV_SPEC ).run
 
-		expect( res.transactions ).to have( 1 ).member
+		expect( res.transactions.size ).to eq(  1  )
 		request, response = res.transactions.first
 		expect( request ).to be_a( Mongrel2::JSONRequest )
 		expect( response ).to be_nil()
@@ -287,7 +287,7 @@ describe Mongrel2::Handler do
 
 		res = OneShotHandler.new( TEST_UUID, TEST_SEND_SPEC, TEST_RECV_SPEC ).run
 
-		expect( res.transactions ).to have( 1 ).member
+		expect( res.transactions.size ).to eq(  1  )
 		request, response = res.transactions.first
 		expect( response ).to be_nil()
 	end

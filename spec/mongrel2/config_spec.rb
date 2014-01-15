@@ -45,7 +45,7 @@ describe Mongrel2::Config do
 		Mongrel2::Config.init_database
 		Mongrel2::Config::Server.truncate
 
-		s = Mongrel2::Config::Server.create(
+		Mongrel2::Config::Server.create(
 			uuid: TEST_UUID,
 			access_log: '/log/access.log',
 			error_log: '/log/error.log',
@@ -53,7 +53,7 @@ describe Mongrel2::Config do
 			default_host: 'localhost',
 			port: 8275
 		  )
-		expect( Mongrel2::Config.servers ).to have( 1 ).member
+		expect( Mongrel2::Config.servers.size ).to eq(  1  )
 		expect( Mongrel2::Config.servers.first.uuid ).to eq( TEST_UUID )
 	end
 
@@ -62,7 +62,7 @@ describe Mongrel2::Config do
 		Mongrel2::Config::Setting.dataset.truncate
 		Mongrel2::Config::Setting.create( key: 'control_port', value: 'ipc://var/run/control.sock' )
 		expect( Mongrel2::Config.settings ).to respond_to( :[] )
-		expect( Mongrel2::Config.settings ).to have( 1 ).member
+		expect( Mongrel2::Config.settings.size ).to eq(  1  )
 		expect( Mongrel2::Config.settings[ :control_port ] ).to eq( 'ipc://var/run/control.sock' )
 	end
 
@@ -72,9 +72,9 @@ describe Mongrel2::Config do
 
 	it "knows whether or not its database has been initialized" do
 		Mongrel2::Config.db = Mongrel2::Config.in_memory_db
-		expect( Mongrel2::Config.database_initialized? ).to be_false()
+		expect( Mongrel2::Config.database_initialized? ).to be_falsey()
 		Mongrel2::Config.init_database!
-		expect( Mongrel2::Config.database_initialized? ).to be_true()
+		expect( Mongrel2::Config.database_initialized? ).to be_truthy()
 	end
 
 	it "doesn't re-initialize the database if the non-bang version of init_database is used" do

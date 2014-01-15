@@ -101,10 +101,18 @@ class Mongrel2::Handler
 	### Create an instance of the handler using the config from the database with
 	### the given +appid+ and run it.
 	def self::run( appid )
-		self.log.info "Running application %p" % [ appid ]
+		app = self.app_instance_for( appid )
+		self.log.info "Running application %p: %p" % [ appid, app ]
+		app.run
+	end
+
+
+	### Return an instance of the handler configured for the handler in the currently-loaded
+	### Mongrel2 config that corresponds to +appid+.
+	def self::app_instance_for( appid )
 		send_spec, recv_spec = self.connection_info_for( appid )
 		self.log.info "  config specs: %s <-> %s" % [ send_spec, recv_spec ]
-		new( appid, send_spec, recv_spec ).run
+		return new( appid, send_spec, recv_spec )
 	end
 
 
@@ -161,9 +169,42 @@ class Mongrel2::Handler
 
 
 	### Return the Mongrel2::Config::Handler that corresponds to this app's
-	### appid.
+	### appid, and its connection's send_spec and recv_spec.
 	def handler_config
-		return Mongrel2::Config::Handler.by_send_ident( self.app_id ).first
+		return self.configured_handlers.where(
+			send_spec: self.conn.sub_addr,
+			recv_spec: self.conn.pub_addr
+		).first
+	end
+
+
+	### Return the Mongrel2::Config::Handlers that corresponds to this app's
+	### appid.
+	def configured_handlers
+		return Mongrel2::Config::Handler.by_send_ident( self.app_id )
+	end
+
+
+	### Return the Mongre2::Config::Routes for this Handler.
+	def configured_routes
+		handlers = self.configured_handlers
+		return Mongrel2::Config::Route.where( target_id: handlers.select(:id) )
+	end
+
+
+	### Return the Mongrel2::Config::Hosts that have routes that point to this
+	### Handler.
+	def configured_hosts
+		routes = self.configured_routes
+		return Mongrel2::Config::Host.where( id: routes.select(:host_id) )
+	end
+
+
+	### Return the Mongrel2::Config::Servers that have hosts that have routes that
+	### point to this Handler.
+	def configured_servers
+		hosts = self.configured_hosts
+		return Mongrel2::Config::Server.where( id: hosts.select(:server_id) )
 	end
 
 
