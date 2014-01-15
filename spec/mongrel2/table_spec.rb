@@ -63,7 +63,7 @@ describe Mongrel2::Table do
 	it "should create an array value and append when appending to an existing key" do
 		@table[:indian_meal] = 'pork sausage'
 		@table.append( 'Indian-MEAL' => 'pinecones' )
-		expect( @table['Indian-Meal'] ).to have(2).members
+		expect( @table['Indian-Meal'].size ).to eq( 2 )
 		expect( @table['Indian-Meal'] ).to include('pinecones')
 		expect( @table['Indian-Meal'] ).to include('pork sausage')
 	end
@@ -74,7 +74,7 @@ describe Mongrel2::Table do
 
 		table = Mongrel2::Table.new({ :bob => :dan, 'Bob' => :dan_too })
 
-		expect( table[:bob] ).to have(2).members
+		expect( table[:bob].size ).to eq( 2 )
 		expect( table['Bob'] ).to include( :dan )
 		expect( table['bob'] ).to include( :dan_too )
 		end
@@ -156,7 +156,7 @@ describe Mongrel2::Table do
 			values << [ header, value ]
 		end
 
-		expect( values.flatten ).to have(8).members
+		expect( values.flatten.size ).to eq( 8 )
 		expect( values.transpose[0] ).to include( 'Thai-Food', 'With-Absinthe', 'A-Number-Of-Some-Sort' )
 		expect( values.transpose[1] ).to include( 'normally good', 'seldom hot enough', 'questionable', '2' )
 	end

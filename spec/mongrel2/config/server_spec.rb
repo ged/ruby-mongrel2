@@ -107,9 +107,9 @@ describe Mongrel2::Config::Server do
 	end
 
 	it "has a predicate that understands the use_ssl value" do
-		expect( @server.use_ssl ).to be_false()
+		expect( @server.use_ssl ).to be_falsey()
 		@server.use_ssl = true
-		expect( @server.use_ssl ).to be_true()
+		expect( @server.use_ssl ).to be_truthy()
 	end
 
 end

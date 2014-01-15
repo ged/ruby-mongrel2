@@ -85,7 +85,7 @@ describe Mongrel2::HTTPResponse do
 		expect( @response ).to_not be_handled()
 		expect( @response.body ).to be_a( StringIO )
 		expect( @response.body.size ).to eq( 0 )
-		expect( @response.headers ).to have(1).keys
+		expect( @response.headers.size ).to eq( 1 )
 	end
 
 	it "sets its status line to 200 OK if the body is set and the status hasn't yet been set" do

@@ -154,6 +154,12 @@ module Mongrel2
 		end
 
 
+		### Return a Hash of current mimetypes from the config database keyed by extension.
+		def self::mimetypes
+			return Mongrel2::Config::Mimetype.to_hash( :extension, :mimetype )
+		end
+
+
 		### Return the contents of the configuration schema SQL file.
 		def self::load_config_schema
 			return CONFIG_SQL.read
