@@ -1,3 +1,13 @@
+== v0.41.0 [2014-02-02] Michael Granger <ged@FaerieMUD.org>
+
+- Convert back to rbczmq for modern mongrel2s
+- Config introspection and cleanup.
+  - Add Mongrel2::Config.mimetypes for fetching Mongrel2's mime-types
+    table.
+  - Add more config introspection to the Mongrel2::Handler class.
+- Use LibXML instead of Nokogiri for XML request type
+
+
 == v0.40.0 [2013-10-31] Michael Granger <ged@FaerieMUD.org>
 
 - Move back to the zmq library, as rbczmq was too unstable.
