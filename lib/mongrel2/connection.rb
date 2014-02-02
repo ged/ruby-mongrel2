@@ -70,13 +70,13 @@ class Mongrel2::Connection
 		self.log.debug "0mq Context is: %p" % [ ctx ]
 
 		self.log.info "Connecting PULL request socket (%s)" % [ self.sub_addr ]
-		@request_sock = ctx.socket( ZMQ::PULL )
-		@request_sock.setsockopt( ZMQ::LINGER, 0 )
+		@request_sock = ctx.socket( :PULL )
+		@request_sock.linger = 0
 		@request_sock.connect( self.sub_addr )
 
 		self.log.info "Connecting PUB response socket (%s)" % [ self.pub_addr ]
-		@response_sock = ctx.socket( ZMQ::PUB )
-		@response_sock.setsockopt( ZMQ::LINGER, 0 )
+		@response_sock = ctx.socket( :PUB )
+		@response_sock.linger = 0
 		@response_sock.connect( self.pub_addr )
 	end
 

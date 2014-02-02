@@ -4,15 +4,15 @@
 
 source "https://rubygems.org/"
 
-gem "nokogiri", "~>1.5"
 gem "sequel", "~>4.2"
 gem "tnetstring", "~>0.3"
 gem "yajl-ruby", "~>1.0"
 gem "trollop", "~>2.0"
 gem "sysexits", "~>1.1"
-gem "zmq", "~>2.1"
+gem "rbczmq", "~>1.7"
 gem "loggability", "~>0.5"
 gem "sqlite3", "~>1.3"
+gem "libxml-ruby", "~>2.7"
 
 gem "hoe-mercurial", "~>1.4.0", :group => [:development, :test]
 gem "hoe-highline", "~>0.1.0", :group => [:development, :test]
