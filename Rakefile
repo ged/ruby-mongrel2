@@ -32,8 +32,8 @@ hoespec = Hoe.spec 'mongrel2' do
 	self.dependency 'yajl-ruby',   '~> 1.0'
 	self.dependency 'trollop',     '~> 2.0'
 	self.dependency 'sysexits',    '~> 1.1'
-	self.dependency 'zmq',         '~> 2.1'
-	self.dependency 'loggability', '~> 0.5'
+	self.dependency 'rbczmq',     '~> 1.7'
+	self.dependency 'loggability','~> 0.5'
 	self.dependency 'sqlite3',     '~> 1.3'
 	self.dependency 'libxml-ruby', '~> 2.7'
 
