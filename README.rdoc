@@ -152,10 +152,10 @@ and generate the API documentation.
 
 == Other Implementations
 
-There are two other Mongrel2 Ruby libraries, +m2r+ and the +mongrel2-rack+
-library. This implementation differs from them in several ways:
+There are two other Mongrel2 Ruby libraries, +m2r+ +rack-mongrel2+.
+This implementation differs from them in several ways:
 
-* It uses the C extension for 0MQ (zmq) instead of the FFI one. If you
+* It uses a C extension for 0MQ (rbczmq) instead of the FFI one. If you
   strongly prefer the FFI library, both of the other Mongrel2 libraries use
   it, so you'll want to stick to one of them.
 
@@ -173,7 +173,7 @@ library. This implementation differs from them in several ways:
 
 == License
 
-Copyright (c) 2011-2013, Michael Granger
+Copyright (c) 2011-2014, Michael Granger
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
