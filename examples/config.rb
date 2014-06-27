@@ -26,6 +26,8 @@ s = server 'examples' do
 	bind_addr    '0.0.0.0'
 	port         8113
 
+	xrequest     '/usr/local/lib/mongrel2/filters/sendfile.so'
+
 	# your main host
 	host 'localhost' do
 
@@ -36,8 +38,9 @@ s = server 'examples' do
 		dumper = handler( 'tcp://127.0.0.1:9997', 'request-dumper', protocol: 'tnetstring' )
 		route '/hello', handler( 'tcp://127.0.0.1:9999',  'helloworld-handler' )
 		route '/async-upload', handler( 'tcp://127.0.0.1:9950',  'async-upload' )
-		route '/dump', dumper
+		route '/sendfile', handler( 'tcp://127.0.0.1:9895', 'sendfile-quine' )
 		route '/ws', handler( 'tcp://127.0.0.1:9995', 'ws-echo' )
+		route '/dump', dumper
 		route '@js', dumper
 		route '<xml', dumper
 

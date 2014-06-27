@@ -17,15 +17,6 @@ require 'mongrel2/response'
 
 describe Mongrel2::Response do
 
-	before( :all ) do
-		setup_logging()
-	end
-
-	after( :all ) do
-		reset_logging()
-	end
-
-
 	it "can create a matching response given a Mongrel2::Request" do
 		req = Mongrel2::Request.new( TEST_UUID, 8, '/path', {}, '' )
 		response = Mongrel2::Response.from_request( req )
@@ -52,6 +43,11 @@ describe Mongrel2::Response do
 		expect {|b| response.each_chunk(&b) }.to yield_with_args( 'the body' )
 	end
 
+	it "can generate an enumerator for its body stream" do
+		response = Mongrel2::Response.new( TEST_UUID, 8, "the body" )
+		expect( response.each_chunk ).to be_a( Enumerator )
+	end
+
 	it "wraps stringifiable bodies set via the #body= accessor in a StringIO" do
 		response = Mongrel2::Response.new( TEST_UUID, 8 )
 		response.body = 'a stringioed body'
@@ -66,27 +62,48 @@ describe Mongrel2::Response do
 		expect( response.body ).to be( testbody )
 	end
 
+
 	context	"an instance with default values" do
 
-		before( :each ) do
-			@response = Mongrel2::Response.new( TEST_UUID, 8 )
-		end
+		let( :response ) { Mongrel2::Response.new(TEST_UUID, 8) }
+
 
 		it "has an empty-IO body" do
-			@response.body.rewind
-			expect( @response.body.read ).to eq( '' )
+			response.body.rewind
+			expect( response.body.read ).to eq( '' )
 		end
 
 		it "supports the append operator to append objects to the body IO" do
-			@response << 'some body stuff' << ' and some more body stuff'
-			@response.body.rewind
-			expect( @response.body.read ).to eq( 'some body stuff and some more body stuff' )
+			response << 'some body stuff' << ' and some more body stuff'
+			response.body.rewind
+			expect( response.body.read ).to eq( 'some body stuff and some more body stuff' )
 		end
 
 		it "supports #puts for appending objects to the body IO separated by EOL" do
-			@response.puts( "some body stuff\n", " and some more body stuff\n\n", :and_a_symbol )
-			@response.body.rewind
-			expect( @response.body.read ).to eq( "some body stuff\n and some more body stuff\n\nand_a_symbol\n" )
+			response.puts( "some body stuff\n", " and some more body stuff\n\n", :and_a_symbol )
+			response.body.rewind
+			expect( response.body.read ).to eq( "some body stuff\n and some more body stuff\n\nand_a_symbol\n" )
+		end
+
+		it "is not an extended reply" do
+			expect( response ).to_not be_extended_reply
+		end
+
+	end
+
+
+	context "an instance extended with a :sendfile reply" do
+
+		let( :response ) do
+			res = Mongrel2::Response.new( TEST_UUID, 213 )
+			res.extend_reply_with( :sendfile )
+			res.extended_reply_data << '/path/to/a/file.txt'
+			res
+		end
+
+
+		it "is an extended reply" do
+			expect( response ).to be_extended_reply
 		end
 
 	end

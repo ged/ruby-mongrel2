@@ -1,11 +1,11 @@
 #!/usr/bin/ruby
 # coding: utf-8
 
-require_relative 'constants'
-require_relative 'matchers'
-
 # SimpleCov test coverage reporting; enable this using the :coverage rake task
 require 'simplecov' if ENV['COVERAGE']
+
+require_relative 'constants'
+require_relative 'matchers'
 
 begin
 	require 'configurability'
@@ -205,7 +205,6 @@ end
 RSpec.configure do |c|
 	include Mongrel2::TestConstants
 
-	c.treat_symbols_as_metadata_keys_with_true_values = true
 	c.run_all_when_everything_filtered = true
 	c.filter_run :focus
 	c.order = 'random'

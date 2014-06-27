@@ -88,7 +88,8 @@ class Mongrel2::HTTPResponse < Mongrel2::Response
 	### Returns true if the response status means the response
 	### shouldn't have a body.
 	def bodiless?
-		return self.body.nil? ||
+		return self.extended_reply? ||
+			self.body.nil? ||
 			HTTP::BODILESS_HTTP_RESPONSE_CODES.include?( self.status )
 	end
 
@@ -168,7 +169,7 @@ class Mongrel2::HTTPResponse < Mongrel2::Response
 
 		headers[:date] ||= Time.now.httpdate
 
-		if self.bodiless?
+		if self.bodiless? && !self.extended_reply?
 			headers.delete( :content_length )
 			headers.delete( :content_type )
 		else

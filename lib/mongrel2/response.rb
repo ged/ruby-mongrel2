@@ -34,11 +34,13 @@ class Mongrel2::Response
 	def initialize( sender_id, conn_id, body='' )
 		body = StringIO.new( body, 'a+' ) unless body.respond_to?( :read )
 
-		@sender_id = sender_id
-		@conn_id   = conn_id
-		@body      = body
-		@request   = nil
-		@chunksize = DEFAULT_CHUNKSIZE
+		@sender_id             = sender_id
+		@conn_id               = conn_id
+		@body                  = body
+		@request               = nil
+		@chunksize             = DEFAULT_CHUNKSIZE
+		@extended_reply_filter = nil
+		@extended_reply_data   = []
 	end
 
 
@@ -63,6 +65,13 @@ class Mongrel2::Response
 	# The number of bytes to write to Mongrel in a single "chunk"
 	attr_accessor :chunksize
 
+	# The name of the extended reply filter to use in the reply. If this is set
+	# the response will be send back to Mongrel as an extended reply.
+	attr_reader :extended_reply_filter
+
+	# The Array of data to include with the extended reply
+	attr_reader :extended_reply_data
+
 
 	### Set the response's entity body to +newbody+. If +newbody+ is a String-ish object
 	### (i.e., it responds to #to_str), it will be wrapped in a StringIO in 'a+' mode).
@@ -83,6 +92,21 @@ class Mongrel2::Response
 	### Write the given +objects+ to the response body, calling #to_s on each one.
 	def puts( *objects )
 		self.body.puts( *objects )
+	end
+
+
+	### Set up the response to send an extended reply to Mongrel2, invoking the
+	### given +filter+. The body of the response will be passed to the filter
+	### after being serialized to a tnetstring.
+	def extend_reply_with( filter )
+		@extended_reply_filter = filter
+	end
+	alias_method :extended_reply_with, :extend_reply_with
+
+
+	### Returns +true+ if the response has been set to use an extended reply.
+	def extended_reply?
+		return @extended_reply_filter ? true : false
 	end
 
 

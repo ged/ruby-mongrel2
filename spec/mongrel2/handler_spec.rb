@@ -78,8 +78,9 @@ describe Mongrel2::Handler do
 		end
 
 		it "can look up connection information given an application ID" do
-			Mongrel2::Handler.connection_info_for( TEST_UUID ).
-				should == [ TEST_SEND_SPEC, TEST_RECV_SPEC ]
+			expect(
+				Mongrel2::Handler.connection_info_for(TEST_UUID)
+			).to eq([ TEST_SEND_SPEC, TEST_RECV_SPEC ])
 		end
 
 		it "has a convenience method for instantiating and running a Handler given an " +
