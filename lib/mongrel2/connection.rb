@@ -123,7 +123,19 @@ class Mongrel2::Connection
 		self.check_closed
 		header = "%s %d:%s," % [ sender_id, conn_id.to_s.length, conn_id ]
 		buf = header + ' ' + data
-		self.log.debug "Sending response (PUB)"
+		self.log.debug "Sending response (PUB): %p" % [ buf ]
+		self.response_sock.send( buf )
+		self.log.debug "  done with send (%d bytes)" % [ buf.bytesize ]
+	end
+
+
+	### Write raw +data+ to the given connection ID (+conn_id+) at the specified
+	### +sender_id+ as an extended response of type +response_type+.
+	def send_extended( sender_id, conn_id, response_type, *data )
+		self.check_closed
+		self.log.debug "Sending response with %s extended reply (PUB): %p" % [ response_type, data ]
+		header = "%s %d:X %s," % [ sender_id, conn_id.to_s.length + 2, conn_id ]
+		buf = header + ' ' + TNetstring.dump( [response_type] + data )
 		self.response_sock.send( buf )
 		self.log.debug "  done with send (%d bytes)" % [ buf.bytesize ]
 	end
@@ -134,6 +146,12 @@ class Mongrel2::Connection
 		response.each_chunk do |data|
 			self.send( response.sender_id, response.conn_id, data )
 		end
+		if response.extended_reply?
+			self.log.debug "Response also includes an extended reply."
+			data = response.extended_reply_data
+			filter = response.extended_reply_filter
+			self.send_extended( response.sender_id, response.conn_id, filter, *data )
+		end
 	end
 
 
@@ -143,6 +161,16 @@ class Mongrel2::Connection
 	def broadcast( sender_id, conn_ids, data )
 		idlist = conn_ids.flatten.map( &:to_s ).join( ' ' )
 		self.send( sender_id, idlist, data )
+	end
+
+
+	### Send the given +data+ to one or more connected clients identified by +client_ids+
+	### via the server specified by +sender_id+ as an extended reply of type 
+	### +response_type+. The +client_ids+ should be an Array of Integer IDs no longer
+	### than Mongrel2::MAX_IDENTS.
+	def broadcast_extended( sender_id, conn_ids, response_type, *data )
+		idlist = conn_ids.flatten.map( &:to_s ).join( ' ' )
+		self.send_extended( sender_id, idlist, response_type, *data )
 	end
 
 

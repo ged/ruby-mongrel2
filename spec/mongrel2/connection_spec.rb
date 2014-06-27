@@ -137,13 +137,40 @@ describe Mongrel2::Connection do
 		end
 
 		it "can write raw response messages to more than one conn_id at the same time" do
-			expect( @response_sock ).to receive( :send ).with( "#{TEST_UUID} 15:8 16 44 45 1833, the data" )
+			expect( @response_sock ).to receive( :send ).
+				with( "#{TEST_UUID} 15:8 16 44 45 1833, the data" )
 			@conn.broadcast( TEST_UUID, [8, 16, 44, 45, 1833], 'the data' )
 		end
 
 		it "can write raw response messages to more than one conn_id at the same time" do
-			expect( @response_sock ).to receive( :send ).with( "#{TEST_UUID} 15:8 16 44 45 1833, the data" )
+			expect( @response_sock ).to receive( :send ).
+				with( "#{TEST_UUID} 15:8 16 44 45 1833, the data" )
 			@conn.broadcast( TEST_UUID, [8, 16, 44, 45, 1833], 'the data' )
+		end
+
+		it "can write an extended response message" do
+			expect( @response_sock ).to receive( :send ).
+				with( "#{TEST_UUID} 3:X 8, 27:8:sendfile,12:the_data.txt,]" )
+			@conn.send_extended( TEST_UUID, 8, :sendfile, "the_data.txt" )
+		end
+
+		it "can broadcast an extended response message" do
+			expect( @response_sock ).to receive( :send ).
+				with( "#{TEST_UUID} 9:X 8 16 32, 27:8:sendfile,12:the_data.txt,]" )
+			@conn.broadcast_extended( TEST_UUID, [8,16,32], :sendfile, "the_data.txt" )
+		end
+
+		it "can write a Mongrel2::Response with extended reply" do
+			expect( @response_sock ).to receive( :send ).
+				with( "#{TEST_UUID} 1:8, " )
+			expect( @response_sock ).to receive( :send ).
+				with( "#{TEST_UUID} 3:X 8, 27:8:sendfile,12:the_data.txt,]" )
+
+			response = Mongrel2::Response.new( TEST_UUID, 8, '' )
+			response.extended_reply_with( :sendfile )
+			response.extended_reply_data << 'the_data.txt'
+
+			@conn.reply( response )
 		end
 
 		it "can tell the connection a request or a response was from to close" do
