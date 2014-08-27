@@ -24,6 +24,7 @@ examples/helloworld-handler.rb
 examples/request-dumper.rb
 examples/request-dumper.tmpl
 examples/run
+examples/sendfile.rb
 examples/ws-echo.rb
 lib/mongrel2.rb
 lib/mongrel2/config.rb
