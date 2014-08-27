@@ -165,7 +165,7 @@ class Mongrel2::Connection
 
 
 	### Send the given +data+ to one or more connected clients identified by +client_ids+
-	### via the server specified by +sender_id+ as an extended reply of type 
+	### via the server specified by +sender_id+ as an extended reply of type
 	### +response_type+. The +client_ids+ should be an Array of Integer IDs no longer
 	### than Mongrel2::MAX_IDENTS.
 	def broadcast_extended( sender_id, conn_ids, response_type, *data )
