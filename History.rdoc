@@ -1,3 +1,10 @@
+== v0.43.0 [2014-12-17] Michael Granger <ged@FaerieMUD.org>
+
+- Add a Mongrel2::Request#server_chroot
+  Used to qualify filesystem paths relative to Mongrel's chroot for
+  sendfile, async upload, etc.
+
+
 == v0.42.0 [2014-08-27] Michael Granger <ged@FaerieMUD.org>
 
 Add support for sending extended replies.
