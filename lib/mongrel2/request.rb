@@ -190,12 +190,8 @@ class Mongrel2::Request
 		raise Mongrel2::UploadError, "invalid upload: upload headers don't match" unless
 			self.upload_headers_match?
 
-		route = Mongrel2::Config::Route.for_request( self ) or
-			raise Mongrel2::UploadError, "couldn't find the route config for %s" % [ self ]
-		server = route.host.server
-
 		relpath = Pathname( self.headers.x_mongrel2_upload_done )
-		chrooted = server.chroot_path + relpath
+		chrooted = self.server_chroot + relpath
 
 		if chrooted.exist?
 			return chrooted
@@ -203,10 +199,24 @@ class Mongrel2::Request
 			return relpath
 		else
 			self.log.error "uploaded body %s not found: tried relative to cwd and server chroot (%s)" %
-				[ relpath, server.chroot ]
+				[ relpath, chrooted ]
 			raise Mongrel2::UploadError,
 				"couldn't find the path to uploaded body."
 		end
+	end
+
+
+	### Return the chroot directory of the mongrel2 daemon that received this request as
+	### a Pathname.
+	def server_chroot
+		route = Mongrel2::Config::Route.for_request( self ) or
+			raise Mongrel2::UploadError, "couldn't find the route config for %s" % [ self ]
+		server = route.host.server
+
+		path = server.chroot
+		path = '/' if path.empty?
+
+		return Pathname( path )
 	end
 
 
