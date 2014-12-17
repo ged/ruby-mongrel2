@@ -5,6 +5,9 @@ require 'mongrel2/config' unless defined?( Mongrel2::Config )
 
 # Mongrel2 Route configuration class
 class Mongrel2::Config::Route < Mongrel2::Config( :route )
+	extend Loggability
+
+	log_to :mongrel2
 
 	### As of Mongrel2/1.8.0:
 	# CREATE TABLE route (id INTEGER PRIMARY KEY,
@@ -18,6 +21,8 @@ class Mongrel2::Config::Route < Mongrel2::Config( :route )
 	### Return the Route that corresponds to the given +request+.
 	def self::for_request( request )
 		pattern = request.headers.pattern
+		self.log.debug "Searching for the route for the path %p in %p" %
+			[ pattern, self.all ]
 		return self.filter( path: pattern ).first
 	end
 

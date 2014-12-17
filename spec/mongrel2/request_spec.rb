@@ -19,12 +19,28 @@ require 'mongrel2/request'
 describe Mongrel2::Request do
 
 	before( :all ) do
-		setup_logging()
+		setup_config_db()
+
+		# Set up a test server config so the request can find the server's chroot
+		server 'specs' do
+			default_host 'localhost'
+			access_log   'access.log'
+			error_log    'error.log'
+			chroot       Dir.tmpdir
+			pid_file     '/var/run/mongrel2.pid'
+			port         8113
+
+			host 'localhost' do
+				route '/form', handler( 'tcp://127.0.0.1:9900', 'upload-handler' )
+				route TEST_JSON_PATH, handler( 'tcp://127.0.0.1:9902', 'json-handler' )
+			end
+		end
+
 		@factory = Mongrel2::RequestFactory.new( route: '/form' )
 	end
 
-	after( :all ) do
-		reset_logging()
+	before( :each ) do
+		Mongrel2::Config::Server.first.update( chroot: Dir.tmpdir )
 	end
 
 
@@ -125,6 +141,19 @@ describe Mongrel2::Request do
 			expect( @req.remote_ip.to_s ).to eq( '127.0.0.1' )
 		end
 
+		it "can look up the chroot directory of the server the request is from" do
+			Mongrel2::Config::Server.first.update( chroot: '/usr/local/www' )
+			expect( @req.server_chroot ).to be_a( Pathname )
+			expect( @req.server_chroot.to_s ).to eq( '/usr/local/www' )
+		end
+
+
+		it "returns '/' as the chroot directory if the server isn't chrooted" do
+			Mongrel2::Config::Server.first.update( chroot: '' )
+			expect( @req.server_chroot ).to be_a( Pathname )
+			expect( @req.server_chroot.to_s ).to eq( '/' )
+		end
+
 	end
 
 
@@ -152,6 +181,7 @@ describe Mongrel2::Request do
 		end
 
 	end
+
 
 	describe "framework support" do
 
@@ -206,24 +236,6 @@ describe Mongrel2::Request do
 
 
 	describe "async upload support" do
-
-		before( :all ) do
-			setup_config_db()
-
-			# Set up a test server config so the request can find the server's chroot
-			server 'specs' do
-				default_host 'localhost'
-				access_log   'access.log'
-				error_log    'error.log'
-				chroot       Dir.tmpdir
-				pid_file     '/var/run/mongrel2.pid'
-				port         8113
-
-				host 'localhost' do
-					route '/form', handler( TEST_SEND_SPEC, 'upload-handler', TEST_RECV_SPEC )
-				end
-			end
-		end
 
 		before( :each ) do
 			@spoolfile = Tempfile.new( 'mongrel2.upload', Dir.tmpdir )
