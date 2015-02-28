@@ -39,14 +39,11 @@ hoespec = Hoe.spec 'mongrel2' do
 	self.dependency 'configurability', '~> 2.0', :developer
 	self.dependency 'simplecov',       '~> 0.7', :developer
 	self.dependency 'hoe-deveiate',    '~> 0.3', :developer
-	self.dependency 'hoe-bundler',     '~> 1.2', :developer
+	self.dependency 'rdoc-generator-fivefish', '~> 0', :development
 
-	self.spec_extras[:rdoc_options] = ['-f', 'fivefish', '-t', 'Mongrel2 Ruby Connector']
-	self.require_ruby_version( '>= 1.9.2' )
-
+	self.require_ruby_version( '>=2.0.0' )
 	self.hg_sign_tags = true if self.respond_to?( :hg_sign_tags= )
 	self.check_history_on_release = true if self.respond_to?( :check_history_on_release= )
-
 	self.rdoc_locations << "deveiate:/usr/local/www/public/code/#{remote_rdoc_dir}"
 end
 
