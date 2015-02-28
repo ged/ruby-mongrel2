@@ -173,7 +173,7 @@ This implementation differs from them in several ways:
 
 == License
 
-Copyright (c) 2011-2014, Michael Granger
+Copyright (c) 2011-2015, Michael Granger
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
