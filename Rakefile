@@ -1,21 +1,19 @@
 #!/usr/bin/env rake
 
+require 'rake/clean'
+require 'rdoc/task'
+
 begin
 	require 'hoe'
 rescue LoadError
 	abort "This Rakefile requires 'hoe' (gem install hoe)"
 end
 
-# Work around borked RSpec support in this version
-if Hoe::VERSION == '2.12.0'
-	warn "Ignore warnings about not having rspec; it's a bug in Hoe 2.12.0"
-	require 'rspec'
-end
+GEMSPEC = 'mongrel2.gemspec'
 
 Hoe.plugin :mercurial
 Hoe.plugin :signing
 Hoe.plugin :deveiate
-Hoe.plugin :bundler
 
 Hoe.plugins.delete :rubyforge
 
@@ -55,12 +53,7 @@ end
 ENV['VERSION'] ||= hoespec.spec.version.to_s
 
 # Ensure the specs pass before checking in
-task 'hg:precheckin' => [:check_manifest, :check_history, :spec]
-
-# Rebuild the ChangeLog immediately before release
-task :prerelease => [:check_manifest, :check_history, 'ChangeLog']
-
-task :check_manifest => 'ChangeLog'
+task 'hg:precheckin' => [ :check_history, :check_manifest, :gemspec, :spec ]
 
 
 desc "Build a coverage report"
@@ -68,4 +61,33 @@ task :coverage do
 	ENV["COVERAGE"] = 'yes'
 	Rake::Task[:spec].invoke
 end
+CLOBBER.include( 'coverage' )
+
+
+# Use the fivefish formatter for docs generated from development checkout
+if File.directory?( '.hg' )
+	require 'rdoc/task'
+
+	Rake::Task[ 'docs' ].clear
+	RDoc::Task.new( 'docs' ) do |rdoc|
+	    rdoc.main = "README.rdoc"
+	    rdoc.rdoc_files.include( "*.rdoc", "ChangeLog", "lib/**/*.rb" )
+	    rdoc.generator = :fivefish
+		rdoc.title = 'Ruby-Mongrel2'
+	    rdoc.rdoc_dir = 'doc'
+	end
+end
+
+task :gemspec => GEMSPEC
+file GEMSPEC => __FILE__
+task GEMSPEC do |task|
+	spec = $hoespec.spec
+	spec.files.delete( '.gemtest' )
+	spec.version = "#{spec.version.bump}.0.pre#{Time.now.strftime("%Y%m%d%H%M%S")}"
+	File.open( task.name, 'w' ) do |fh|
+		fh.write( spec.to_ruby )
+	end
+end
+
+CLOBBER.include( GEMSPEC.to_s )
 
