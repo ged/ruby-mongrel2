@@ -1,14 +1,14 @@
 # -*- encoding: utf-8 -*-
-# stub: mongrel2 0.44.0.pre20150227195647 ruby lib
+# stub: mongrel2 0.44.0.pre20150325100404 ruby lib
 
 Gem::Specification.new do |s|
   s.name = "mongrel2"
-  s.version = "0.44.0.pre20150227195647"
+  s.version = "0.44.0.pre20150325100404"
 
   s.required_rubygems_version = Gem::Requirement.new("> 1.3.1") if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib"]
   s.authors = ["Michael Granger"]
-  s.date = "2015-02-28"
+  s.date = "2015-03-25"
   s.description = "Ruby-Mongrel2 is a complete Ruby connector for Mongrel2[http://mongrel2.org/].\n\nThis library includes configuration-database ORM classes, a Ruby\nimplementation of the 'm2sh' tool, a configuration DSL for generating config\ndatabases in pure Ruby, a Control port interface object, and handler classes\nfor creating applications or higher-level frameworks."
   s.email = ["ged@FaerieMUD.org"]
   s.executables = ["m2sh.rb"]
@@ -18,7 +18,7 @@ Gem::Specification.new do |s|
   s.licenses = ["BSD"]
   s.rdoc_options = ["--main", "README.rdoc"]
   s.required_ruby_version = Gem::Requirement.new(">= 2.0.0")
-  s.rubygems_version = "2.4.5"
+  s.rubygems_version = "2.4.6"
   s.signing_key = "/Volumes/Keys/ged-private_gem_key.pem"
   s.summary = "Ruby-Mongrel2 is a complete Ruby connector for Mongrel2[http://mongrel2.org/]"
 
