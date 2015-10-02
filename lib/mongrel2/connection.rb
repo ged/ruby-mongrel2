@@ -105,7 +105,7 @@ class Mongrel2::Connection
 
 		self.log.debug "Fetching next request (PULL)"
 		data = self.request_sock.recv
-		self.log.debug "  got %s request data: %p" % [ data.encoding.name, data ]
+		self.log.debug "  got %d bytes of %s request data" % [ data.bytesize, data.encoding.name ]
 		return data
 	end
 
@@ -123,7 +123,7 @@ class Mongrel2::Connection
 		self.check_closed
 		header = "%s %d:%s," % [ sender_id, conn_id.to_s.length, conn_id ]
 		buf = header + ' ' + data
-		self.log.debug "Sending response (PUB): %p" % [ buf ]
+		self.log.debug "Sending response (PUB)"
 		self.response_sock.send( buf )
 		self.log.debug "  done with send (%d bytes)" % [ buf.bytesize ]
 	end
@@ -133,7 +133,7 @@ class Mongrel2::Connection
 	### +sender_id+ as an extended response of type +response_type+.
 	def send_extended( sender_id, conn_id, response_type, *data )
 		self.check_closed
-		self.log.debug "Sending response with %s extended reply (PUB): %p" % [ response_type, data ]
+		self.log.debug "Sending response with %s extended reply (PUB)"
 		header = "%s %d:X %s," % [ sender_id, conn_id.to_s.length + 2, conn_id ]
 		buf = header + ' ' + TNetstring.dump( [response_type] + data )
 		self.response_sock.send( buf )
