@@ -1,6 +1,9 @@
 == v0.43.1 [2015-03-25] Michael Granger <ged@FaerieMUD.org>
 
+Bugfixes:
+
 - Remove some duplicated status codes that warn under Ruby 2.2.
+- Remove some debug logging that errors under Ruby 2.2.
 
 
 == v0.43.0 [2014-12-17] Michael Granger <ged@FaerieMUD.org>
