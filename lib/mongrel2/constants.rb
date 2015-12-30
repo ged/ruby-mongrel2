@@ -81,6 +81,7 @@ module Mongrel2::Constants
 		RECONDITION_REQUIRED          = 428
 		TOO_MANY_REQUESTS             = 429
 		REQUEST_HEADERS_TOO_LARGE     = 431
+		UNAVAILABLE_DUE_TO_LEGALITIES = 451
 
 		SERVER_ERROR                  = 500
 		NOT_IMPLEMENTED               = 501
@@ -143,6 +144,7 @@ module Mongrel2::Constants
 		    428 => "Precondition Required",
 		    429 => "Too Many Requests",
 		    431 => "Request Headers too Large",
+		    451 => "Unavailable For Legal Reasons",
 		    500 => "Internal Server Error",
 		    501 => "Method Not Implemented",
 		    502 => "Bad Gateway",
