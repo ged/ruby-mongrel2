@@ -1,3 +1,16 @@
+== v0.44.0 [2016-01-20] Mahlon E. Smith <mahlon@martini.nu>
+
+Enhancements:
+
+- Ensure that Mongrel2 spool files are removed after the lifetime of a
+  request.
+- Add the newly proposed code specific to legal obstacles /
+  censorship.
+
+https://datatracker.ietf.org/doc/draft-ietf-httpbis-legally-
+restricted-status/?include_text=1
+
+
 == v0.43.2 [2015-03-25] Michael Granger <ged@FaerieMUD.org>
 
 Bugfixes:
