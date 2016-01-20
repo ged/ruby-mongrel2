@@ -77,6 +77,11 @@ describe Mongrel2::Handler do
 			Mongrel2::Config::Handler.create( @handler_config )
 		end
 
+		after( :each ) do
+			clean_config_db
+		end
+
+
 		it "can look up connection information given an application ID" do
 			expect(
 				Mongrel2::Handler.connection_info_for(TEST_UUID)
@@ -121,7 +126,7 @@ describe Mongrel2::Handler do
 			Mongrel2::Config::Handler.dataset.truncate
 			expect {
 				Mongrel2::Handler.connection_info_for( TEST_UUID )
-			}.to raise_error()
+			}.to raise_error( ArgumentError )
 		end
 
 	end
@@ -300,5 +305,18 @@ describe Mongrel2::Handler do
 		expect( res.conn ).to_not equal( original_conn )
 	end
 
+	it "cleans any mongrel2 request spool files after sending a response" do
+		spoolfile = Pathname.new( Dir.tmpdir + '/mongrel2.uskd8l1' )
+		spoolfile.write( "Hi!" )
+
+		req = make_request( 'METHOD' => 'POST', :headers => {
+			'x-mongrel2-upload-start' => spoolfile.basename,
+			'x-mongrel2-upload-done'  => spoolfile.basename
+		})
+		expect( @request_sock ).to receive( :recv ).and_return( req )
+
+		res = OneShotHandler.new( TEST_UUID, TEST_SEND_SPEC, TEST_RECV_SPEC ).run
+		expect( spoolfile ).to_not exist
+	end
 end
 

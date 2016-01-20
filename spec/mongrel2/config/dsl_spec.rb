@@ -21,11 +21,7 @@ describe Mongrel2::Config::DSL do
 	end
 
 	before( :each ) do
-		Mongrel2::Config::Server.truncate
-		Mongrel2::Config::Host.truncate
-		Mongrel2::Config::Route.truncate
-		Mongrel2::Config::Filter.truncate
-		Mongrel2::Config::XRequest.truncate
+		clean_config_db()
 	end
 
 	after( :all ) do

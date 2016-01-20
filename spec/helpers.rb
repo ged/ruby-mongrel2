@@ -30,6 +30,7 @@ require 'sequel/model'
 ### RSpec helper functions that are used to test Mongrel2 itself.
 module Mongrel2::SpecHelpers
 	include Mongrel2::TestConstants
+	include Mongrel2::Config::DSL
 
 	###############
 	module_function
@@ -45,6 +46,12 @@ module Mongrel2::SpecHelpers
 	def setup_config_db
 		Mongrel2::Config.db ||= Mongrel2::Config.in_memory_db
 		Mongrel2::Config.init_database
+		clean_config_db()
+	end
+
+
+	### Wipe out any existing db data.
+	def clean_config_db
 		Mongrel2::Config.db.tables.collect {|t| Mongrel2::Config.db[t] }.each( &:truncate )
 	end
 
@@ -62,8 +69,24 @@ module Mongrel2::SpecHelpers
 	end
 
 
+	### Provide a default mongrel2 configuration.
+	###
+	def setup_mongrel2_config
+		server 'test-server' do
+			chroot Dir.tmpdir
+			port 8080
+			default_host 'test-host'
+
+			host 'test-host' do
+				route '/handler', handler( TEST_RECV_SPEC, 'test-handler' )
+			end
+		end
+	end
+
+
 	### Make a raw Mongrel2 request from the specified +opts+ and return it as a String.
 	def make_request( opts={} )
+		setup_mongrel2_config()
 		opts = TEST_REQUEST_OPTS.merge( opts )
 		headers = normalize_headers( opts )
 
