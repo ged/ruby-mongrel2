@@ -256,6 +256,15 @@ class Mongrel2::Handler
 			self.log.info( res.inspect )
 			@conn.reply( res ) unless @conn.closed?
 		end
+	ensure
+		# Remove any temporarily spooled Mongrel2 files.
+		begin
+			if req && req.body && req.body.respond_to?( :path ) && req.body.path
+				File.unlink( req.body.path )
+			end
+		rescue Errno::ENOENT => err
+			self.log.debug "File already cleaned up: %s (%s)" % [ req.body.path, err.message ]
+		end
 	end
 
 

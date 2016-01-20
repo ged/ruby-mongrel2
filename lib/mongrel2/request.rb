@@ -201,7 +201,7 @@ class Mongrel2::Request
 			self.log.error "uploaded body %s not found: tried relative to cwd and server chroot (%s)" %
 				[ relpath, chrooted ]
 			raise Mongrel2::UploadError,
-				"couldn't find the path to uploaded body."
+				"couldn't find the path to uploaded body %p." % [ chrooted.to_s ]
 		end
 	end
 
