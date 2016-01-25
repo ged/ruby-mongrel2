@@ -14,7 +14,6 @@ describe Mongrel2::Connection do
 	include Mongrel2::Config::DSL
 
 	before( :all ) do
-		setup_logging()
 	end
 
 	# Ensure 0MQ never actually gets called
@@ -27,10 +26,6 @@ describe Mongrel2::Connection do
 
 	after( :each ) do
 		Mongrel2.instance_variable_set( :@zmq_ctx, nil )
-	end
-
-	after( :all ) do
-		reset_logging()
 	end
 
 
@@ -122,6 +117,14 @@ describe Mongrel2::Connection do
 			msg = make_request()
 			expect( @request_sock ).to receive( :recv ).and_return( msg )
 			expect( @conn.receive ).to be_a( Mongrel2::Request )
+		end
+
+		it "handles a socket error while receiving" do
+			expect( @request_sock ).to receive( :recv ).and_return( nil )
+			expect( ZMQ ).to receive( :error ).and_return( ZMQ::Error.new("something bad happened") )
+			expect {
+				@conn.receive
+			}.to raise_error( ZMQ::Error, 'something bad happened' )
 		end
 
 		it "can write raw response messages with a TNetString header onto the response_sock" do
