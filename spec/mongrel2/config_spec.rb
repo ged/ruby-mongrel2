@@ -14,6 +14,11 @@ describe Mongrel2::Config do
 
 	before( :all ) do
 		setup_config_db()
+		@original_db = Mongrel2::Config.db
+	end
+
+	after( :each ) do
+		Mongrel2::Config.db = @original_db
 	end
 
 	after( :all ) do
