@@ -30,18 +30,18 @@ hoespec = Hoe.spec 'mongrel2' do
 	self.dependency 'yajl-ruby',   '~> 1.0'
 	self.dependency 'trollop',     '~> 2.0'
 	self.dependency 'sysexits',    '~> 1.1'
-	self.dependency 'rbczmq',     '~> 1.7'
-	self.dependency 'loggability','~> 0.5'
+	self.dependency 'rbczmq',      '~> 1.7'
+	self.dependency 'loggability', '~> 0.11'
 	self.dependency 'sqlite3',     '~> 1.3'
 	self.dependency 'libxml-ruby', '~> 2.7'
 
-	self.dependency 'amalgalite',      '~> 1.3', :developer
-	self.dependency 'configurability', '~> 2.0', :developer
-	self.dependency 'simplecov',       '~> 0.7', :developer
-	self.dependency 'hoe-deveiate',    '~> 0.3', :developer
+	self.dependency 'amalgalite',      '~> 1.5', :developer
+	self.dependency 'configurability', '~> 2.2', :developer
+	self.dependency 'simplecov',       '~> 0.12', :developer
+	self.dependency 'hoe-deveiate',    '~> 0.8', :developer
 	self.dependency 'rdoc-generator-fivefish', '~> 0', :development
 
-	self.require_ruby_version( '>=2.0.0' )
+	self.require_ruby_version( '>=2.2.0' )
 	self.hg_sign_tags = true if self.respond_to?( :hg_sign_tags= )
 	self.check_history_on_release = true if self.respond_to?( :check_history_on_release= )
 	self.rdoc_locations << "deveiate:/usr/local/www/public/code/#{remote_rdoc_dir}"
