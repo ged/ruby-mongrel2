@@ -1,16 +1,16 @@
-amalgalite -v1.4.1
-configurability -v2.2.1
-hoe -v3.14.2
-hoe-bundler -v1.2.0
-hoe-deveiate -v0.3.0
-loggability -v0.7.0
-libxml-ruby -v2.8.0
-rdoc -v4.1.0
-sequel -v4.27.0
-simplecov -v0.10.0
-sqlite3 -v1.3.10
+# mongrel2.gems generated gem export file. Note that any env variable settings will be missing. Append these after using a ';' field separator
+
+amalgalite -v1.5.0
+configurability 
+hoe-deveiate -v0.8.0
+libxml-ruby -v2.9.0
+loggability
+rbczmq
+rdoc-generator-fivefish
+sequel -v4.40.0
+simplecov -v0.12.0
+sqlite3
 sysexits -v1.2.0
 tnetstring -v0.3.4
 trollop -v2.1.2
-yajl-ruby -v1.2.1
-rbczmq -v1.7.9
+yajl-ruby -v1.3.0
