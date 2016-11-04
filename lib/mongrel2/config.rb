@@ -139,8 +139,8 @@ module Mongrel2
 				newdb.sql_log_level = :debug
 
 				self.descendents.each do |subclass|
-					self.log.debug "Resetting database connection for %p to: %p" %
-						[ subclass, newdb ]
+					self.log.debug "Resetting database connection for %p to: %p (%#16x)" %
+						[ subclass, newdb, newdb.object_id * 2 ]
 					subclass.db = newdb
 				end
 			end
