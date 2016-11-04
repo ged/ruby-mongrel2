@@ -14,7 +14,6 @@ require 'mongrel2/config'
 describe Mongrel2::Config::Handler do
 
 	before( :all ) do
-		setup_logging()
 		setup_config_db()
 	end
 
@@ -28,9 +27,7 @@ describe Mongrel2::Config::Handler do
 		)
 	end
 
-	after( :all ) do
-		reset_logging()
-	end
+
 
 	it "is valid if its specs and identities are all valid" do
 		expect( @handler ).to be_valid()

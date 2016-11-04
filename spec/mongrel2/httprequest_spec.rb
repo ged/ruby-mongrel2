@@ -17,16 +17,11 @@ require 'mongrel2/httpresponse'
 describe Mongrel2::HTTPRequest do
 
 	before( :all ) do
-		setup_logging()
 		@factory = Mongrel2::RequestFactory.new( route: '/glamour' )
 	end
 
 	before( :each ) do
 		@req = @factory.get( '/glamour/test' )
-	end
-
-	after( :all ) do
-		reset_logging()
 	end
 
 

@@ -14,16 +14,8 @@ require 'mongrel2/httpresponse'
 
 describe Mongrel2::HTTPResponse do
 
-	before( :all ) do
-		setup_logging()
-	end
-
 	before( :each ) do
 		@response = Mongrel2::HTTPResponse.new( TEST_UUID, 299 )
-	end
-
-	after( :all ) do
-		reset_logging()
 	end
 
 

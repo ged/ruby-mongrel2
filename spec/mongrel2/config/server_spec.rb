@@ -14,7 +14,6 @@ require 'mongrel2/config'
 describe Mongrel2::Config::Server do
 
 	before( :all ) do
-		setup_logging()
 		setup_config_db()
 	end
 
@@ -28,10 +27,6 @@ describe Mongrel2::Config::Server do
 			default_host: 'localhost',
 			port:         8118
 		)
-	end
-
-	after( :all ) do
-		reset_logging()
 	end
 
 

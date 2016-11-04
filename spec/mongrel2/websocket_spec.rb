@@ -19,13 +19,9 @@ require 'mongrel2/websocket'
 describe Mongrel2::WebSocket do
 
 	before( :all ) do
-		setup_logging()
 		@factory = Mongrel2::WebSocketFrameFactory.new( route: '/websock' )
 	end
 
-	after( :all ) do
-		reset_logging()
-	end
 
 	# Data for testing payload of binary frames
 	BINARY_DATA =

@@ -35,12 +35,7 @@ describe Mongrel2::Handler do
 
 
 	before( :all ) do
-		setup_logging()
 		setup_config_db()
-	end
-
-	after( :all ) do
-		reset_logging()
 	end
 
 

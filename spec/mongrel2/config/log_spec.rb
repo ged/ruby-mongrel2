@@ -16,12 +16,7 @@ require 'mongrel2/config'
 describe Mongrel2::Config::Log do
 
 	before( :all ) do
-		setup_logging()
 		setup_config_db()
-	end
-
-	after( :all ) do
-		reset_logging()
 	end
 
 

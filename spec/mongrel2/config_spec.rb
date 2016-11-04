@@ -13,12 +13,10 @@ require 'mongrel2/config'
 describe Mongrel2::Config do
 
 	before( :all ) do
-		setup_logging()
 		setup_config_db()
 	end
 
 	after( :all ) do
-		reset_logging()
 		File.delete( 'config-spec.sqlite' ) if File.exist?( 'config.spec.sqlite' )
 	end
 
