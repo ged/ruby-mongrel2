@@ -104,7 +104,7 @@ class Mongrel2::Connection
 		self.check_closed
 
 		self.log.debug "Fetching next request (PULL)"
-		data = self.request_sock.recv or raise( ZMQ.error )
+		data = self.request_sock.recv or raise( ZMQ.error || 'unknown error' )
 		self.log.debug "  got %d bytes of %s request data" % [ data.bytesize, data.encoding.name ]
 		return data
 	end

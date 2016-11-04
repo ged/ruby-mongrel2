@@ -127,6 +127,14 @@ describe Mongrel2::Connection do
 			}.to raise_error( ZMQ::Error, 'something bad happened' )
 		end
 
+		it "handles a socket error that doesn't set an error message while receiving" do
+			expect( @request_sock ).to receive( :recv ).and_return( nil )
+			expect( ZMQ ).to receive( :error ).and_return( nil )
+			expect {
+				@conn.receive
+			}.to raise_error( RuntimeError, 'unknown error' )
+		end
+
 		it "can write raw response messages with a TNetString header onto the response_sock" do
 			expect( @response_sock ).to receive( :send ).with( "#{TEST_UUID} 1:8, the data" )
 			@conn.send( TEST_UUID, 8, "the data" )
