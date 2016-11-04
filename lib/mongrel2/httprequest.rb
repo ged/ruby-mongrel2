@@ -109,12 +109,14 @@ class Mongrel2::HTTPRequest < Mongrel2::Request
 
 	### Return the details to include in the contents of the #inspected object.
 	def inspect_details
+		body_size = self.body.size || 0
+
 		return %Q{[%s] "%s %s %s" -- %0.2fK body} % [
 			self.headers.x_forwarded_for,
 			self.headers[:method],
 			self.headers.uri,
 			self.headers.version,
-			(self.body.size / 1024.0),
+			(body_size / 1024.0),
 		]
 	end
 

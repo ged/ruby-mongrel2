@@ -1,15 +1,15 @@
 # -*- encoding: utf-8 -*-
-# stub: mongrel2 0.44.0.pre20150325141702 ruby lib
+# stub: mongrel2 0.45.0.pre20161103192010 ruby lib
 
 Gem::Specification.new do |s|
   s.name = "mongrel2"
-  s.version = "0.44.0.pre20150325141702"
+  s.version = "0.45.0.pre20161103192010"
 
   s.required_rubygems_version = Gem::Requirement.new("> 1.3.1") if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib"]
   s.authors = ["Michael Granger"]
   s.cert_chain = ["certs/ged.pem"]
-  s.date = "2015-03-25"
+  s.date = "2016-11-04"
   s.description = "Ruby-Mongrel2 is a complete Ruby connector for Mongrel2[http://mongrel2.org/].\n\nThis library includes configuration-database ORM classes, a Ruby\nimplementation of the 'm2sh' tool, a configuration DSL for generating config\ndatabases in pure Ruby, a Control port interface object, and handler classes\nfor creating applications or higher-level frameworks."
   s.email = ["ged@FaerieMUD.org"]
   s.executables = ["m2sh.rb"]
@@ -18,8 +18,8 @@ Gem::Specification.new do |s|
   s.homepage = "https://bitbucket.org/ged/ruby-mongrel2"
   s.licenses = ["BSD"]
   s.rdoc_options = ["--main", "README.rdoc"]
-  s.required_ruby_version = Gem::Requirement.new(">= 2.0.0")
-  s.rubygems_version = "2.4.6"
+  s.required_ruby_version = Gem::Requirement.new(">= 2.2.0")
+  s.rubygems_version = "2.5.1"
   s.summary = "Ruby-Mongrel2 is a complete Ruby connector for Mongrel2[http://mongrel2.org/]"
 
   if s.respond_to? :specification_version then
@@ -32,18 +32,18 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<trollop>, ["~> 2.0"])
       s.add_runtime_dependency(%q<sysexits>, ["~> 1.1"])
       s.add_runtime_dependency(%q<rbczmq>, ["~> 1.7"])
-      s.add_runtime_dependency(%q<loggability>, ["~> 0.5"])
+      s.add_runtime_dependency(%q<loggability>, ["~> 0.11"])
       s.add_runtime_dependency(%q<sqlite3>, ["~> 1.3"])
       s.add_runtime_dependency(%q<libxml-ruby>, ["~> 2.7"])
       s.add_development_dependency(%q<hoe-mercurial>, ["~> 1.4"])
-      s.add_development_dependency(%q<hoe-deveiate>, ["~> 0.6"])
+      s.add_development_dependency(%q<hoe-deveiate>, ["~> 0.8"])
       s.add_development_dependency(%q<hoe-highline>, ["~> 0.2"])
-      s.add_development_dependency(%q<rdoc>, ["~> 4.0"])
-      s.add_development_dependency(%q<amalgalite>, ["~> 1.3"])
-      s.add_development_dependency(%q<configurability>, ["~> 2.0"])
-      s.add_development_dependency(%q<simplecov>, ["~> 0.7"])
+      s.add_development_dependency(%q<amalgalite>, ["~> 1.5"])
+      s.add_development_dependency(%q<configurability>, ["~> 2.2"])
+      s.add_development_dependency(%q<simplecov>, ["~> 0.12"])
       s.add_development_dependency(%q<rdoc-generator-fivefish>, ["~> 0"])
-      s.add_development_dependency(%q<hoe>, ["~> 3.13"])
+      s.add_development_dependency(%q<rdoc>, ["~> 4.0"])
+      s.add_development_dependency(%q<hoe>, ["~> 3.15"])
     else
       s.add_dependency(%q<sequel>, ["~> 4.2"])
       s.add_dependency(%q<tnetstring>, ["~> 0.3"])
@@ -51,18 +51,18 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<trollop>, ["~> 2.0"])
       s.add_dependency(%q<sysexits>, ["~> 1.1"])
       s.add_dependency(%q<rbczmq>, ["~> 1.7"])
-      s.add_dependency(%q<loggability>, ["~> 0.5"])
+      s.add_dependency(%q<loggability>, ["~> 0.11"])
       s.add_dependency(%q<sqlite3>, ["~> 1.3"])
       s.add_dependency(%q<libxml-ruby>, ["~> 2.7"])
       s.add_dependency(%q<hoe-mercurial>, ["~> 1.4"])
-      s.add_dependency(%q<hoe-deveiate>, ["~> 0.6"])
+      s.add_dependency(%q<hoe-deveiate>, ["~> 0.8"])
       s.add_dependency(%q<hoe-highline>, ["~> 0.2"])
-      s.add_dependency(%q<rdoc>, ["~> 4.0"])
-      s.add_dependency(%q<amalgalite>, ["~> 1.3"])
-      s.add_dependency(%q<configurability>, ["~> 2.0"])
-      s.add_dependency(%q<simplecov>, ["~> 0.7"])
+      s.add_dependency(%q<amalgalite>, ["~> 1.5"])
+      s.add_dependency(%q<configurability>, ["~> 2.2"])
+      s.add_dependency(%q<simplecov>, ["~> 0.12"])
       s.add_dependency(%q<rdoc-generator-fivefish>, ["~> 0"])
-      s.add_dependency(%q<hoe>, ["~> 3.13"])
+      s.add_dependency(%q<rdoc>, ["~> 4.0"])
+      s.add_dependency(%q<hoe>, ["~> 3.15"])
     end
   else
     s.add_dependency(%q<sequel>, ["~> 4.2"])
@@ -71,17 +71,17 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<trollop>, ["~> 2.0"])
     s.add_dependency(%q<sysexits>, ["~> 1.1"])
     s.add_dependency(%q<rbczmq>, ["~> 1.7"])
-    s.add_dependency(%q<loggability>, ["~> 0.5"])
+    s.add_dependency(%q<loggability>, ["~> 0.11"])
     s.add_dependency(%q<sqlite3>, ["~> 1.3"])
     s.add_dependency(%q<libxml-ruby>, ["~> 2.7"])
     s.add_dependency(%q<hoe-mercurial>, ["~> 1.4"])
-    s.add_dependency(%q<hoe-deveiate>, ["~> 0.6"])
+    s.add_dependency(%q<hoe-deveiate>, ["~> 0.8"])
     s.add_dependency(%q<hoe-highline>, ["~> 0.2"])
-    s.add_dependency(%q<rdoc>, ["~> 4.0"])
-    s.add_dependency(%q<amalgalite>, ["~> 1.3"])
-    s.add_dependency(%q<configurability>, ["~> 2.0"])
-    s.add_dependency(%q<simplecov>, ["~> 0.7"])
+    s.add_dependency(%q<amalgalite>, ["~> 1.5"])
+    s.add_dependency(%q<configurability>, ["~> 2.2"])
+    s.add_dependency(%q<simplecov>, ["~> 0.12"])
     s.add_dependency(%q<rdoc-generator-fivefish>, ["~> 0"])
-    s.add_dependency(%q<hoe>, ["~> 3.13"])
+    s.add_dependency(%q<rdoc>, ["~> 4.0"])
+    s.add_dependency(%q<hoe>, ["~> 3.15"])
   end
 end

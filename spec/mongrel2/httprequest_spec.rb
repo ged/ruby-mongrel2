@@ -78,6 +78,13 @@ describe Mongrel2::HTTPRequest do
 		expect( @req ).to be_secure()
 	end
 
+	it "doesn't error when inspecting a bodiless instance" do
+		# I don't remember what circumstances this is guarding against, so this is a bit
+		# artificial
+		@req.body = double( "sizeless body", size: nil )
+		expect( @req.inspect ).to match( /0.00K body/ )
+	end
+
 
 	describe "header convenience methods" do
 
