@@ -1,3 +1,12 @@
+== v0.45.0 [2016-11-03] Michael Granger <ged@FaerieMUD.org>
+
+Bugfixes:
+
+- Guard against HTTP requests with a nil body.size.
+- Make Mongrel2::Config a proper abstract subclass of Sequel::Model.
+- Raise ZMQ::Error on nil return from Connection#recv
+
+
 == v0.44.0 [2016-01-20] Mahlon E. Smith <mahlon@martini.nu>
 
 Enhancements:
