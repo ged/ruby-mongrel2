@@ -32,6 +32,12 @@ require 'mongrel2/constants'
 
 module Mongrel2
 
+	# Initialize the Cozy::Postgres::Model class as an abstract model class (i.e.,
+	# without a default dataset). This prevents it from looking for a table called
+	# `models`, and makes inheriting it more straightforward.
+	# Thanks to Jeremy Evans for the suggestion.
+	Config = Class.new( Sequel::Model )
+
 	# The base Mongrel2 database-backed configuration class. It's a subclass of Sequel::Model, so
 	# you'll first need to be familiar with Sequel (http://sequel.rubyforge.org/) and
 	# especially its Sequel::Model ORM.
@@ -45,7 +51,7 @@ module Mongrel2
 	# == References
 	# * http://mongrel2.org/static/book-finalch4.html#x6-260003.4
 	#
-	class Config < Sequel::Model
+	class Config
 		extend Loggability
 		include Mongrel2::Constants
 
@@ -129,12 +135,14 @@ module Mongrel2
 			end
 
 			if self == Mongrel2::Config
-				self.log.debug "Resetting database connection for %d config classes to: %p" %
-					[ self.descendents.length, newdb ]
 				newdb.logger = Loggability[ Mongrel2 ].proxy_for( newdb )
 				newdb.sql_log_level = :debug
 
-				self.descendents.each {|subclass| subclass.db = newdb }
+				self.descendents.each do |subclass|
+					self.log.debug "Resetting database connection for %p to: %p" %
+						[ subclass, newdb ]
+					subclass.db = newdb
+				end
 			end
 		end
 
