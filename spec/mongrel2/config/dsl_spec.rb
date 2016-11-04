@@ -16,16 +16,11 @@ describe Mongrel2::Config::DSL do
 	include described_class
 
 	before( :all ) do
-		setup_logging()
 		setup_config_db()
 	end
 
 	before( :each ) do
 		clean_config_db()
-	end
-
-	after( :all ) do
-		reset_logging()
 	end
 
 

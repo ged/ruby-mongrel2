@@ -13,7 +13,6 @@ require 'mongrel2/control'
 describe Mongrel2::Control do
 
 	before( :all ) do
-		setup_logging()
 	end
 
 	before( :each ) do
@@ -30,7 +29,6 @@ describe Mongrel2::Control do
 
 	after( :all ) do
 		Mongrel2.instance_variable_set( :@zmq_ctx, nil )
-		reset_logging()
 	end
 
 

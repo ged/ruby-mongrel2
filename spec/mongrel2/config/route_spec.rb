@@ -14,16 +14,11 @@ require 'mongrel2/config'
 describe Mongrel2::Config::Route do
 
 	before( :all ) do
-		setup_logging()
 		setup_config_db()
 	end
 
 	before( :each ) do
 		@route = Mongrel2::Config::Route.new( :path => '' )
-	end
-
-	after( :all ) do
-		reset_logging()
 	end
 
 

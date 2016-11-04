@@ -14,7 +14,6 @@ require 'mongrel2/config'
 describe Mongrel2::Config::Directory do
 
 	before( :all ) do
-		setup_logging()
 		setup_config_db()
 	end
 
@@ -24,10 +23,6 @@ describe Mongrel2::Config::Directory do
 			:index_file    => 'index.html',
 			:default_ctype => 'text/plain'
 		)
-	end
-
-	after( :all ) do
-		reset_logging()
 	end
 
 

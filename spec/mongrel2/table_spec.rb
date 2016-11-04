@@ -12,17 +12,8 @@ require 'mongrel2/table'
 
 describe Mongrel2::Table do
 
-
-	before( :all ) do
-		setup_logging()
-	end
-
 	before( :each ) do
 		@table = Mongrel2::Table.new
-	end
-
-	after( :all ) do
-		reset_logging()
 	end
 
 
