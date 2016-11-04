@@ -22,10 +22,10 @@ module Mongrel2
 	log_as :mongrel2
 
 
-	abort "\n\n>>> Mongrel2 requires Ruby 1.9.2 or later. <<<\n\n" if RUBY_VERSION < '1.9.2'
+	abort "\n\n>>> Mongrel2 requires Ruby 2.2 or later. <<<\n\n" if RUBY_VERSION < '2.2.0'
 
 	# Library version constant
-	VERSION = '0.44.0'
+	VERSION = '0.45.0'
 
 	# Version-control revision constant
 	REVISION = %q$Revision$
