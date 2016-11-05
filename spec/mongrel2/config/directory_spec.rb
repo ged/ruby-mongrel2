@@ -11,11 +11,7 @@ require 'mongrel2/config'
 ###	C O N T E X T S
 #####################################################################
 
-describe Mongrel2::Config::Directory do
-
-	before( :all ) do
-		setup_config_db()
-	end
+describe Mongrel2::Config::Directory, :db do
 
 	before( :each ) do
 		@dir = Mongrel2::Config::Directory.new(

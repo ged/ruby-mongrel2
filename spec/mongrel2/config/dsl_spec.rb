@@ -11,17 +11,9 @@ require 'mongrel2/config'
 ###	C O N T E X T S
 #####################################################################
 
-describe Mongrel2::Config::DSL do
+describe Mongrel2::Config::DSL, :db do
 
 	include described_class
-
-	before( :all ) do
-		setup_config_db()
-	end
-
-	before( :each ) do
-		clean_config_db()
-	end
 
 
 	describe 'servers' do

@@ -11,11 +11,7 @@ require 'mongrel2/config'
 ###	C O N T E X T S
 #####################################################################
 
-describe Mongrel2::Config::Handler do
-
-	before( :all ) do
-		setup_config_db()
-	end
+describe Mongrel2::Config::Handler, :db do
 
 	before( :each ) do
 		Mongrel2::Config::Handler.truncate

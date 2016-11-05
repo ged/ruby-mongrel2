@@ -42,20 +42,6 @@ module Mongrel2::SpecHelpers
 	end
 
 
-	### Set up a Mongrel2 configuration database in memory.
-	def setup_config_db
-		Mongrel2::Config.db ||= Mongrel2::Config.in_memory_db
-		Mongrel2::Config.init_database
-		clean_config_db()
-	end
-
-
-	### Wipe out any existing db data.
-	def clean_config_db
-		Mongrel2::Config.db.tables.collect {|t| Mongrel2::Config.db[t] }.each( &:truncate )
-	end
-
-
 	### Normalize and fill in missing members for the given +opts+.
 	def normalize_headers( opts, defaults=TEST_HEADERS )
 		headers = defaults.merge( opts[:headers] || {} )
@@ -171,6 +157,7 @@ module Mongrel2::SpecHelpers
 		return data.encode( 'binary' )
 	end
 
+
 	### Make a Mongrel2 handshake request for a WebSocket route.
 	def make_websocket_handshake( opts={} )
 		opts = TEST_WEBSOCKET_REQUEST_OPTS.merge( opts )
@@ -191,6 +178,7 @@ module Mongrel2::SpecHelpers
 		]
 		return data.encode( 'binary' )
 	end
+
 
 	### Make a Mongrel2 frame for a WebSocket route.
 	def make_websocket_frame( opts={} )
@@ -215,8 +203,6 @@ module Mongrel2::SpecHelpers
 
 end
 
-
-abort "You need a version of RSpec >= 2.6.0" unless defined?( RSpec )
 
 if defined?( ::Amalgalite )
 	$stderr.puts ">>> Using Amalgalite #{Amalgalite::VERSION} for DB access."

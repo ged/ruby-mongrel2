@@ -52,7 +52,6 @@ class Mongrel2::Request
 	end
 
 
-
 	### Register the specified +subclass+ as the class to instantiate when the +METHOD+
 	### header is one of the specified +req_methods+. This method exists for frameworks
 	### which wish to provide their own Request types.
