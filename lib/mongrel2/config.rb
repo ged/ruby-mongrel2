@@ -164,7 +164,11 @@ module Mongrel2
 
 		### Return a Hash of current mimetypes from the config database keyed by extension.
 		def self::mimetypes
-			return Mongrel2::Config::Mimetype.to_hash( :extension, :mimetype )
+			unless @mimetypes
+				@mimetypes = Mongrel2::Config::Mimetype.to_hash( :extension, :mimetype )
+				@mimetypes.freeze
+			end
+			return @mimetypes
 		end
 
 
