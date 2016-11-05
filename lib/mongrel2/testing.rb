@@ -15,6 +15,46 @@ module Mongrel2
 	# A collection of helper functions that are generally useful
 	# for testing Mongrel2::Handlers.
 	module SpecHelpers
+
+		### Inclusion callback -- install some hooks
+		def self::included( context )
+
+			context.before( :all ) do
+				setup_config_db
+			end
+
+			context.around( :each ) do |example|
+				if (( setting = example.metadata[:db] ))
+					if setting == :no_transaction || setting == :without_transaction
+						Loggability[ Mongrel2 ].debug "  running without a transaction"
+						example.run
+					else
+						Loggability[ Mongrel2 ].debug "  running with a transaction"
+						Mongrel2::Config.db.transaction( rollback: :always ) do
+							example.run
+						end
+					end
+				else
+					example.run
+				end
+			end
+
+			super
+		end
+
+
+		### Set up a Mongrel2 configuration database in memory.
+		def setup_config_db
+			Mongrel2::Config.db ||= Mongrel2::Config.in_memory_db
+			Mongrel2::Config.init_database!
+		end
+
+
+		### Truncate all the tables in the current config DB.
+		def clean_config_db
+			Mongrel2::Config.db.tables.collect {|t| Mongrel2::Config.db[t] }.each( &:truncate )
+		end
+
 	end # module SpecHelpers
 
 

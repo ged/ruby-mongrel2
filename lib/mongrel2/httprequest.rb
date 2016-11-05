@@ -11,11 +11,13 @@ require 'mongrel2/httpresponse'
 class Mongrel2::HTTPRequest < Mongrel2::Request
 	extend Loggability
 
-	# Loggability API -- set up logging under the 'mongrel2' log host
-	log_to :mongrel2
 
 	# HTTP verbs from RFC2616
 	HANDLED_HTTP_METHODS = [ :OPTIONS, :GET, :HEAD, :POST, :PUT, :DELETE, :TRACE, :CONNECT ]
+
+
+	# Loggability API -- set up logging under the 'mongrel2' log host
+	log_to :mongrel2
 
 	# Mongrel2::Request API -- register this class as handling the HTTP verbs
 	register_request_type( self, *HANDLED_HTTP_METHODS )

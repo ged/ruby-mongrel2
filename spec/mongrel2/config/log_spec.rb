@@ -13,12 +13,7 @@ require 'mongrel2/config'
 ###	C O N T E X T S
 #####################################################################
 
-describe Mongrel2::Config::Log do
-
-	before( :all ) do
-		setup_config_db()
-	end
-
+describe Mongrel2::Config::Log, :db do
 
 	it "has a convenience method for writing to the commit log" do
 		what  = 'load etc/mongrel2.conf'

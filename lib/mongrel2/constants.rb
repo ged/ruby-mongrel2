@@ -29,7 +29,6 @@ module Mongrel2::Constants
 	# Maximum number of identifiers that can be included in a broadcast response
 	MAX_BROADCAST_IDENTS = 100
 
-
 	# HTTP status and result constants
 	module HTTP
 		CONTINUE                      = 100
@@ -171,7 +170,6 @@ module Mongrel2::Constants
 		]
 
 	end
-
 
 end # module Mongrel2::Constants
 

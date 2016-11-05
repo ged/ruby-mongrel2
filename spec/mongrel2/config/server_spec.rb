@@ -11,11 +11,7 @@ require 'mongrel2/config'
 ###	C O N T E X T S
 #####################################################################
 
-describe Mongrel2::Config::Server do
-
-	before( :all ) do
-		setup_config_db()
-	end
+describe Mongrel2::Config::Server, :db do
 
 	before( :each ) do
 		@server = Mongrel2::Config::Server.new(

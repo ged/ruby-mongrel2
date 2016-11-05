@@ -11,7 +11,7 @@ require 'mongrel2/handler'
 ###	C O N T E X T S
 #####################################################################
 
-describe Mongrel2::Handler do
+describe Mongrel2::Handler, :db do
 
 	# Make a handler class for testing that only ever handles one request, and
 	# keeps track of any requests it handles and their responses.
@@ -32,11 +32,6 @@ describe Mongrel2::Handler do
 		end
 
 	end # class OneShotHandler
-
-
-	before( :all ) do
-		setup_config_db()
-	end
 
 
 	# Ensure 0MQ never actually gets called

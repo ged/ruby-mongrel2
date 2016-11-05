@@ -11,11 +11,7 @@ require 'mongrel2/config'
 ###	C O N T E X T S
 #####################################################################
 
-describe Mongrel2::Config::Route do
-
-	before( :all ) do
-		setup_config_db()
-	end
+describe Mongrel2::Config::Route, :db do
 
 	before( :each ) do
 		@route = Mongrel2::Config::Route.new( :path => '' )

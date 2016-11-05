@@ -16,10 +16,9 @@ require 'mongrel2/request'
 ###	C O N T E X T S
 #####################################################################
 
-describe Mongrel2::Request do
+describe Mongrel2::Request, :db do
 
 	before( :all ) do
-		setup_config_db()
 
 		# Set up a test server config so the request can find the server's chroot
 		server 'specs' do
