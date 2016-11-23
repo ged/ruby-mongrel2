@@ -306,6 +306,8 @@ describe Mongrel2::Handler, :db do
 		expect( @request_sock ).to receive( :recv ).and_return( req )
 
 		res = OneShotHandler.new( TEST_UUID, TEST_SEND_SPEC, TEST_RECV_SPEC ).run
+		request, response = res.transactions.first
+		expect( request.body ).to be_closed
 		expect( spoolfile ).to_not exist
 	end
 end

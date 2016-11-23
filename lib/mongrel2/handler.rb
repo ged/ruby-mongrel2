@@ -260,6 +260,7 @@ class Mongrel2::Handler
 		# Remove any temporarily spooled Mongrel2 files.
 		begin
 			if req && req.body && req.body.respond_to?( :path ) && req.body.path
+				req.body.close unless req.body.closed?
 				File.unlink( req.body.path )
 			end
 		rescue Errno::ENOENT => err
