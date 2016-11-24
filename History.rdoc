@@ -1,3 +1,10 @@
+== v0.47.0 [2016-11-23] Mahlon E. Smith <mahlon@martini.nu>
+
+Enhancements:
+
+- Close spooled request bodies at the end of the request lifecycle.
+
+
 == v0.46.0 [2016-11-05] Michael Granger <ged@FaerieMUD.org>
 
 Enhancements:
