@@ -31,7 +31,7 @@ s = server 'examples' do
 	# your main host
 	host 'localhost' do
 
-		route '/', directory( "#{basedir}/data/mongrel2/", 'bootstrap.html', 'text/html' )
+		route '/', directory( "#{basedir}/public/", 'bootstrap.html', 'text/html' )
 		route '/source', directory( "#{basedir}/examples/", 'README.txt', 'text/plain' )
 
 		# Handlers

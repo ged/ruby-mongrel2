@@ -1,6 +1,6 @@
 #!/usr/bin/ruby
 
-require 'zmq'
+require 'cztop'
 require 'yajl'
 require 'pathname'
 require 'tnetstring'
@@ -27,9 +27,8 @@ class Mongrel2::Control
 	### Create a new control port object using the current configuration.
 	def initialize( port=DEFAULT_PORT )
 		check_port( port )
-		@ctx = Mongrel2.zmq_context
-		@socket = @ctx.socket( :REQ )
-		@socket.linger = 0
+		@socket = CZTop::Socket::REQ.new
+		@socket.options.linger = 0
 		@socket.connect( port.to_s )
 	end
 
@@ -172,11 +171,11 @@ class Mongrel2::Control
 	def request( command, options={} )
 		msg = TNetstring.dump([ command, options ])
 		self.log.debug "Request: %p" % [ msg ]
-		self.socket.send( msg )
+		self.socket << msg
 
-		response = self.socket.recv
+		response = self.socket.receive
 		self.log.debug "Response: %p" % [ response ]
-		return unpack_response( response )
+		return unpack_response( response.pop )
 	end
 
 

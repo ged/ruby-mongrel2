@@ -29,6 +29,7 @@ class RequestDumper < Mongrel2::Handler
 		template.request = request
 		template.title = "Ruby-Mongrel2 Request Dumper"
 		template.safelevel = $SAFE
+		template.gem_versions = gem_versions()
 
 		response.status = 200
 		response.headers.content_type = 'text/html'
@@ -36,6 +37,14 @@ class RequestDumper < Mongrel2::Handler
 
 		response
 	end
+
+
+	def gem_versions
+		return Gem.loaded_specs.each_with_object({}) do |(name, spec), hash|
+			hash[ name ] = spec.version.to_s
+		end
+	end
+
 
 end # class RequestDumper
 

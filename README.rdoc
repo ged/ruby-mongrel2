@@ -155,10 +155,6 @@ and generate the API documentation.
 There are two other Mongrel2 Ruby libraries, +m2r+ +rack-mongrel2+.
 This implementation differs from them in several ways:
 
-* It uses a C extension for 0MQ (rbczmq) instead of the FFI one. If you
-  strongly prefer the FFI library, both of the other Mongrel2 libraries use
-  it, so you'll want to stick to one of them.
-
 * It doesn't come with a Rack handler, or Rails examples, or anything too
   fancy. I intend to build my own webby framework bits around Mongrel2, and
   I thought maybe someone else might want to as well. If you don't, well

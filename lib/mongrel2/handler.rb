@@ -1,7 +1,7 @@
 #-*- ruby -*-
 #encoding: utf-8
 
-require 'zmq'
+require 'cztop'
 require 'loggability'
 
 require 'mongrel2' unless defined?( Mongrel2 )
@@ -135,8 +135,16 @@ class Mongrel2::Handler
 	### Create a new instance of the handler with the specified +app_id+, +send_spec+,
 	### and +recv_spec+.
 	def initialize( app_id, send_spec, recv_spec ) # :notnew:
-		@app_id = app_id
-		@conn   = Mongrel2::Connection.new( app_id, send_spec, recv_spec )
+		@app_id    = app_id
+		@conn      = Mongrel2::Connection.new( app_id, send_spec, recv_spec )
+#		@self_pipe = CZTop::Socket::PAIR.new( 'inproc://signal-handler' )
+
+		@self_pipe = {
+			reader: CZTop::Socket::PAIR.new( '@inproc://signal-handler' ),
+			writer: CZTop::Socket::PAIR.new( '>inproc://signal-handler' )
+		}
+
+		@poller = CZTop::Poller.new( @conn.request_sock, @self_pipe[:reader] )
 
 		Thread.main[:signal_queue] = []
 	end
@@ -156,6 +164,7 @@ class Mongrel2::Handler
 	### Run the handler.
 	def run
 		self.log.info "Starting up %p" % [ self ]
+
 		self.set_signal_handlers
 		self.start_accepting_requests
 
@@ -164,7 +173,6 @@ class Mongrel2::Handler
 		self.restore_signal_handlers
 		self.log.info "Done: %p" % [ self ]
 		@conn.close
-		Mongrel2.zmq_context.close if Mongrel2.zmq_context.respond_to?( :close )
 	end
 
 
@@ -222,6 +230,9 @@ class Mongrel2::Handler
 		self.log.info "Restarting"
 		old_conn = @conn
 		@conn = @conn.dup
+
+		@poller = CZTop::Poller.new( @conn.request_sock, @self_pipe[:reader] )
+
 		self.log.debug "  conn %p -> %p" % [ old_conn, @conn ]
 		old_conn.close
 	end
@@ -229,26 +240,34 @@ class Mongrel2::Handler
 
 	### Start a loop, accepting a request and handling it.
 	def start_accepting_requests
+		self.log.info "Starting the request loop."
 		until @conn.closed?
-			ZMQ.select([ @conn.request_sock ])
-			self.accept_request unless @conn.closed?
+			begin
+				if event = @poller.wait
+					case event.socket
+					when @conn.request_sock
+						req = @conn.receive
+						self.accept_request( req ) unless @conn.closed?
+					when @self_pipe[:reader]
+						@self_pipe[:reader].wait
+						self.process_signal_queue
+					else
+						self.log.warn "Got unhandled poller event: %p" % [ event ]
+					end
+				end
+			rescue Errno::EAGAIN
+				# self.log.debug "Got EAGAIN, retrying."
+			rescue Interrupt
+				# self.log.debug "Got an Interrupt; retrying."
+			end
 		end
-	rescue ZMQ::Error => err
-		self.process_signal_queue
 
-		unless @conn.closed?
-			self.log.error "%p while accepting requests: %s" % [ err.class, err.message ]
-			self.log.debug { err.backtrace.join("\n  ") }
-
-			# Restart the method
-			retry
-		end
+		self.log.debug "Done accepting requests."
 	end
 
 
 	### Read a request from the connection and dispatch it.
-	def accept_request
-		req = @conn.receive
+	def accept_request( req )
 		self.log.info( req.inspect )
 		res = self.dispatch_request( req )
 
@@ -414,11 +433,23 @@ class Mongrel2::Handler
 	# be handled, override #set_signal_handlers with an empty method.
 	#
 
+	### Wake up the handler when a signal needs to be processed.
+	def wake_up
+		$stderr.puts "Waking up the signal handler"
+		@self_pipe[ :writer ].signal( 0 )
+		$stderr.puts "Done sending the wakeup."
+	end
+
+
 	### Set up signal handlers for common signals that will shut down, restart, etc.
 	def set_signal_handlers
 		self.log.debug "Setting up deferred signal handlers."
 		QUEUE_SIGS.each do |sig|
-			Signal.trap( sig ) { Thread.main[:signal_queue] << sig }
+			Signal.trap( sig ) do
+				Thread.main[:signal_queue] << sig
+				self.wake_up
+				$stderr.puts "Done handling the signal."
+			end
 		end
 	end
 
@@ -439,6 +470,7 @@ class Mongrel2::Handler
 			Signal.trap( sig, :DEFAULT )
 		end
 	end
+
 
 	### Handle any queued signals.
 	def process_signal_queue
