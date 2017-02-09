@@ -2,6 +2,9 @@
 
 require_relative '../helpers'
 
+require 'ostruct'
+require 'cztop'
+
 require 'mongrel2'
 require 'mongrel2/config'
 require 'mongrel2/handler'
@@ -36,20 +39,23 @@ describe Mongrel2::Handler, :db do
 
 	# Ensure 0MQ never actually gets called
 	before( :each ) do
-		@ctx = double( '0mq context', close: nil )
-		@request_sock = double( "request socket", :linger= => nil, :connect => nil, :close => nil )
-		@response_sock = double( "response socket", :linger= => nil, :connect => nil, :close => nil )
+		@request_sock    = instance_double( CZTop::Socket::PULL, :options => OpenStruct.new, :connect => nil, :close => nil )
+		@response_sock   = instance_double( CZTop::Socket::PUB, :options => OpenStruct.new, :connect => nil, :close => nil )
+		@selfpipe_reader = instance_double( CZTop::Socket::PAIR )
+		@selfpipe_writer = instance_double( CZTop::Socket::PAIR )
+		@poller          = instance_double( CZTop::Poller )
+		@poller_event    = instance_double( CZTop::Poller::Event )
 
-		allow( @ctx ).to receive( :socket ).with( :PULL ).and_return( @request_sock )
-		allow( @ctx ).to receive( :socket ).with( :PUB ).and_return( @response_sock )
+		allow( CZTop::Socket::PULL ).to receive( :new ).and_return( @request_sock )
+		allow( CZTop::Socket::PUB ).to receive( :new ).and_return( @response_sock )
+		allow( CZTop::Socket::PAIR ).to receive( :new ).with( '@inproc://signal-handler' ).
+			and_return( @selfpipe_reader )
+		allow( CZTop::Socket::PAIR ).to receive( :new ).with( '>inproc://signal-handler' ).
+			and_return( @selfpipe_writer )
+		allow( CZTop::Poller ).to receive( :new ).and_return( @poller )
 
-		allow( ZMQ ).to receive( :select ).and_return([ [@request_sock], [], [] ])
-
-		Mongrel2.instance_variable_set( :@zmq_ctx, @ctx )
-	end
-
-	after( :each ) do
-		Mongrel2.instance_variable_set( :@zmq_ctx, nil )
+		allow( @poller ).to receive( :wait ).and_return( @poller_event )
+		allow( @poller_event ).to receive( :socket ).and_return( @request_sock )
 	end
 
 
@@ -78,11 +84,12 @@ describe Mongrel2::Handler, :db do
 			).to eq([ TEST_SEND_SPEC, TEST_RECV_SPEC ])
 		end
 
+
 		it "has a convenience method for instantiating and running a Handler given an " +
 		   "application ID" do
 
 			req = make_request()
-			expect( @request_sock ).to receive( :recv ).and_return( req )
+			expect( @request_sock ).to receive( :receive ).and_return( CZTop::Message.new( req ) )
 
 			res = OneShotHandler.run( TEST_UUID )
 
@@ -92,9 +99,10 @@ describe Mongrel2::Handler, :db do
 			expect( res.conn.pub_addr ).to eq( TEST_RECV_SPEC )
 		end
 
+
 		it "knows what handler config corresponds to its" do
 			req = make_request()
-			expect( @request_sock ).to receive( :recv ).and_return( req )
+			expect( @request_sock ).to receive( :receive ).and_return( CZTop::Message.new( req ) )
 
 			res = OneShotHandler.run( TEST_UUID )
 
@@ -124,7 +132,7 @@ describe Mongrel2::Handler, :db do
 
 	it "dispatches HTTP requests to the #handle method" do
 		req = make_request()
-		expect( @request_sock ).to receive( :recv ).and_return( req )
+		expect( @request_sock ).to receive( :receive ).and_return( CZTop::Message.new( req ) )
 
 		res = OneShotHandler.new( TEST_UUID, TEST_SEND_SPEC, TEST_RECV_SPEC ).run
 
@@ -135,9 +143,10 @@ describe Mongrel2::Handler, :db do
 		expect( response.status ).to eq( 204 )
 	end
 
+
 	it "ignores JSON messages by default" do
 		req = make_json_request()
-		expect( @request_sock ).to receive( :recv ).and_return( req )
+		expect( @request_sock ).to receive( :receive ).and_return( CZTop::Message.new( req ) )
 
 		res = OneShotHandler.new( TEST_UUID, TEST_SEND_SPEC, TEST_RECV_SPEC ).run
 
@@ -146,6 +155,7 @@ describe Mongrel2::Handler, :db do
 		expect( request ).to be_a( Mongrel2::JSONRequest )
 		expect( response ).to be_nil()
 	end
+
 
 	it "dispatches JSON message to the #handle_json method" do
 		json_handler = Class.new( OneShotHandler ) do
@@ -155,7 +165,7 @@ describe Mongrel2::Handler, :db do
 		end
 
 		req = make_json_request()
-		expect( @request_sock ).to receive( :recv ).and_return( req )
+		expect( @request_sock ).to receive( :receive ).and_return( CZTop::Message.new( req ) )
 
 		res = json_handler.new( TEST_UUID, TEST_SEND_SPEC, TEST_RECV_SPEC ).run
 
@@ -165,9 +175,10 @@ describe Mongrel2::Handler, :db do
 		expect( response ).to be_a( Mongrel2::Response )
 	end
 
+
 	it "ignores XML messages by default" do
 		req = make_xml_request()
-		expect( @request_sock ).to receive( :recv ).and_return( req )
+		expect( @request_sock ).to receive( :receive ).and_return( CZTop::Message.new( req ) )
 
 		res = OneShotHandler.new( TEST_UUID, TEST_SEND_SPEC, TEST_RECV_SPEC ).run
 
@@ -177,6 +188,7 @@ describe Mongrel2::Handler, :db do
 		expect( response ).to be_nil()
 	end
 
+
 	it "dispatches XML message to the #handle_xml method" do
 		xml_handler = Class.new( OneShotHandler ) do
 			def handle_xml( request )
@@ -185,7 +197,7 @@ describe Mongrel2::Handler, :db do
 		end
 
 		req = make_xml_request()
-		expect( @request_sock ).to receive( :recv ).and_return( req )
+		expect( @request_sock ).to receive( :receive ).and_return( CZTop::Message.new( req ) )
 
 		res = xml_handler.new( TEST_UUID, TEST_SEND_SPEC, TEST_RECV_SPEC ).run
 
@@ -195,6 +207,7 @@ describe Mongrel2::Handler, :db do
 		expect( response ).to be_a( Mongrel2::Response )
 	end
 
+
 	it "dispatches WebSocket opening handshakes to the #handle_websocket_handshake method" do
 		ws_handler = Class.new( OneShotHandler ) do
 			def handle_websocket_handshake( handshake )
@@ -203,7 +216,7 @@ describe Mongrel2::Handler, :db do
 		end
 
 		req = make_websocket_handshake()
-		expect( @request_sock ).to receive( :recv ).and_return( req )
+		expect( @request_sock ).to receive( :receive ).and_return( CZTop::Message.new( req ) )
 
 		res = ws_handler.new( TEST_UUID, TEST_SEND_SPEC, TEST_RECV_SPEC ).run
 
@@ -213,6 +226,7 @@ describe Mongrel2::Handler, :db do
 		expect( response ).to be_a( Mongrel2::WebSocket::ServerHandshake )
 	end
 
+
 	it "dispatches WebSocket protocol frames to the #handle_websocket method" do
 		ws_handler = Class.new( OneShotHandler ) do
 			def handle_websocket( frame )
@@ -221,7 +235,7 @@ describe Mongrel2::Handler, :db do
 		end
 
 		req = make_websocket_frame()
-		expect( @request_sock ).to receive( :recv ).and_return( req )
+		expect( @request_sock ).to receive( :receive ).and_return( CZTop::Message.new( req ) )
 
 		res = ws_handler.new( TEST_UUID, TEST_SEND_SPEC, TEST_RECV_SPEC ).run
 
@@ -231,11 +245,13 @@ describe Mongrel2::Handler, :db do
 		expect( response ).to be_a( Mongrel2::WebSocket::Frame )
 	end
 
-	it "continues when a ZMQ::Error is received but the connection remains open" do
+
+	it "continues when a SocketError is received but the connection remains open" do
+		pending "Does this still apply?"
 		req = make_request()
 
-		expect( @request_sock ).to receive( :recv ).and_raise( ZMQ::Error.new("Interrupted system call.") )
-		expect( @request_sock ).to receive( :recv ).and_return( req )
+		expect( @request_sock ).to receive( :receive ).and_raise( SocketError.new("Interrupted system call.") )
+		expect( @request_sock ).to receive( :receive ).and_return( CZTop::Message.new( req ) )
 
 		res = OneShotHandler.new( TEST_UUID, TEST_SEND_SPEC, TEST_RECV_SPEC ).run
 
@@ -246,9 +262,10 @@ describe Mongrel2::Handler, :db do
 		expect( response.status ).to eq( 204 )
 	end
 
+
 	it "ignores disconnect notices by default" do
 		req = make_json_request( :path => '@*', :body => {'type' => 'disconnect'} )
-		expect( @request_sock ).to receive( :recv ).and_return( req )
+		expect( @request_sock ).to receive( :receive ).and_return( CZTop::Message.new( req ) )
 
 		res = OneShotHandler.new( TEST_UUID, TEST_SEND_SPEC, TEST_RECV_SPEC ).run
 
@@ -257,6 +274,7 @@ describe Mongrel2::Handler, :db do
 		expect( request ).to be_a( Mongrel2::JSONRequest )
 		expect( response ).to be_nil()
 	end
+
 
 	it "dispatches disconnect notices to the #handle_disconnect method" do
 		disconnect_handler = Class.new( OneShotHandler ) do
@@ -266,7 +284,7 @@ describe Mongrel2::Handler, :db do
 		end
 
 		req = make_json_request( :path => '@*', :body => {'type' => 'disconnect'} )
-		expect( @request_sock ).to receive( :recv ).and_return( req )
+		expect( @request_sock ).to receive( :receive ).and_return( CZTop::Message.new( req ) )
 
 		res = disconnect_handler.new( TEST_UUID, TEST_SEND_SPEC, TEST_RECV_SPEC ).run
 
@@ -276,10 +294,11 @@ describe Mongrel2::Handler, :db do
 		expect( response ).to be_nil()
 	end
 
+
 	it "cancels async upload notices by default" do
 		req = make_request( 'METHOD' => 'POST', :headers => {'x-mongrel2-upload-start' => 'uploadfile.XXX'} )
-		expect( @request_sock ).to receive( :recv ).and_return( req )
-		expect( @response_sock ).to receive( :send ).with( "#{TEST_UUID} 1:8, " )
+		expect( @request_sock ).to receive( :receive ).and_return( CZTop::Message.new( req ) )
+		expect( @response_sock ).to receive( :<< ).with( "#{TEST_UUID} 1:8, " )
 
 		res = OneShotHandler.new( TEST_UUID, TEST_SEND_SPEC, TEST_RECV_SPEC ).run
 
@@ -288,12 +307,14 @@ describe Mongrel2::Handler, :db do
 		expect( response ).to be_nil()
 	end
 
+
 	it "re-establishes its connection when told to restart" do
 		res = OneShotHandler.new( TEST_UUID, TEST_SEND_SPEC, TEST_RECV_SPEC )
 		original_conn = res.conn
 		res.restart
 		expect( res.conn ).to_not equal( original_conn )
 	end
+
 
 	it "cleans any mongrel2 request spool files after sending a response" do
 		spoolfile = Pathname.new( Dir.tmpdir + '/mongrel2.uskd8l1' )
@@ -303,7 +324,7 @@ describe Mongrel2::Handler, :db do
 			'x-mongrel2-upload-start' => spoolfile.basename,
 			'x-mongrel2-upload-done'  => spoolfile.basename
 		})
-		expect( @request_sock ).to receive( :recv ).and_return( req )
+		expect( @request_sock ).to receive( :receive ).and_return( CZTop::Message.new( req ) )
 
 		res = OneShotHandler.new( TEST_UUID, TEST_SEND_SPEC, TEST_RECV_SPEC ).run
 		request, response = res.transactions.first

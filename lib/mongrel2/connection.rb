@@ -2,7 +2,7 @@
 #encoding: utf-8
 
 require 'socket'
-require 'zmq'
+require 'cztop'
 require 'yajl'
 require 'digest/sha1'
 require 'loggability'
@@ -66,17 +66,14 @@ class Mongrel2::Connection
 
 	### Establish both connections to the Mongrel2 server.
 	def connect
-		ctx = Mongrel2.zmq_context
-		self.log.debug "0mq Context is: %p" % [ ctx ]
-
 		self.log.info "Connecting PULL request socket (%s)" % [ self.sub_addr ]
-		@request_sock = ctx.socket( :PULL )
-		@request_sock.linger = 0
+		@request_sock = CZTop::Socket::PULL.new
+		@request_sock.options.linger = 0
 		@request_sock.connect( self.sub_addr )
 
 		self.log.info "Connecting PUB response socket (%s)" % [ self.pub_addr ]
-		@response_sock = ctx.socket( :PUB )
-		@response_sock.linger = 0
+		@response_sock = CZTop::Socket::PUB.new
+		@response_sock.options.linger = 0
 		@response_sock.connect( self.pub_addr )
 	end
 
@@ -104,7 +101,8 @@ class Mongrel2::Connection
 		self.check_closed
 
 		self.log.debug "Fetching next request (PULL)"
-		data = self.request_sock.recv or raise( ZMQ.error || 'unknown error' )
+		message = self.request_sock.receive
+		data = message.pop
 		self.log.debug "  got %d bytes of %s request data" % [ data.bytesize, data.encoding.name ]
 		return data
 	end
@@ -124,7 +122,7 @@ class Mongrel2::Connection
 		header = "%s %d:%s," % [ sender_id, conn_id.to_s.length, conn_id ]
 		buf = header + ' ' + data
 		self.log.debug "Sending response (PUB)"
-		self.response_sock.send( buf )
+		self.response_sock << buf
 		self.log.debug "  done with send (%d bytes)" % [ buf.bytesize ]
 	end
 
@@ -136,7 +134,7 @@ class Mongrel2::Connection
 		self.log.debug "Sending response with %s extended reply (PUB)"
 		header = "%s %d:X %s," % [ sender_id, conn_id.to_s.length + 2, conn_id ]
 		buf = header + ' ' + TNetstring.dump( [response_type] + data )
-		self.response_sock.send( buf )
+		self.response_sock << buf
 		self.log.debug "  done with send (%d bytes)" % [ buf.bytesize ]
 	end
 

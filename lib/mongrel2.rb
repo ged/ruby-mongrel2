@@ -1,11 +1,8 @@
 # -*- ruby -*-
 #encoding: utf-8
 
-# Ensure this is used instead of 'zmq' if it's also installed
-gem 'rbczmq'
-
 require 'loggability'
-require 'zmq'
+require 'cztop'
 
 #
 # A Mongrel2 connector and configuration library for Ruby.
@@ -44,20 +41,6 @@ module Mongrel2
 	end
 
 
-	# ZMQ::Context (lazy-loaded)
-	@zmq_ctx = nil
-
-	### Fetch the ZMQ::Context for sockets, creating it if necessary.
-	def self::zmq_context
-		if @zmq_ctx.nil?
-			self.log.info "Using 0MQ %d.%d.%d" % ZMQ.version
-			@zmq_ctx = ZMQ::Context.new
-		end
-
-		return @zmq_ctx
-	end
-
-
 	require 'mongrel2/exceptions'
 	require 'mongrel2/connection'
 	require 'mongrel2/handler'
@@ -70,13 +53,5 @@ module Mongrel2
 	require 'mongrel2/control'
 
 end # module Mongrel2
-
-
-# Workaround for rbzmq <= 2.3.0
-unless defined?( ZMQ::Error )
-	module ZMQ
-		Error = ::RuntimeError
-	end
-end
 
 

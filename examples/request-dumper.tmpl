@@ -62,10 +62,24 @@
 		<section id="inspect">
 			<header>
 				<h1>Inspected Request</h1>
+			</header>
+
 				<pre>
 <?pp request ?>
 				</pre>
+		</section>
+
+
+		<section id="gem-versions">
+			<header>
+				<h1>Gem Versions</h1>
 			</header>
+
+			<ul>
+				<?for gem, version in gem_versions ?>
+				<li><strong><?attr gem ?></strong>: <?attr version ?></li>
+				<?end for ?>
+			</ul>
 		</section>
 
   </section>
