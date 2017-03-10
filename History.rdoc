@@ -1,3 +1,10 @@
+==  v0.49.0 [2017-03-10] Michael Granger <ged@FaerieMUD.org>
+
+Enhancements:
+
+- Use the CZTop library instead of rbczmq for ZeroMQ sockets.
+
+
 == v0.48.0 [2017-01-16] Mahlon E. Smith <mahlon@martini.nu>
 
 Housekeeping:
