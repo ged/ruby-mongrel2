@@ -1,3 +1,11 @@
+== v0.48.0 [2017-01-16] Mahlon E. Smith <mahlon@martini.nu>
+
+Housekeeping:
+
+- Removed explicit versions for .gems local development
+- Bumped Configurability dependency.
+
+
 == v0.47.0 [2016-11-23] Mahlon E. Smith <mahlon@martini.nu>
 
 Enhancements:
