@@ -8,6 +8,8 @@ Manifest.txt
 README.rdoc
 Rakefile
 bin/m2sh.rb
+data/mongrel2/config.sql
+data/mongrel2/mimetypes.sql
 lib/mongrel2.rb
 lib/mongrel2/config.rb
 lib/mongrel2/config/directory.rb
