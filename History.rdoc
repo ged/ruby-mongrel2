@@ -1,3 +1,10 @@
+==  v0.50.0 [2017-04-24] Michael Granger <ged@FaerieMUD.org>
+
+Bugfixes:
+
+- Fix issues with (and require) Sequel 4.45+
+
+
 ==  v0.49.0 [2017-03-10] Michael Granger <ged@FaerieMUD.org>
 
 Enhancements:
