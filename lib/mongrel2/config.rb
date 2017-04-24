@@ -259,19 +259,7 @@ module Mongrel2
 
 	### Factory method that creates subclasses of Mongrel2::Config.
 	def self::Config( source )
-		unless Sequel::Model::ANONYMOUS_MODEL_CLASSES.key?( source )
-			anonclass = nil
-			if source.is_a?( Sequel::Database )
-				anonclass = Class.new( Mongrel2::Config )
-				anonclass.db = source
-			else
-				anonclass = Class.new( Mongrel2::Config ).set_dataset( source )
-			end
-
-			Sequel::Model::ANONYMOUS_MODEL_CLASSES[ source ] = anonclass
-		end
-
-		return Sequel::Model::ANONYMOUS_MODEL_CLASSES[ source ]
+		return Mongrel2::Config.Model( source )
 	end
 
 	require 'mongrel2/config/directory'
