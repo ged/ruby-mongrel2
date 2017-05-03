@@ -136,15 +136,11 @@ class Mongrel2::Handler
 	### and +recv_spec+.
 	def initialize( app_id, send_spec, recv_spec ) # :notnew:
 		@app_id    = app_id
+
 		@conn      = Mongrel2::Connection.new( app_id, send_spec, recv_spec )
-#		@self_pipe = CZTop::Socket::PAIR.new( 'inproc://signal-handler' )
 
-		@self_pipe = {
-			reader: CZTop::Socket::PAIR.new( '@inproc://signal-handler' ),
-			writer: CZTop::Socket::PAIR.new( '>inproc://signal-handler' )
-		}
-
-		@poller = CZTop::Poller.new( @conn.request_sock, @self_pipe[:reader] )
+		@self_pipe = nil
+		@poller    = nil
 
 		Thread.main[:signal_queue] = []
 	end
@@ -165,6 +161,13 @@ class Mongrel2::Handler
 	def run
 		self.log.info "Starting up %p" % [ self ]
 
+		@self_pipe = {
+			reader: CZTop::Socket::PAIR.new( '@inproc://signal-handler' ),
+			writer: CZTop::Socket::PAIR.new( '>inproc://signal-handler' )
+		}
+
+		@poller = CZTop::Poller.new( @conn.request_sock, @self_pipe[:reader] )
+
 		self.set_signal_handlers
 		self.start_accepting_requests
 
@@ -172,7 +175,7 @@ class Mongrel2::Handler
 	ensure
 		self.restore_signal_handlers
 		self.log.info "Done: %p" % [ self ]
-		@conn.close
+		@conn.close if @conn
 	end
 
 
@@ -228,13 +231,14 @@ class Mongrel2::Handler
 	### database connections, flush caches, or other restart-ey stuff.
 	def restart
 		self.log.info "Restarting"
-		old_conn = @conn
-		@conn = @conn.dup
+		if (( old_conn = @conn ))
+			@conn = @conn.dup
 
-		@poller = CZTop::Poller.new( @conn.request_sock, @self_pipe[:reader] )
+			@poller = CZTop::Poller.new( @conn.request_sock, @self_pipe[:reader] )
 
-		self.log.debug "  conn %p -> %p" % [ old_conn, @conn ]
-		old_conn.close
+			self.log.debug "  conn %p -> %p" % [ old_conn, @conn ]
+			old_conn.close
+		end
 	end
 
 

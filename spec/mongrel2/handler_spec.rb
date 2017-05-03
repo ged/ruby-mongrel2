@@ -310,8 +310,13 @@ describe Mongrel2::Handler, :db do
 
 	it "re-establishes its connection when told to restart" do
 		res = OneShotHandler.new( TEST_UUID, TEST_SEND_SPEC, TEST_RECV_SPEC )
+		pipe_reader = instance_double( CZTop::Socket::PAIR )
+		pipe_writer = instance_double( CZTop::Socket::PAIR )
+		res.instance_variable_set( :@self_pipe, {reader: pipe_reader, writer: pipe_writer} )
+
 		original_conn = res.conn
 		res.restart
+
 		expect( res.conn ).to_not equal( original_conn )
 	end
 
