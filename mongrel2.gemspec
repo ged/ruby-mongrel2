@@ -1,15 +1,15 @@
 # -*- encoding: utf-8 -*-
-# stub: mongrel2 0.51.0.pre20170424092442 ruby lib
+# stub: mongrel2 0.51.0.pre20170531150940 ruby lib
 
 Gem::Specification.new do |s|
   s.name = "mongrel2".freeze
-  s.version = "0.51.0.pre20170424092442"
+  s.version = "0.51.0.pre20170531150940"
 
   s.required_rubygems_version = Gem::Requirement.new("> 1.3.1".freeze) if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib".freeze]
   s.authors = ["Michael Granger".freeze]
   s.cert_chain = ["certs/ged.pem".freeze]
-  s.date = "2017-04-24"
+  s.date = "2017-05-31"
   s.description = "Ruby-Mongrel2 is a complete Ruby connector for Mongrel2[http://mongrel2.org/].\n\nThis library includes configuration-database ORM classes, a Ruby\nimplementation of the 'm2sh' tool, a configuration DSL for generating config\ndatabases in pure Ruby, a Control port interface object, and handler classes\nfor creating applications or higher-level frameworks.".freeze
   s.email = ["ged@FaerieMUD.org".freeze]
   s.executables = ["m2sh.rb".freeze]
@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
   s.licenses = ["BSD-3-Clause".freeze]
   s.rdoc_options = ["--main".freeze, "README.rdoc".freeze]
   s.required_ruby_version = Gem::Requirement.new(">= 2.2.0".freeze)
-  s.rubygems_version = "2.6.11".freeze
+  s.rubygems_version = "2.6.12".freeze
   s.summary = "Ruby-Mongrel2 is a complete Ruby connector for Mongrel2[http://mongrel2.org/]".freeze
 
   if s.respond_to? :specification_version then
@@ -29,7 +29,7 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<cztop>.freeze, ["~> 0.11"])
       s.add_runtime_dependency(%q<libxml-ruby>.freeze, ["~> 2.7"])
       s.add_runtime_dependency(%q<loggability>.freeze, ["~> 0.12"])
-      s.add_runtime_dependency(%q<sequel>.freeze, ["~> 4.45"])
+      s.add_runtime_dependency(%q<sequel>.freeze, ["= 4.45"])
       s.add_runtime_dependency(%q<sqlite3>.freeze, ["~> 1.3"])
       s.add_runtime_dependency(%q<sysexits>.freeze, ["~> 1.1"])
       s.add_runtime_dependency(%q<tnetstring>.freeze, ["~> 0.3"])
@@ -48,7 +48,7 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<cztop>.freeze, ["~> 0.11"])
       s.add_dependency(%q<libxml-ruby>.freeze, ["~> 2.7"])
       s.add_dependency(%q<loggability>.freeze, ["~> 0.12"])
-      s.add_dependency(%q<sequel>.freeze, ["~> 4.45"])
+      s.add_dependency(%q<sequel>.freeze, ["= 4.45"])
       s.add_dependency(%q<sqlite3>.freeze, ["~> 1.3"])
       s.add_dependency(%q<sysexits>.freeze, ["~> 1.1"])
       s.add_dependency(%q<tnetstring>.freeze, ["~> 0.3"])
@@ -68,7 +68,7 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<cztop>.freeze, ["~> 0.11"])
     s.add_dependency(%q<libxml-ruby>.freeze, ["~> 2.7"])
     s.add_dependency(%q<loggability>.freeze, ["~> 0.12"])
-    s.add_dependency(%q<sequel>.freeze, ["~> 4.45"])
+    s.add_dependency(%q<sequel>.freeze, ["= 4.45"])
     s.add_dependency(%q<sqlite3>.freeze, ["~> 1.3"])
     s.add_dependency(%q<sysexits>.freeze, ["~> 1.1"])
     s.add_dependency(%q<tnetstring>.freeze, ["~> 0.3"])
