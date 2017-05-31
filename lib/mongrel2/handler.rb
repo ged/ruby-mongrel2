@@ -161,9 +161,10 @@ class Mongrel2::Handler
 	def run
 		self.log.info "Starting up %p" % [ self ]
 
+		rand_id = "%d-%s" % [ Process.pid, SecureRandom.hex(8) ]
 		@self_pipe = {
-			reader: CZTop::Socket::PAIR.new( '@inproc://signal-handler' ),
-			writer: CZTop::Socket::PAIR.new( '>inproc://signal-handler' )
+			reader: CZTop::Socket::PAIR.new( "@inproc://signal-handler-#{rand_id}" ),
+			writer: CZTop::Socket::PAIR.new( ">inproc://signal-handler-#{rand_id}" )
 		}
 
 		@poller = CZTop::Poller.new( @conn.request_sock, @self_pipe[:reader] )

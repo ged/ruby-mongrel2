@@ -48,9 +48,9 @@ describe Mongrel2::Handler, :db do
 
 		allow( CZTop::Socket::PULL ).to receive( :new ).and_return( @request_sock )
 		allow( CZTop::Socket::PUB ).to receive( :new ).and_return( @response_sock )
-		allow( CZTop::Socket::PAIR ).to receive( :new ).with( '@inproc://signal-handler' ).
+		allow( CZTop::Socket::PAIR ).to receive( :new ).with( %r|@inproc://signal-handler-\d+-\w{8}| ).
 			and_return( @selfpipe_reader )
-		allow( CZTop::Socket::PAIR ).to receive( :new ).with( '>inproc://signal-handler' ).
+		allow( CZTop::Socket::PAIR ).to receive( :new ).with( %r|>inproc://signal-handler-\d+-\w{8}| ).
 			and_return( @selfpipe_writer )
 		allow( CZTop::Poller ).to receive( :new ).and_return( @poller )
 
