@@ -2,6 +2,7 @@
 #encoding: utf-8
 
 require 'cztop'
+require 'securerandom'
 require 'loggability'
 
 require 'mongrel2' unless defined?( Mongrel2 )
