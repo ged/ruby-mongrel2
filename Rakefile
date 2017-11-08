@@ -25,15 +25,15 @@ hoespec = Hoe.spec 'mongrel2' do
 
 	self.developer 'Michael Granger', 'ged@FaerieMUD.org'
 
-	self.dependency 'cztop',       '~> 0.11'
-	self.dependency 'libxml-ruby', '~> 2.7'
-	self.dependency 'loggability', '~> 0.12'
-	self.dependency 'sequel',      '= 4.45'
-	self.dependency 'sqlite3',     '~> 1.3'
-	self.dependency 'sysexits',    '~> 1.1'
-	self.dependency 'tnetstring',  '~> 0.3'
-	self.dependency 'trollop',     '~> 2.0'
-	self.dependency 'yajl-ruby',   '~> 1.0'
+	self.dependency 'cztop',                '~> 0.11'
+	self.dependency 'libxml-ruby',          '~> 2.7'
+	self.dependency 'loggability',          '~> 0.12'
+	self.dependency 'sequel',               '~> 5.2'
+	self.dependency 'sqlite3',              '~> 1.3'
+	self.dependency 'sysexits',             '~> 1.1'
+	self.dependency 'tnetstring',           '~> 0.3'
+	self.dependency 'trollop',              '~> 2.0'
+	self.dependency 'yajl-ruby',            '~> 1.0'
 
 	self.dependency 'amalgalite',      '~> 1.5', :developer
 	self.dependency 'configurability', '~> 3.1', :developer

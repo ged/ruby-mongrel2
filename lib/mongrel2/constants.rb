@@ -11,7 +11,7 @@ module Mongrel2::Constants
 	# The Pathname of the data directory
 	DATA_DIR = if ENV['MONGREL2_DATADIR']
 			Pathname( ENV['MONGREL2_DATADIR'] )
-		elsif Gem.datadir( 'mongrel2' )
+		elsif Gem.datadir( 'mongrel2' ) && File.directory?( Gem.datadir('mongrel2') )
 			Pathname( Gem.datadir('mongrel2') )
 		else
 			Pathname( __FILE__ ).dirname.parent.parent + 'data/mongrel2'
