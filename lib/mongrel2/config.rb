@@ -37,6 +37,7 @@ module Mongrel2
 	# `models`, and makes inheriting it more straightforward.
 	# Thanks to Jeremy Evans for the suggestion.
 	Config = Class.new( Sequel::Model )
+	Config.require_valid_table = false
 
 	# The base Mongrel2 database-backed configuration class. It's a subclass of Sequel::Model, so
 	# you'll first need to be familiar with Sequel (http://sequel.rubyforge.org/) and
@@ -130,8 +131,11 @@ module Mongrel2
 		### Reset the database connection that all model objects will use to +newdb+, which should
 		### be a Sequel::Database.
 		def self::db=( newdb )
-			self.without_sql_logging( newdb ) do
-				super
+			@db = newdb
+			if @dataset
+				Loggability.for_logger( self ).with_level( :fatal ) do
+					set_dataset( newdb.dataset.clone(@dataset.opts) )
+				end
 			end
 
 			if self == Mongrel2::Config
