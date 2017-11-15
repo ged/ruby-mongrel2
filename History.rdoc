@@ -1,3 +1,15 @@
+==  v0.51.0 [2017-11-15] Michael Granger <ged@FaerieMUD.org>
+
+Enhancements:
+
+- Support (require) Sequel 5
+- Update libxml-ruby dependency to the latest
+
+Bugfixes:
+
+- Add missing config input file for the bootstrap command
+
+
 == v0.50.2 [2017-07-05] Michael Granger <ged@FaerieMUD.org>
 
 Bugfixes:
