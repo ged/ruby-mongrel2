@@ -1,3 +1,11 @@
+== v0.52.0 [2018-07-21] Michael Granger <ged@FaerieMUD.org>
+
+Enhancements:
+
+- Refactor IO code to use cztop-reactor
+- Fix use of Gem.datadir for newer Rubygems.
+
+
 ==  v0.51.0 [2017-11-15] Michael Granger <ged@FaerieMUD.org>
 
 Enhancements:
