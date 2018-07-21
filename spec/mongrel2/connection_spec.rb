@@ -14,9 +14,6 @@ require 'mongrel2/connection'
 describe Mongrel2::Connection do
 	include Mongrel2::Config::DSL
 
-	before( :all ) do
-	end
-
 	# Ensure 0MQ never actually gets called
 	before( :each ) do
 		@conn = Mongrel2::Connection.new( TEST_UUID, TEST_SEND_SPEC, TEST_RECV_SPEC )
@@ -27,6 +24,7 @@ describe Mongrel2::Connection do
 		expect( @conn.instance_variable_get( :@request_sock ) ).to be_nil()
 		expect( @conn.instance_variable_get( :@response_sock ) ).to be_nil()
 	end
+
 
 	it "connects to the endpoints specified on demand" do
 		request_sock = double( "request socket", options: OpenStruct.new )
@@ -45,9 +43,11 @@ describe Mongrel2::Connection do
 		expect( @conn.response_sock ).to eq( response_sock )
 	end
 
+
 	it "stringifies as a description of the appid and both sockets" do
 		expect( @conn.to_s ).to eq( "{#{TEST_UUID}} #{TEST_SEND_SPEC} <-> #{TEST_RECV_SPEC}" )
 	end
+
 
 	context "after a connection has been established" do
 
@@ -69,6 +69,7 @@ describe Mongrel2::Connection do
 			@conn.close
 		end
 
+
 		it "raises an exception if asked to fetch data after being closed" do
 			allow( @request_sock ).to receive( :close )
 			allow( @response_sock ).to receive( :close )
@@ -79,6 +80,7 @@ describe Mongrel2::Connection do
 				@conn.recv
 			}.to raise_error( Mongrel2::ConnectionError, /operation on closed connection/i )
 		end
+
 
 		it "doesn't keep its request and response sockets when duped" do
 			request_sock2 = double( "request socket", :options => OpenStruct.new, :connect => nil )
@@ -92,6 +94,7 @@ describe Mongrel2::Connection do
 			expect( duplicate.response_sock ).to eq( response_sock2 )
 		end
 
+
 		it "doesn't keep its closed state when duped" do
 			expect( @request_sock ).to receive( :close )
 			expect( @response_sock ).to receive( :close )
@@ -102,21 +105,25 @@ describe Mongrel2::Connection do
 			expect( duplicate ).to_not be_closed()
 		end
 
+
 		it "can read raw request messages off of the request_sock" do
 			expect( @request_sock ).to receive( :receive ).and_return( CZTop::Message.new( "the data" ) )
 			expect( @conn.recv ).to eq( "the data" )
 		end
 
+
 		it "can read request messages off of the request_sock as Mongrel2::Request objects" do
-			msg = make_request()
-			expect( @request_sock ).to receive( :receive ).and_return( CZTop::Message.new( msg ) )
+			req = make_request()
+			expect( @request_sock ).to receive( :receive ).and_return( CZTop::Message.new(req) )
 			expect( @conn.receive ).to be_a( Mongrel2::Request )
 		end
+
 
 		it "can write raw response messages with a TNetString header onto the response_sock" do
 			expect( @response_sock ).to receive( :<< ).with( "#{TEST_UUID} 1:8, the data" )
 			@conn.send( TEST_UUID, 8, "the data" )
 		end
+
 
 		it "can write Mongrel2::Responses to the response_sock" do
 			expect( @response_sock ).to receive( :<< ).with( "#{TEST_UUID} 1:8, the data" )
@@ -125,17 +132,20 @@ describe Mongrel2::Connection do
 			@conn.reply( response )
 		end
 
-		it "can write raw response messages to more than one conn_id at the same time" do
-			expect( @response_sock ).to receive( :<< ).
-				with( "#{TEST_UUID} 15:8 16 44 45 1833, the data" )
-			@conn.broadcast( TEST_UUID, [8, 16, 44, 45, 1833], 'the data' )
-		end
 
 		it "can write raw response messages to more than one conn_id at the same time" do
 			expect( @response_sock ).to receive( :<< ).
 				with( "#{TEST_UUID} 15:8 16 44 45 1833, the data" )
 			@conn.broadcast( TEST_UUID, [8, 16, 44, 45, 1833], 'the data' )
 		end
+
+
+		it "can write raw response messages to more than one conn_id at the same time" do
+			expect( @response_sock ).to receive( :<< ).
+				with( "#{TEST_UUID} 15:8 16 44 45 1833, the data" )
+			@conn.broadcast( TEST_UUID, [8, 16, 44, 45, 1833], 'the data' )
+		end
+
 
 		it "can write an extended response message" do
 			expect( @response_sock ).to receive( :<< ).
@@ -143,11 +153,13 @@ describe Mongrel2::Connection do
 			@conn.send_extended( TEST_UUID, 8, :sendfile, "the_data.txt" )
 		end
 
+
 		it "can broadcast an extended response message" do
 			expect( @response_sock ).to receive( :<< ).
 				with( "#{TEST_UUID} 9:X 8 16 32, 27:8:sendfile,12:the_data.txt,]" )
 			@conn.broadcast_extended( TEST_UUID, [8,16,32], :sendfile, "the_data.txt" )
 		end
+
 
 		it "can write a Mongrel2::Response with extended reply" do
 			expect( @response_sock ).to receive( :<< ).
@@ -162,12 +174,14 @@ describe Mongrel2::Connection do
 			@conn.reply( response )
 		end
 
+
 		it "can tell the connection a request or a response was from to close" do
 			expect( @response_sock ).to receive( :<< ).with( "#{TEST_UUID} 1:8, " )
 
 			response = Mongrel2::Response.new( TEST_UUID, 8 )
 			@conn.reply_close( response )
 		end
+
 
 		it "can broadcast a close to multiple connection IDs" do
 			expect( @response_sock ).to receive( :<< ).with( "#{TEST_UUID} 15:8 16 44 45 1833, " )

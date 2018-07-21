@@ -2,6 +2,8 @@
 #encoding: utf-8
 
 require 'cztop'
+require 'cztop/reactor'
+require 'cztop/reactor/signal_handling'
 require 'securerandom'
 require 'loggability'
 
@@ -85,7 +87,8 @@ require 'mongrel2/websocket'
 #
 class Mongrel2::Handler
 	extend Loggability
-	include Mongrel2::Constants
+	include Mongrel2::Constants,
+	        CZTop::Reactor::SignalHandling
 
 
 	# Loggability API -- set up logging under the 'mongrel2' log host
@@ -96,7 +99,7 @@ class Mongrel2::Handler
 	QUEUE_SIGS = [
 		:INT, :TERM, :HUP, :USR1,
 		# :TODO: :QUIT, :WINCH, :USR2, :TTIN, :TTOU
-	]
+	] & Signal.list.keys.map( &:to_sym )
 
 
 	### Create an instance of the handler using the config from the database with
@@ -136,14 +139,12 @@ class Mongrel2::Handler
 	### Create a new instance of the handler with the specified +app_id+, +send_spec+,
 	### and +recv_spec+.
 	def initialize( app_id, send_spec, recv_spec ) # :notnew:
+		super() # To the signal handler mixin
+
 		@app_id    = app_id
 
 		@conn      = Mongrel2::Connection.new( app_id, send_spec, recv_spec )
-
-		@self_pipe = nil
-		@poller    = nil
-
-		Thread.main[:signal_queue] = []
+		@reactor   = CZTop::Reactor.new
 	end
 
 
@@ -151,31 +152,30 @@ class Mongrel2::Handler
 	public
 	######
 
+	##
 	# The handler's Mongrel2::Connection object.
 	attr_reader :conn
 
+	##
 	# The app ID the app was created with
 	attr_reader :app_id
+
+	##
+	# The CZTop::Reactor that manages IO
+	attr_reader :reactor
 
 
 	### Run the handler.
 	def run
 		self.log.info "Starting up %p" % [ self ]
 
-		rand_id = "%d-%s" % [ Process.pid, SecureRandom.hex(8) ]
-		@self_pipe = {
-			reader: CZTop::Socket::PAIR.new( "@inproc://signal-handler-#{rand_id}" ),
-			writer: CZTop::Socket::PAIR.new( ">inproc://signal-handler-#{rand_id}" )
-		}
-
-		@poller = CZTop::Poller.new( @conn.request_sock, @self_pipe[:reader] )
-
-		self.set_signal_handlers
-		self.start_accepting_requests
+		self.reactor.register( @conn.request_sock, :read, &self.method(:on_socket_event) )
+		self.with_signal_handler( self.reactor, *QUEUE_SIGS ) do
+			self.start_accepting_requests
+		end
 
 		return self # For chaining
 	ensure
-		self.restore_signal_handlers
 		self.log.info "Done: %p" % [ self ]
 		@conn.close if @conn
 	end
@@ -224,7 +224,7 @@ class Mongrel2::Handler
 	### Shut down the handler.
 	def shutdown
 		self.log.info "Shutting down."
-		self.ignore_signals
+		self.reactor.stop_polling
 		@conn.close
 	end
 
@@ -234,9 +234,9 @@ class Mongrel2::Handler
 	def restart
 		self.log.info "Restarting"
 		if (( old_conn = @conn ))
+			self.reactor.unregister( old_conn.request_sock )
 			@conn = @conn.dup
-
-			@poller = CZTop::Poller.new( @conn.request_sock, @self_pipe[:reader] )
+			self.reactor.register( @conn.request_sock, :read, &self.method(:on_socket_event) )
 
 			self.log.debug "  conn %p -> %p" % [ old_conn, @conn ]
 			old_conn.close
@@ -247,28 +247,20 @@ class Mongrel2::Handler
 	### Start a loop, accepting a request and handling it.
 	def start_accepting_requests
 		self.log.info "Starting the request loop."
-		until @conn.closed?
-			begin
-				if event = @poller.wait
-					case event.socket
-					when @conn.request_sock
-						req = @conn.receive
-						self.accept_request( req ) unless @conn.closed?
-					when @self_pipe[:reader]
-						@self_pipe[:reader].wait
-						self.process_signal_queue
-					else
-						self.log.warn "Got unhandled poller event: %p" % [ event ]
-					end
-				end
-			rescue Errno::EAGAIN
-				# self.log.debug "Got EAGAIN, retrying."
-			rescue Interrupt
-				# self.log.debug "Got an Interrupt; retrying."
-			end
-		end
+		self.reactor.start_polling( ignore_interrupts: true )
+	end
 
-		self.log.debug "Done accepting requests."
+
+	### Reactor callback -- handle an IO event.
+	def on_socket_event( event )
+		if event.readable?
+			req = self.conn.receive
+			self.accept_request( req )
+		elsif event.writable?
+			raise "Request socket became writable?!"
+		else
+			raise "Socket event was neither readable nor writable! (%s)" % [ event ]
+		end
 	end
 
 
@@ -379,9 +371,9 @@ class Mongrel2::Handler
 	def handle_websocket( request )
 		self.log.warn "Unhandled WEBSOCKET frame (%p)" % [ request.headers.path ]
 		res = request.response
-		res.make_close_frame( WebSocket::CLOSE_POLICY_VIOLATION )
-		self.conn.reply( res)
+		res.make_close_frame( Mongrel2::WebSocket::CLOSE_POLICY_VIOLATION )
 
+		self.conn.reply( res )
 		self.conn.reply_close( request )
 
 		return nil
@@ -391,8 +383,8 @@ class Mongrel2::Handler
 	### Handle a WebSocket handshake HTTP +request+. If not overridden, this method drops
 	### the connection.
 	def handle_websocket_handshake( handshake )
-		self.log.warn "Unhandled WEBSOCKET_HANDSHAKE request (%p)" % [ request.headers.path ]
-		self.conn.reply_close( request )
+		self.log.warn "Unhandled WEBSOCKET_HANDSHAKE request (%p)" % [ handshake.headers.path ]
+		self.conn.reply_close( handshake )
 
 		return nil
 	end
@@ -401,7 +393,7 @@ class Mongrel2::Handler
 	### Handle a disconnect notice from Mongrel2 via the given +request+. Its return value
 	### is ignored.
 	def handle_disconnect( request )
-		self.log.info "Unhandled disconnect notice."
+		self.log.info "Connection %p closed." % [ request.conn_id ]
 		return nil
 	end
 
@@ -436,56 +428,8 @@ class Mongrel2::Handler
 	# :section: Signal Handling
 	# These methods set up some behavior for starting, restarting, and stopping
 	# your application when a signal is received. If you don't want signals to
-	# be handled, override #set_signal_handlers with an empty method.
+	# be handled, override #handle_signal with an empty method.
 	#
-
-	### Wake up the handler when a signal needs to be processed.
-	def wake_up
-		$stderr.puts "Waking up the signal handler"
-		@self_pipe[ :writer ].signal( 0 )
-		$stderr.puts "Done sending the wakeup."
-	end
-
-
-	### Set up signal handlers for common signals that will shut down, restart, etc.
-	def set_signal_handlers
-		self.log.debug "Setting up deferred signal handlers."
-		QUEUE_SIGS.each do |sig|
-			Signal.trap( sig ) do
-				Thread.main[:signal_queue] << sig
-				self.wake_up
-				$stderr.puts "Done handling the signal."
-			end
-		end
-	end
-
-
-	### Set all signal handlers to ignore.
-	def ignore_signals
-		self.log.debug "Ignoring signals."
-		QUEUE_SIGS.each do |sig|
-			Signal.trap( sig, :IGNORE )
-		end
-	end
-
-
-	### Set the signal handlers back to their defaults.
-	def restore_signal_handlers
-		self.log.debug "Restoring default signal handlers."
-		QUEUE_SIGS.each do |sig|
-			Signal.trap( sig, :DEFAULT )
-		end
-	end
-
-
-	### Handle any queued signals.
-	def process_signal_queue
-		# Look for any signals that arrived and handle them
-		while sig = Thread.main[:signal_queue].shift
-			self.handle_signal( sig )
-		end
-	end
-
 
 	### Handle signals.
 	def handle_signal( sig )

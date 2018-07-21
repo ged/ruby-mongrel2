@@ -463,6 +463,13 @@ module Mongrel2::WebSocket
 		end
 
 
+		### Set the :close opcode on this frame and set its status to +statuscode+.
+		def make_close_frame( statuscode=Mongrel2::WebSocket::CLOSE_NORMAL )
+			self.opcode = :close
+			self.set_status( statuscode )
+		end
+
+
 		### Overwrite the frame's payload with a status message based on
 		### +statuscode+.
 		def set_status( statuscode )
@@ -619,6 +626,12 @@ module Mongrel2::WebSocket
 					raise ArgumentError, "Don't know what the %p flag is." % [ flag ]
 				end
 			end
+		end
+
+
+		### Compatibility with Mongrel2::Response.
+		def extended_reply? # :nodoc:
+			return false
 		end
 
 
