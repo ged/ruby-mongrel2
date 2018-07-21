@@ -91,6 +91,13 @@ module Mongrel2::SpecHelpers
 	end
 
 
+	### Make a Mongrel2::Request from the specified +opts+ and return it.
+	def make_request_object( opts={} )
+		data = make_request( opts )
+		return Mongrel2::Request.parse( data )
+	end
+
+
 	### Make a new-style (TNetstring headers) raw Mongrel2 request from the specified +opts+
 	### and return it as a String.
 	def make_tn_request( opts={} )
@@ -135,6 +142,13 @@ module Mongrel2::SpecHelpers
 	end
 
 
+	### Make a Mongrel2::JSONRequest from the specified +opts+ and return it.
+	def make_json_request_object( opts={} )
+		data = make_json_request( opts )
+		return Mongrel2::Request.parse( data )
+	end
+
+
 	### Make a Mongrel2 request for an XML route.
 	def make_xml_request( opts={} )
 		opts = TEST_XML_REQUEST_OPTS.merge( opts )
@@ -155,6 +169,13 @@ module Mongrel2::SpecHelpers
 			bodystring,
 		]
 		return data.encode( 'binary' )
+	end
+
+
+	### Make a Mongrel2::XMLRequest from the specified +opts+ and return it.
+	def make_xml_request_object( opts={} )
+		data = make_xml_request( opts )
+		return Mongrel2::Request.parse( data )
 	end
 
 
@@ -180,6 +201,14 @@ module Mongrel2::SpecHelpers
 	end
 
 
+	### Make a Mongrel2::WebSocket::ClientHandshake from the specified +opts+ and
+	### return it.
+	def make_websocket_handshake_object( opts={} )
+		data = make_websocket_handshake( opts )
+		return Mongrel2::Request.parse( data )
+	end
+
+
 	### Make a Mongrel2 frame for a WebSocket route.
 	def make_websocket_frame( opts={} )
 		opts = TEST_WEBSOCKET_REQUEST_OPTS.merge( opts )
@@ -199,6 +228,13 @@ module Mongrel2::SpecHelpers
 			bodystring,
 		]
 		return data.encode( 'binary' )
+	end
+
+
+	### Make a Mongrel2::WebSocket::Frame from the specified +opts+ and return it.
+	def make_websocket_frame_object( opts={} )
+		data = make_websocket_frame( opts )
+		return Mongrel2::Request.parse( data )
 	end
 
 end
