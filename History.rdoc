@@ -1,3 +1,10 @@
+== v0.52.1 [2018-07-23] Michael Granger <ged@FaerieMUD.org>
+
+Bugfixes:
+
+- Fix version of dependency on cztop-reactor
+
+
 == v0.52.0 [2018-07-21] Michael Granger <ged@FaerieMUD.org>
 
 Enhancements:

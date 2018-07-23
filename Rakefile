@@ -26,7 +26,7 @@ hoespec = Hoe.spec 'mongrel2' do
 	self.developer 'Michael Granger', 'ged@FaerieMUD.org'
 
 	self.dependency 'cztop',                '~> 0.11'
-	self.dependency 'cztop-reactor',        '~> 0.3'
+	self.dependency 'cztop-reactor',        '~> 0.6'
 	self.dependency 'libxml-ruby',          '~> 3.0'
 	self.dependency 'loggability',          '~> 0.12'
 	self.dependency 'sequel',               '~> 5.2'
