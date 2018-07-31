@@ -248,6 +248,12 @@ class Mongrel2::Request
 	end
 
 
+	### Indicate that a request is never an extended reply.
+	def extended_reply?
+		return false
+	end
+
+
 	#
 	# :section: Introspection Methods
 	#
