@@ -68,12 +68,10 @@ class Mongrel2::Connection
 	def connect
 		self.log.info "Connecting PULL request socket (%s)" % [ self.sub_addr ]
 		@request_sock = CZTop::Socket::PULL.new
-		@request_sock.options.linger = 0
 		@request_sock.connect( self.sub_addr )
 
 		self.log.info "Connecting PUB response socket (%s)" % [ self.pub_addr ]
 		@response_sock = CZTop::Socket::PUB.new
-		@response_sock.options.linger = 0
 		@response_sock.connect( self.pub_addr )
 	end
 
@@ -197,8 +195,14 @@ class Mongrel2::Connection
 	def close
 		return if self.closed?
 		self.closed = true
-		@request_sock.close if @request_sock
-		@response_sock.close if @response_sock
+		if @request_sock
+			@request_sock.options.linger = 0
+			@request_sock.close
+		end
+		if @response_sock
+			@response_sock.options.linger = 0
+			@response_sock.close
+		end
 	end
 
 
