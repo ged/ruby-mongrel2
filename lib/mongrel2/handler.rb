@@ -141,10 +141,10 @@ class Mongrel2::Handler
 	def initialize( app_id, send_spec, recv_spec ) # :notnew:
 		super() # To the signal handler mixin
 
-		@app_id    = app_id
+		@app_id  = app_id
 
-		@conn      = Mongrel2::Connection.new( app_id, send_spec, recv_spec )
-		@reactor   = CZTop::Reactor.new
+		@conn    = Mongrel2::Connection.new( app_id, send_spec, recv_spec )
+		@reactor = nil
 	end
 
 
@@ -162,13 +162,14 @@ class Mongrel2::Handler
 
 	##
 	# The CZTop::Reactor that manages IO
-	attr_reader :reactor
+	attr_accessor :reactor
 
 
 	### Run the handler.
 	def run
 		self.log.info "Starting up %p" % [ self ]
 
+		self.reactor = CZTop::Reactor.new
 		self.reactor.register( @conn.request_sock, :read, &self.method(:on_socket_event) )
 		self.with_signal_handler( self.reactor, *QUEUE_SIGS ) do
 			self.start_accepting_requests
