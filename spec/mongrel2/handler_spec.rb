@@ -268,6 +268,7 @@ describe Mongrel2::Handler, :db do
 		handler = TestingHandler.new( TEST_UUID, TEST_SEND_SPEC, TEST_RECV_SPEC )
 		original_conn = handler.conn
 
+		handler.reactor = instance_double( CZTop::Reactor )
 		expect( handler.reactor ).to receive( :unregister ).with( original_conn.request_sock )
 		expect( handler.reactor ).to receive( :register ) do |request_sock, mode, &callback|
 			expect( request_sock ).to be_a( CZTop::Socket )

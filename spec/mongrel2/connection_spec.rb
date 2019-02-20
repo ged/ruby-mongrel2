@@ -31,12 +31,9 @@ describe Mongrel2::Connection do
 		response_sock = double( "response socket", options: OpenStruct.new )
 
 		expect( CZTop::Socket::PULL ).to receive( :new ).and_return( request_sock )
-		expect( request_sock.options ).to receive( :linger= ).with( 0 )
 		expect( request_sock ).to receive( :connect ).with( TEST_SEND_SPEC )
 
 		expect( CZTop::Socket::PUB ).to receive( :new ).and_return( response_sock )
-		expect( response_sock.options ).to receive( :linger= ).with( 0 )
-		expect( response_sock.options ).to_not receive( :identity= )
 		expect( response_sock ).to receive( :connect ).with( TEST_RECV_SPEC )
 
 		expect( @conn.request_sock ).to eq( request_sock )

@@ -233,6 +233,8 @@ class Mongrel2::Handler
 	### Restart the handler. You should override this if you want to re-establish
 	### database connections, flush caches, or other restart-ey stuff.
 	def restart
+		raise "can't restart: not running" unless self.reactor
+
 		self.log.info "Restarting"
 		if (( old_conn = @conn ))
 			self.reactor.unregister( old_conn.request_sock )
