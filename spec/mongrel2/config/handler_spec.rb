@@ -24,7 +24,6 @@ describe Mongrel2::Config::Handler, :db do
 	end
 
 
-
 	it "is valid if its specs and identities are all valid" do
 		expect( @handler ).to be_valid()
 	end
@@ -35,6 +34,7 @@ describe Mongrel2::Config::Handler, :db do
 		expect( @handler ).to_not be_valid()
 		expect( @handler.errors.full_messages.first ).to match( /must not be nil/i )
 	end
+
 
 	it "isn't valid if it doesn't have a recv_spec" do
 		@handler.recv_spec = nil
@@ -49,6 +49,7 @@ describe Mongrel2::Config::Handler, :db do
 		expect( @handler.errors.full_messages.first ).to match( /not a uri/i )
 	end
 
+
 	it "isn't valid if it doesn't have a valid URL in its recv_spec" do
 		@handler.recv_spec = 'smoke signals'
 		expect( @handler ).to_not be_valid()
@@ -61,6 +62,7 @@ describe Mongrel2::Config::Handler, :db do
 		expect( @handler ).to_not be_valid()
 		expect( @handler.errors.full_messages.first ).to match( /invalid 0mq transport/i )
 	end
+
 
 	it "isn't valid if has an unsupported transport in its recv_spec" do
 		@handler.recv_spec = 'inproc://application'
@@ -75,6 +77,7 @@ describe Mongrel2::Config::Handler, :db do
 		expect( @handler.errors.full_messages.first ).to match( /invalid sender identity/i )
 	end
 
+
 	it "*is* valid if it doesn't have a recv_ident" do
 		@handler.recv_ident = nil
 		expect( @handler ).to be_valid()
@@ -86,16 +89,19 @@ describe Mongrel2::Config::Handler, :db do
 		expect( @handler ).to be_valid()
 	end
 
+
 	it "is valid if it has 'tnetstring' set as the protocol" do
 		@handler.protocol = 'tnetstring'
 		expect( @handler ).to be_valid()
 	end
+
 
 	it "isn't valid if it has an invalid protocol" do
 		@handler.protocol = 'morsecode'
 		expect( @handler ).to_not be_valid()
 		expect( @handler.errors.full_messages.first ).to match( /invalid/i )
 	end
+
 
 	it "isn't valid if its send_spec isn't unique" do
 		dup = @handler.dup

@@ -17,6 +17,7 @@ describe Mongrel2::Config::DSL, :db do
 
 
 	describe 'servers' do
+
 		it "can generate a default server config using the 'server' declarative" do
 			result = server '965A7196-99BC-46FA-945B-3478AE92BFB5'
 
@@ -42,6 +43,7 @@ describe Mongrel2::Config::DSL, :db do
 			expect( result.error_log ).to eq( '/var/log/errors' )
 			expect( result.control_port ).to eq( '/var/run/intranet.sock' )
 		end
+
 	end
 
 	describe 'hosts' do
@@ -60,6 +62,7 @@ describe Mongrel2::Config::DSL, :db do
 			expect( host ).to be_a( Mongrel2::Config::Host )
 			expect( host.name ).to eq( 'localhost' )
 		end
+
 
 		it "can add several elaborately-configured hosts to a server via a block" do
 			result = server '965A7196-99BC-46FA-945B-3478AE92BFB5' do
@@ -138,8 +141,8 @@ describe Mongrel2::Config::DSL, :db do
 			expect( host2.routes.first ).to be_a( Mongrel2::Config::Route )
 		end
 
-
 	end
+
 
 	describe 'settings' do
 
@@ -150,6 +153,7 @@ describe Mongrel2::Config::DSL, :db do
 		after( :each ) do
 			Mongrel2::Config::Setting.dataset.exclude( :id => @ids ).delete
 		end
+
 
 		it "can set the expert tweakable settings en masse" do
 			result = settings(
@@ -168,6 +172,7 @@ describe Mongrel2::Config::DSL, :db do
 			expect( result[2].key ).to eq( 'upload.temp_store_mode' )
 			expect( result[2].value ).to eq( '0666' )
 		end
+
 
 		it "can set a single expert setting" do
 			result = setting "zeromq.threads", 16
@@ -195,6 +200,7 @@ describe Mongrel2::Config::DSL, :db do
 			expect( result[1].mimetype ).to eq( 'text/x-textile' )
 		end
 
+
 		it "can set a single mimetype mapping" do
 			result = mimetype '.tmpl', 'text/x-inversion-template'
 			expect( result ).to be_a( Mongrel2::Config::Mimetype )
@@ -203,6 +209,7 @@ describe Mongrel2::Config::DSL, :db do
 		end
 
 	end
+
 
 	describe 'filters' do
 
@@ -215,6 +222,7 @@ describe Mongrel2::Config::DSL, :db do
 			expect( result.filters.first ).to be_a( Mongrel2::Config::Filter )
 			expect( result.filters.first.settings ).to eq( {} )
 		end
+
 
 		it "can add a filter with settings to a server" do
 			result = server '965A7196-99BC-46FA-945B-3478AE92BFB5' do
@@ -231,6 +239,7 @@ describe Mongrel2::Config::DSL, :db do
 
 	end
 
+
 	describe 'xrequests' do
 
 		it "can add an xrequest to a server" do
@@ -242,6 +251,7 @@ describe Mongrel2::Config::DSL, :db do
 			expect( result.xrequests.first ).to be_a( Mongrel2::Config::XRequest )
 			expect( result.xrequests.first.settings ).to eq( {} )
 		end
+
 
 		it "can add a filter with settings to a server" do
 			result = server '965A7196-99BC-46FA-945B-3478AE92BFB5' do

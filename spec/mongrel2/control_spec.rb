@@ -13,9 +13,6 @@ require 'mongrel2/control'
 
 describe Mongrel2::Control do
 
-	before( :all ) do
-	end
-
 	before( :each ) do
 		@ctx = double( "ZMQ::Context" )
 		@socket = double( "ZMQ REQ socket", :connect => nil, :options => OpenStruct.new )
@@ -34,6 +31,7 @@ describe Mongrel2::Control do
 		expect( @control.stop ).to eq( [{ :msg => "signal sent to server" }] )
 	end
 
+
 	it "sends a 'reload' command to the control port when #reload is called" do
 		expect( @socket ).to receive( :<< ).with( "12:6:reload,0:}]" )
 		expect( @socket ).to receive( :receive ).
@@ -41,12 +39,14 @@ describe Mongrel2::Control do
 		expect( @control.reload ).to eq( [{ :msg => "signal sent to server" }] )
 	end
 
+
 	it "sends a 'terminate' command to the control port when #terminate is called" do
 		expect( @socket ).to receive( :<< ).with( "15:9:terminate,0:}]" )
 		expect( @socket ).to receive( :receive ).
 			and_return( CZTop::Message.new("59:7:headers,6:3:msg,]4:rows,29:25:21:signal sent to server,]]}") )
 		expect( @control.terminate ).to eq( [{ :msg => "signal sent to server" }] )
 	end
+
 
 	it "sends a 'help' command to the control port when #help is called" do
 		expect( @socket ).to receive( :<< ).with( "10:4:help,0:}]" )
@@ -75,6 +75,7 @@ describe Mongrel2::Control do
 		])
 	end
 
+
 	it "sends a 'uuid' command to the control port when #uuid is called" do
 		expect( @socket ).to receive( :<< ).with( "10:4:uuid,0:}]" )
 		expect( @socket ).to receive( :receive ).and_return(
@@ -83,6 +84,7 @@ describe Mongrel2::Control do
 		)
 		expect( @control.uuid ).to eq( [{ :uuid => '34D8E57C-3E91-4F24-9BBE-0B53C1827CB4' }] )
 	end
+
 
 	it "sends an 'info' command to the control port when #info is called" do
 		expect( @socket ).to receive( :<< ).with( "10:4:info,0:}]" )
@@ -105,6 +107,7 @@ describe Mongrel2::Control do
 			:default_hostname => "localhost"
 		}])
 	end
+
 
 	it "sends a 'status' command with a 'what' option set to 'tasks' to the control port " +
 	   "when #tasklist is called" do
@@ -129,6 +132,7 @@ describe Mongrel2::Control do
 		])
 	end
 
+
 	it "sends an 'status' command with a 'what' option set to 'net' to the control port " +
 	   "when #conn_status is called" do
 
@@ -144,12 +148,14 @@ describe Mongrel2::Control do
 		])
 	end
 
+
 	it "sends a 'time' command to the control port when #time is called" do
 		expect( @socket ).to receive( :<< ).with( "10:4:time,0:}]" )
 		expect( @socket ).to receive( :receive ).
 			and_return( CZTop::Message.new("49:7:headers,7:4:time,]4:rows,18:14:10:1315532674,]]}") )
 		expect( @control.time ).to eq( Time.at( 1315532674 ) )
 	end
+
 
 	it "sends a 'kill' command with an ID equal to the argument to the control port when #kill " +
 	   "is called" do
@@ -158,6 +164,7 @@ describe Mongrel2::Control do
 			and_return( CZTop::Message.new( "40:7:headers,9:6:status,]4:rows,8:5:2:OK,]]}" ) )
 		expect( @control.kill( 0 ) ).to eq( [{ :status => "OK" }] )
 	end
+
 
 	it "sends a 'control_stop' command to the control port when #info is called" do
 		expect( @socket ).to receive( :<< ).with( "19:12:control_stop,0:}]" )

@@ -17,7 +17,6 @@ describe Mongrel2::Table do
 	end
 
 
-
 	it "allows setting/fetching case-insensitively" do
 
 		@table['Accept'] = :accept
@@ -156,6 +155,7 @@ describe Mongrel2::Table do
 	it "can yield an Enumerator for its header iterator" do
 		expect( @table.each_header ).to be_a( Enumerator )
 	end
+
 end
 
 

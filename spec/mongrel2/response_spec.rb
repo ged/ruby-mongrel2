@@ -33,20 +33,24 @@ describe Mongrel2::Response do
 		expect( response.body.read ).to eq( 'the body' )
 	end
 
+
 	it "stringifies to its body contents" do
 		response = Mongrel2::Response.new( TEST_UUID, 8, 'the body' )
 		expect( response.to_s ).to eq( 'the body' )
 	end
+
 
 	it "can be streamed in chunks" do
 		response = Mongrel2::Response.new( TEST_UUID, 8, 'the body' )
 		expect {|b| response.each_chunk(&b) }.to yield_with_args( 'the body' )
 	end
 
+
 	it "can generate an enumerator for its body stream" do
 		response = Mongrel2::Response.new( TEST_UUID, 8, "the body" )
 		expect( response.each_chunk ).to be_a( Enumerator )
 	end
+
 
 	it "wraps stringifiable bodies set via the #body= accessor in a StringIO" do
 		response = Mongrel2::Response.new( TEST_UUID, 8 )
@@ -54,6 +58,7 @@ describe Mongrel2::Response do
 		expect( response.body ).to be_a( StringIO )
 		expect( response.body.string ).to eq( 'a stringioed body' )
 	end
+
 
 	it "doesn't try to wrap non-stringfiable bodies in a StringIO" do
 		response = Mongrel2::Response.new( TEST_UUID, 8 )
@@ -73,17 +78,20 @@ describe Mongrel2::Response do
 			expect( response.body.read ).to eq( '' )
 		end
 
+
 		it "supports the append operator to append objects to the body IO" do
 			response << 'some body stuff' << ' and some more body stuff'
 			response.body.rewind
 			expect( response.body.read ).to eq( 'some body stuff and some more body stuff' )
 		end
 
+
 		it "supports #puts for appending objects to the body IO separated by EOL" do
 			response.puts( "some body stuff\n", " and some more body stuff\n\n", :and_a_symbol )
 			response.body.rewind
 			expect( response.body.read ).to eq( "some body stuff\n and some more body stuff\n\nand_a_symbol\n" )
 		end
+
 
 		it "is not an extended reply" do
 			expect( response ).to_not be_extended_reply

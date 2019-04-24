@@ -38,11 +38,13 @@ describe Mongrel2::Config do
 		end
 	end
 
+
 	it "can reset the database handle for the config classes" do
 		db = Mongrel2::Config.in_memory_db
 		Mongrel2::Config.db = db
 		expect( Mongrel2::Config::Directory.db ).to equal( db )
 	end
+
 
 	it "has a convenience method for fetching an Array of all of its configured servers" do
 		Mongrel2::Config.init_database
@@ -60,6 +62,7 @@ describe Mongrel2::Config do
 		expect( Mongrel2::Config.servers.first.uuid ).to eq( TEST_UUID )
 	end
 
+
 	it "has a convenience method for getting a setting's value" do
 		Mongrel2::Config.init_database
 		Mongrel2::Config::Setting.dataset.truncate
@@ -69,9 +72,11 @@ describe Mongrel2::Config do
 		expect( Mongrel2::Config.settings[ :control_port ] ).to eq( 'ipc://var/run/control.sock' )
 	end
 
+
 	it "can read the configuration schema from a data file" do
 		expect( Mongrel2::Config.load_config_schema ).to match( /create table server/i )
 	end
+
 
 	it "knows whether or not its database has been initialized" do
 		Mongrel2::Config.db = Mongrel2::Config.in_memory_db
@@ -79,6 +84,7 @@ describe Mongrel2::Config do
 		Mongrel2::Config.init_database!
 		expect( Mongrel2::Config.database_initialized? ).to be_truthy()
 	end
+
 
 	it "doesn't re-initialize the database if the non-bang version of init_database is used" do
 		Mongrel2::Config.db = Mongrel2::Config.in_memory_db
@@ -88,21 +94,25 @@ describe Mongrel2::Config do
 		Mongrel2::Config.init_database
 	end
 
+
 	it "can return the path to the config DB as a Pathname if it's pointing at a file" do
 		Mongrel2::Config.db = Sequel.
 			connect( adapter: Mongrel2::Config.sqlite_adapter, database: 'config-spec.sqlite' )
 		expect( Mongrel2::Config.dbname ).to eq( 'config-spec.sqlite' )
 	end
 
+
 	it "returns nil if asked for the pathname to an in-memory database" do
 		Mongrel2::Config.db = Mongrel2::Config.in_memory_db
 		expect( Mongrel2::Config.dbname ).to be_nil()
 	end
 
+
 	describe "Configurability support", :if => defined?( Configurability ) do
 		require 'configurability/behavior'
 
 		it_should_behave_like "an object with Configurability"
+
 
 		it "uses the 'mongrel2' config section" do
 			expect( Mongrel2::Config.config_key ).to eq( :mongrel2 )

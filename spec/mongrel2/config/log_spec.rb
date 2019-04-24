@@ -29,6 +29,7 @@ describe Mongrel2::Config::Log, :db do
 		expect( log.how ).to eq( how )
 	end
 
+
 	it "has reasonable defaults for 'where' and 'how'" do
 		what  = 'load etc/mongrel2.conf'
 		why   = 'updating'
@@ -38,6 +39,7 @@ describe Mongrel2::Config::Log, :db do
 		expect( log.location ).to eq( Socket.gethostname )
 		expect( log.how ).to eq( File.basename( $0 ) )
 	end
+
 
 	describe "an entry" do
 
@@ -65,6 +67,7 @@ describe Mongrel2::Config::Log, :db do
 				$
 			}x)
 		end
+
 
 		it "stringifies with a reason if it has one" do
 			@log.why = 'Because'

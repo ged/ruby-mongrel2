@@ -26,11 +26,13 @@ describe Mongrel2::Config::Directory, :db do
 		expect( @dir ).to be_valid()
 	end
 
+
 	it "isn't valid if it doesn't have a base" do
 		@dir.base = nil
 		expect( @dir ).to_not be_valid()
 		expect( @dir.errors.full_messages.first ).to match( /missing or nil/i )
 	end
+
 
 	it "isn't valid when its base starts with '/'" do
 		@dir.base = '/var/www/public/'
@@ -38,11 +40,13 @@ describe Mongrel2::Config::Directory, :db do
 		expect( @dir.errors.full_messages.first ).to match( %r{shouldn't start with '/'}i )
 	end
 
+
 	it "isn't valid when its base doesn't end with '/'" do
 		@dir.base = 'var/www/public'
 		expect( @dir ).to_not be_valid()
 		expect( @dir.errors.full_messages.first ).to match( %r{must end with '/'}i )
 	end
+
 
 	it "isn't valid if it doesn't have an index file" do
 		@dir.index_file = nil
@@ -50,17 +54,20 @@ describe Mongrel2::Config::Directory, :db do
 		expect( @dir.errors.full_messages.first ).to match( /must not be nil/i )
 	end
 
+
 	it "isn't valid if it doesn't have a default content-type" do
 		@dir.default_ctype = nil
 		expect( @dir ).to_not be_valid()
 		expect( @dir.errors.full_messages.first ).to match( /must not be nil/i )
 	end
 
+
 	it "isn't valid if its cache TTL is set to a negative value" do
 		@dir.cache_ttl = -5
 		expect( @dir ).to_not be_valid()
 		expect( @dir.errors.full_messages.first ).to match( /not a positive integer/i )
 	end
+
 
 	it "is valid if its cache TTL is set to zero" do
 		@dir.cache_ttl = 0

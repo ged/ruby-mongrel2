@@ -85,6 +85,7 @@ describe Mongrel2::Handler, :db do
 			Mongrel2::Config::Handler.dataset.truncate
 		end
 
+
 		it "raises an exception if no handler with its appid exists in the config DB" do
 			Mongrel2::Config::Handler.dataset.truncate
 			expect {
@@ -93,6 +94,7 @@ describe Mongrel2::Handler, :db do
 		end
 
 	end
+
 
 
 	it "responds to HTTP requests with a 204 No Content response by default" do
@@ -301,5 +303,6 @@ describe Mongrel2::Handler, :db do
 		expect( request.body ).to be_closed
 		expect( spoolfile ).to_not exist
 	end
+
 end
 

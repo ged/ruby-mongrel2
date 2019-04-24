@@ -30,11 +30,13 @@ describe Mongrel2::Config::Server, :db do
 		expect( @server ).to be_valid()
 	end
 
+
 	it "isn't valid if it doesn't have an access_log path" do
 		@server.access_log = nil
 		expect( @server ).to_not be_valid()
 		expect( @server.errors.full_messages.first ).to match( /missing or nil/i )
 	end
+
 
 	it "isn't valid if it doesn't have an error_log path" do
 		@server.error_log = nil
@@ -42,17 +44,20 @@ describe Mongrel2::Config::Server, :db do
 		expect( @server.errors.full_messages.first ).to match( /missing or nil/i )
 	end
 
+
 	it "isn't valid if it doesn't have an pid_file path" do
 		@server.pid_file = nil
 		expect( @server ).to_not be_valid()
 		expect( @server.errors.full_messages.first ).to match( /missing or nil/i )
 	end
 
+
 	it "isn't valid if it doesn't have a default_host" do
 		@server.default_host = nil
 		expect( @server ).to_not be_valid()
 		expect( @server.errors.full_messages.first ).to match( /missing or nil/i )
 	end
+
 
 	it "isn't valid if it doesn't specify a port" do
 		@server.port = nil
@@ -68,6 +73,7 @@ describe Mongrel2::Config::Server, :db do
 		expect( @server.control_socket_uri ).to eq( 'ipc:///usr/local/www/run/control' )
 	end
 
+
 	it "knows where its control socket is if there is a setting for control_port" do
 		Mongrel2::Config::Setting.dataset.truncate
 		allow( FileTest ).to receive( :socket? ).with( '/usr/local/www/var/run/control.sock' ).
@@ -76,11 +82,13 @@ describe Mongrel2::Config::Server, :db do
 		expect( @server.control_socket_uri ).to eq( 'ipc:///usr/local/www/var/run/control.sock' )
 	end
 
+
 	it "raises an error if the control socket path doesn't point to a UNIX socket" do
 		expect {
 			@server.control_socket
 		}.to raise_error( RuntimeError, /unable to find the socket/i )
 	end
+
 
 	it "can create a Mongrel2::Control for its control port" do
 		Mongrel2::Config::Setting.dataset.truncate
@@ -91,11 +99,13 @@ describe Mongrel2::Config::Server, :db do
 		sock.close
 	end
 
+
 	it "knows what the Pathname of its PID file is" do
 		pidfile = @server.pid_file_path
 		expect( pidfile ).to be_a( Pathname )
 		expect( pidfile.to_s ).to eq( '/run/mongrel2.pid' )
 	end
+
 
 	it "has a predicate that understands the use_ssl value" do
 		expect( @server.use_ssl ).to be_falsey()

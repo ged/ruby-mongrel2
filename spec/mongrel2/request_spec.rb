@@ -56,6 +56,7 @@ describe Mongrel2::Request, :db do
 		expect( req.headers['Host'] ).to eq( TEST_HEADERS['host'] )
 	end
 
+
 	it "can parse a request message with TNetstring headers" do
 
 		message = make_tn_request()
@@ -68,6 +69,7 @@ describe Mongrel2::Request, :db do
 		expect( req.headers ).to be_a( Mongrel2::Table )
 		expect( req.headers.host ).to eq( TEST_HEADERS['host'] )
 	end
+
 
 	it "can parse a request message with a JSON body" do
 
@@ -84,12 +86,14 @@ describe Mongrel2::Request, :db do
 		expect( req.data ).to eq( TEST_JSON_BODY )
 	end
 
+
 	it "raises an UnhandledMethodError with the name of the method for METHOD verbs that " +
 	   "don't look like HTTP ones" do
 
 		message = make_request( :headers => {'METHOD' => '!DIVULGE'} )
 		expect { Mongrel2::Request.parse(message) }.to raise_error( Mongrel2::UnhandledMethodError, /!DIVULGE/ )
 	end
+
 
 	it "knows what kind of response it should return" do
 		expect( Mongrel2::Request.response_class ).to eq( Mongrel2::Response )
@@ -103,6 +107,7 @@ describe Mongrel2::Request, :db do
 			@req = Mongrel2::Request.parse( message )
 		end
 
+
 		it "can return an appropriate response instance for themselves" do
 			result = @req.response
 			expect( result ).to be_a( Mongrel2::Response )
@@ -110,9 +115,11 @@ describe Mongrel2::Request, :db do
 			expect( result.conn_id ).to eq( @req.conn_id )
 		end
 
+
 		it "remembers its response if it's already made one" do
 			expect( @req.response ).to equal( @req.response )
 		end
+
 
 		it "allows the entity body to be replaced by assigning a String" do
 			@req.body = 'something else'
@@ -120,11 +127,13 @@ describe Mongrel2::Request, :db do
 			expect( @req.body.string ).to eq( 'something else' )
 		end
 
+
 		it "doesn't try to wrap non-stringish entity body replacements in a StringIO" do
 			testobj = Object.new
 			@req.body = testobj
 			expect( @req.body ).to be( testobj )
 		end
+
 
 		it "provides a convenience method for fetching the requestor's IP address" do
 			@req.headers.merge!(
@@ -133,12 +142,14 @@ describe Mongrel2::Request, :db do
 			expect( @req.remote_ip.to_s ).to eq( '127.0.0.1' )
 		end
 
+
 		it "fetching the requestor's IP address even when travelling via proxies" do
 			@req.headers.merge!(
 				'X-Forwarded-For' => [ '127.0.0.1', '8.8.8.8', '4.4.4.4' ]
 			)
 			expect( @req.remote_ip.to_s ).to eq( '127.0.0.1' )
 		end
+
 
 		it "can look up the chroot directory of the server the request is from" do
 			Mongrel2::Config::Server.first.update( chroot: '/usr/local/www' )
@@ -165,12 +176,14 @@ describe Mongrel2::Request, :db do
 			expect( req.body.string.encoding ).to be( Encoding::ISO_8859_1 )
 		end
 
+
 		it "keeps the data as ascii-8bit if no charset is in the content-type header" do
 			body = "some data".encode( 'binary' )
 			req = @factory.post( '/form', body, content_type: 'application/octet-stream' )
 
 			expect( req.body.string.encoding ).to be( Encoding::ASCII_8BIT )
 		end
+
 
 		it "keeps the data as ascii-8bit if there is no content-type header" do
 			body = "some data".encode( 'binary' )
@@ -210,6 +223,7 @@ describe Mongrel2::Request, :db do
 			expect( Mongrel2::Request.subclass_for_method( 'JSON' ) ).to eq( subclass )
 		end
 
+
 		it "includes a mechanism for overriding the Request subclass for a particular request " +
 		   "method" do
 			subclass = Class.new( Mongrel2::Request ) do
@@ -220,6 +234,7 @@ describe Mongrel2::Request, :db do
 			expect( Mongrel2::Request.subclass_for_method( 'POST' ) ).to_not eq( subclass )
 			expect( Mongrel2::Request.subclass_for_method( 'JSON' ) ).to_not eq( subclass )
 		end
+
 
 		it "clears any cached method -> subclass lookups when the default subclass changes" do
 			Mongrel2::Request.subclass_for_method( 'OPTIONS' ) # cache OPTIONS -> Mongrel2::Request
@@ -242,12 +257,14 @@ describe Mongrel2::Request, :db do
 			@spoolpath = @spoolfile.path.slice( Dir.tmpdir.length + 1..-1 )
 		end
 
+
 		it "knows if it's an 'async upload started' notification" do
 			req = @factory.post( '/form', '', x_mongrel2_upload_start: @spoolpath )
 
 			expect( req ).to be_upload_started()
 			expect( req ).to_not be_upload_done()
 		end
+
 
 		it "knows if it's an 'async upload done' notification" do
 			req = @factory.post( '/form', '',
@@ -259,6 +276,7 @@ describe Mongrel2::Request, :db do
 			expect( req ).to be_valid_upload()
 		end
 
+
 		it "knows if it's not a valid 'async upload done' notification" do
 			req = @factory.post( '/form', '',
 				x_mongrel2_upload_start: @spoolpath,
@@ -268,6 +286,7 @@ describe Mongrel2::Request, :db do
 			expect( req ).to be_upload_done()
 			expect( req ).to_not be_valid_upload()
 		end
+
 
 		it "raises an exception if the uploaded file fetched with mismatched headers" do
 			req = @factory.post( '/form', '',
@@ -279,6 +298,7 @@ describe Mongrel2::Request, :db do
 			}.to raise_error( Mongrel2::UploadError, /upload headers/i )
 		end
 
+
 		it "can return a Pathname object for the uploaded file if it's valid" do
 			req = @factory.post( '/form', '',
 				x_mongrel2_upload_start: @spoolpath,
@@ -289,6 +309,7 @@ describe Mongrel2::Request, :db do
 			expect( req.uploaded_file ).to be_a( Pathname )
 			expect( req.uploaded_file.to_s ).to eq( @spoolfile.path )
 		end
+
 
 		it "sets the body of the request to the uploaded File if it's valid" do
 			req = @factory.post( '/form', '',

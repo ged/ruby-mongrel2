@@ -30,6 +30,7 @@ describe Mongrel2::Config::Route, :db do
 		expect( @route.target ).to eq( dir )
 	end
 
+
 	it "returns a Mongrel2::Config::Proxy if its target_type is 'proxy'" do
 		proxy = Mongrel2::Config::Proxy.create( :addr => '10.2.18.8' )
 
@@ -38,6 +39,7 @@ describe Mongrel2::Config::Route, :db do
 
 		expect( @route.target ).to eq( proxy )
 	end
+
 
 	it "returns a Mongrel2::Config::Handler if its target_type is 'handler'" do
 		handler = Mongrel2::Config::Handler.create(
@@ -50,6 +52,7 @@ describe Mongrel2::Config::Route, :db do
 
 		expect( @route.target ).to eq( handler )
 	end
+
 
 	it "raises an exception if its target_type is set to something invalid" do
 		@route.target_type = 'giraffes'

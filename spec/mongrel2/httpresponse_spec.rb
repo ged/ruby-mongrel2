@@ -23,14 +23,17 @@ describe Mongrel2::HTTPResponse do
 		expect( @response.headers ).to be_a( Mongrel2::Table )
 	end
 
+
 	it "allows headers to be set when the response is created" do
 		response = Mongrel2::HTTPResponse.new( TEST_UUID, 299, :content_type => 'image/jpeg' )
 		expect( response.headers.content_type ).to eq( 'image/jpeg' )
 	end
 
+
 	it "is a No Content response if not set otherwise" do
 		expect( @response.status_line ).to eq( 'HTTP/1.1 204 No Content' )
 	end
+
 
 	it "returns an empty response if its status is set to NO_CONTENT" do
 		@response.puts "The response body"
@@ -40,6 +43,7 @@ describe Mongrel2::HTTPResponse do
 		expect( @response.to_s ).to_not match( /The response body/i )
 	end
 
+
 	it "sets Date, Content-type, and Content-length headers automatically if they haven't been set" do
 		@response << "Some stuff."
 
@@ -48,6 +52,7 @@ describe Mongrel2::HTTPResponse do
 		expect( @response.header_data ).to match( /Date: #{HTTP_DATE}/i )
 	end
 
+
 	it "re-calculates the automatically-added headers when re-rendered" do
 		expect( @response.header_data ).to match( /Content-length: 0\b/i )
 		@response.status = HTTP::OK
@@ -55,17 +60,21 @@ describe Mongrel2::HTTPResponse do
 		expect( @response.header_data ).to match( /Content-length: 10\b/i )
 	end
 
+
 	it "doesn't have a body" do
 		expect( @response.body.size ).to eq( 0 )
 	end
+
 
 	it "stringifies to a valid RFC2616 response string" do
 		expect( @response.to_s ).to match( HTTP_RESPONSE )
 	end
 
+
 	it "has some default headers" do
 		expect( @response.headers['Server'] ).to eq( Mongrel2.version_string( true ) )
 	end
+
 
 	it "can be reset to a pristine state" do
 		@response.body << "Some stuff we want to get rid of later"
@@ -80,14 +89,17 @@ describe Mongrel2::HTTPResponse do
 		expect( @response.headers.size ).to eq( 1 )
 	end
 
+
 	it "sets its status line to 200 OK if the body is set and the status hasn't yet been set" do
 		@response << "Some stuff"
 		expect( @response.status_line ).to eq( 'HTTP/1.1 200 OK' )
 	end
 
+
 	it "sets its status line to 204 No Content if the body is set and the status hasn't yet been set" do
 		expect( @response.status_line ).to eq( 'HTTP/1.1 204 No Content' )
 	end
+
 
 	it "can find the length of its body if it's a String" do
 		test_body = 'A string full of stuff'
@@ -96,12 +108,14 @@ describe Mongrel2::HTTPResponse do
 		expect( @response.get_content_length ).to eq( test_body.length )
 	end
 
+
 	it "can find the length of its body if it's a String with multi-byte characters in it" do
 		test_body = 'Хорошая собака, Стрелке! Очень хорошо.'
 		@response << test_body
 
 		expect( @response.get_content_length ).to eq( test_body.bytesize )
 	end
+
 
 	it "can find the length of its body if it's a seekable IO" do
 		test_body = File.open( __FILE__, 'r' )
@@ -114,6 +128,7 @@ describe Mongrel2::HTTPResponse do
 		expect( @response.get_content_length ).to eq( length )
 	end
 
+
 	it "can find the length of its body even if it's an IO that's been set to do a partial read" do
 		test_body = File.open( __FILE__, 'r' )
 		test_body.seek( 0, IO::SEEK_END )
@@ -125,11 +140,13 @@ describe Mongrel2::HTTPResponse do
 		expect( @response.get_content_length ).to eq( length - 100 )
 	end
 
+
 	it "knows whether or not it has been handled" do
 		expect( @response ).to_not be_handled()
 		@response.status = HTTP::OK
 		expect( @response ).to be_handled()
 	end
+
 
 	it "knows that it has been handled even if the status is set to NOT_FOUND" do
 		@response.reset
@@ -270,6 +287,7 @@ describe Mongrel2::HTTPResponse do
 		@response.keepalive = true
 		expect( @response ).to be_keepalive()
 	end
+
 
 	it "has a puts method for appending objects to the body" do
 		@response.puts( :something_to_sable )

@@ -46,15 +46,18 @@ describe Mongrel2::WebSocket do
 			expect( Mongrel2::Request.request_types[:WEBSOCKET_HANDSHAKE] ).to eq( Mongrel2::WebSocket::ClientHandshake )
 		end
 
+
 		it "knows what subprotocols were requested" do
 			handshake = @factory.handshake( '/websock', 'echo', 'superecho' )
 			expect( handshake.protocols ).to eq( ['echo', 'superecho'] )
 		end
 
+
 		it "doesn't error if no subprotocols were requested" do
 			handshake = @factory.handshake( '/websock' )
 			expect( handshake.protocols ).to eq( [] )
 		end
+
 
 		it "can create a response WebSocket::ServerHandshake for itself" do
 			handshake = @factory.handshake( '/websock' )
@@ -72,6 +75,7 @@ describe Mongrel2::WebSocket do
 			result.body.rewind
 			expect( result.body.read ).to eq( '' )
 		end
+
 
 		it "can create a response WebSocket::ServerHandshake with a valid sub-protocol for itself" do
 			handshake = @factory.handshake( '/websock', 'echo', 'superecho' )
@@ -91,6 +95,7 @@ describe Mongrel2::WebSocket do
 			expect( result.body.read ).to eq( '' )
 		end
 
+
 		it "raises an exception if the specified protocol is not one of the client's advertised ones" do
 			handshake = @factory.handshake( '/websock', 'echo', 'superecho' )
 
@@ -98,6 +103,7 @@ describe Mongrel2::WebSocket do
 				handshake.response( :map_updates )
 			}.to raise_error( Mongrel2::WebSocket::HandshakeError, /map_updates/i )
 		end
+
 
 		it "has a socket identifier" do
 			handshake = @factory.handshake( '/websock', 'echo', 'superecho' )
@@ -114,16 +120,19 @@ describe Mongrel2::WebSocket do
 			expect( Mongrel2::Request.request_types[:WEBSOCKET] ).to eq( Mongrel2::WebSocket::Frame )
 		end
 
+
 		it "knows that its FIN flag is not set if its FLAG header doesn't include that bit" do
 			frame = @factory.text( '/websock', 'Hello!' )
 			frame.flags ^= ( frame.flags & Mongrel2::WebSocket::FIN_FLAG )
 			expect( frame ).to_not be_fin()
 		end
 
+
 		it "knows that its FIN flag is set if its FLAG header includes that bit" do
 			frame = @factory.text( '/websock', 'Hello!', :fin )
 			expect( frame ).to be_fin()
 		end
+
 
 		it "can unset its FIN flag" do
 			frame = @factory.text( '/websock', 'Hello!', :fin )
@@ -131,55 +140,68 @@ describe Mongrel2::WebSocket do
 			expect( frame ).to_not be_fin()
 		end
 
+
 		it "can set its FIN flag" do
 			frame = @factory.text( '/websock', 'Hello!' )
 			frame.fin = true
 			expect( frame ).to be_fin()
 		end
 
+
 		it "knows that its opcode is continuation if its opcode is 0x0" do
 			expect( @factory.continuation( '/websock' ).opcode ).to eq( :continuation )
 		end
+
 
 		it "knows that is opcode is 'text' if its opcode is 0x1" do
 			expect( @factory.text( '/websock', 'Hello!' ).opcode ).to eq( :text )
 		end
 
+
 		it "knows that is opcode is 'binary' if its opcode is 0x2" do
 			expect( @factory.binary( '/websock', 'Hello!' ).opcode ).to eq( :binary )
 		end
+
 
 		it "knows that is opcode is 'close' if its opcode is 0x8" do
 			expect( @factory.close( '/websock' ).opcode ).to eq( :close )
 		end
 
+
 		it "knows that is opcode is 'ping' if its opcode is 0x9" do
 			expect( @factory.ping( '/websock' ).opcode ).to eq( :ping )
 		end
+
 
 		it "knows that is opcode is 'pong' if its opcode is 0xA" do
 			expect( @factory.pong( '/websock' ).opcode ).to eq( :pong )
 		end
 
+
 		it "knows that its opcode is one of the reserved ones if it's 0x3" do
 			expect( @factory.create( '/websocket', '', 0x3 ).opcode ).to eq( :reserved )
 		end
+
 
 		it "knows that its opcode is one of the reserved ones if it's 0x4" do
 			expect( @factory.create( '/websocket', '', 0x4 ).opcode ).to eq( :reserved )
 		end
 
+
 		it "knows that its opcode is one of the reserved ones if it's 0xB" do
 			expect( @factory.create( '/websocket', '', 0xB ).opcode ).to eq( :reserved )
 		end
+
 
 		it "knows that its opcode is one of the reserved ones if it's 0xD" do
 			expect( @factory.create( '/websocket', '', 0xD ).opcode ).to eq( :reserved )
 		end
 
+
 		it "knows that its opcode is one of the reserved ones if it's 0xF" do
 			expect( @factory.create( '/websocket', '', 0xF ).opcode ).to eq( :reserved )
 		end
+
 
 		it "allows its opcode to be set Symbolically" do
 			frame = @factory.text( '/websocket', 'data' )
@@ -187,11 +209,13 @@ describe Mongrel2::WebSocket do
 			expect( frame.numeric_opcode ).to eq( OPCODE[:binary] )
 		end
 
+
 		it "allows its opcode to be set Numerically" do
 			frame = @factory.binary( '/websocket', 'data' )
 			frame.opcode = :text
 			expect( frame.numeric_opcode ).to eq( OPCODE[:text] )
 		end
+
 
 		it "allows its opcode to be set to one of the reserved opcodes Numerically" do
 			frame = @factory.binary( '/websocket', 'data' )
@@ -200,33 +224,41 @@ describe Mongrel2::WebSocket do
 			expect( frame.numeric_opcode ).to eq( 0xC )
 		end
 
+
 		it "knows that its RSV1 flag is set if its FLAG header includes that bit" do
 			expect( @factory.ping( '/websock', 'test', :rsv1 ) ).to be_rsv1()
 		end
+
 
 		it "knows that its RSV2 flag is set if its FLAG header includes that bit" do
 			expect( @factory.ping( '/websock', 'test', :rsv2 ) ).to be_rsv2()
 		end
 
+
 		it "knows that its RSV3 flag is set if its FLAG header includes that bit" do
 			expect( @factory.ping( '/websock', 'test', :rsv3 ) ).to be_rsv3()
 		end
+
 
 		it "knows that one of its RSV flags is set if its FLAG header includes RSV1" do
 			expect( @factory.ping( '/websock', 'test', :rsv1 ) ).to have_rsv_flags()
 		end
 
+
 		it "knows that one of its RSV flags is set if its FLAG header includes RSV2" do
 			expect( @factory.ping( '/websock', 'test', :rsv2 ) ).to have_rsv_flags()
 		end
+
 
 		it "knows that one of its RSV flags is set if its FLAG header includes RSV3" do
 			expect( @factory.ping( '/websock', 'test', :rsv3 ) ).to have_rsv_flags()
 		end
 
+
 		it "knows that no RSV flags are set if its FLAG header doesn't have any RSV bits" do
 			expect( @factory.ping( '/websock', 'test' ) ).to_not have_rsv_flags()
 		end
+
 
 		it "can create a response WebSocket::Frame for itself" do
 			frame = @factory.text( '/websock', "Hi, here's a message!", :fin )
@@ -242,6 +274,7 @@ describe Mongrel2::WebSocket do
 			expect( result.payload.read ).to eq( '' )
 		end
 
+
 		it "creates PONG responses with the same payload for PING frames" do
 			frame = @factory.ping( '/websock', "WOO" )
 
@@ -255,6 +288,7 @@ describe Mongrel2::WebSocket do
 			result.payload.rewind
 			expect( result.payload.read ).to eq( 'WOO' )
 		end
+
 
 		it "allows header flags and/or opcode to be specified when creating a response" do
 			frame = @factory.text( '/websock', "some bad data" )
@@ -271,6 +305,7 @@ describe Mongrel2::WebSocket do
 			expect( result.payload.read ).to eq( '' )
 		end
 
+
 		it "allows reserved opcodes to be specified when creating a response" do
 			frame = @factory.text( '/websock', "some bad data" )
 
@@ -286,6 +321,7 @@ describe Mongrel2::WebSocket do
 			expect( result.payload.read ).to eq( '' )
 		end
 
+
 		it "can be streamed in chunks instead of read all at once" do
 			data = BINARY_DATA * 256
 			binary = @factory.binary( '/websock', data, :fin )
@@ -296,6 +332,7 @@ describe Mongrel2::WebSocket do
 				"\xA9\x0En2q\xCE\x85\xAF)\x88w_d\xD6M\x9E".force_encoding('binary'),
 			])
 		end
+
 
 		it "has a socket identifier" do
 			frame = @factory.text( '/websock', "data" )
@@ -311,6 +348,7 @@ describe Mongrel2::WebSocket do
 			@frame = @factory.text( '/websock', '', :fin )
 		end
 
+
 		it "automatically transcodes its payload to UTF8" do
 			text = "Стрелке!".encode( Encoding::KOI8_U )
 			@frame << text
@@ -325,9 +363,11 @@ describe Mongrel2::WebSocket do
 
 
 	describe "a WebSocket binary frame" do
+
 		before( :each ) do
 			@frame = @factory.binary( '/websock', BINARY_DATA, :fin )
 		end
+
 
 		it "doesn't try to transcode non-UTF8 data" do
 			# 4-byte header
@@ -335,13 +375,16 @@ describe Mongrel2::WebSocket do
 				to eq([ 0x07, 0xbd, 0xb3, 0xfe, 0x87, 0xeb, 0xa9, 0x0e, 0x6e, 0x32, 0x71,
 				  0xce, 0x85, 0xaf, 0x29, 0x88 ])
 		end
+
 	end
 
 
 	describe "a WebSocket close frame" do
+
 		before( :each ) do
 			@frame = @factory.close( '/websock' )
 		end
+
 
 		it "has convenience methods for setting its payload via integer status code" do
 			@frame.set_status( CLOSE_BAD_DATA )
@@ -354,6 +397,7 @@ describe Mongrel2::WebSocket do
 
 
 	describe "WebSocket control frames" do
+
 		before( :each ) do
 			@frame = @factory.close( '/websock', "1002 Protocol error" )
 		end
@@ -365,6 +409,7 @@ describe Mongrel2::WebSocket do
 				@frame.validate
 			}.to raise_error( Mongrel2::WebSocket::FrameError, /cannot exceed 125 bytes/i )
 		end
+
 
 		it "raises an exception if it's fragmented" do
 			@frame.fin = false
@@ -384,6 +429,7 @@ describe Mongrel2::WebSocket do
 			expect( raw_response.encoding ).to eq( Encoding::BINARY )
 		end
 
+
 		it "generates both parts of a fragmented unmasked text message correctly" do
 			first = @factory.text( '/websock', 'Hel' )
 			last = @factory.continuation( '/websock', 'lo', :fin )
@@ -391,6 +437,7 @@ describe Mongrel2::WebSocket do
 			expect( first.bytes.to_a ).to eq( [ 0x01, 0x03, 0x48, 0x65, 0x6c ] )
 			expect( last.bytes.to_a ).to eq( [ 0x80, 0x02, 0x6c, 0x6f ] )
 		end
+
 
 		# The RFC's example is a masked response, but we're never a client, so never
 		# generate masked payloads.
@@ -410,6 +457,7 @@ describe Mongrel2::WebSocket do
 			expect( binary.bytes.to_a[0,4] ).to eq( [ 0x82, 0x7E, 0x01, 0x00 ] )
 			expect( binary.to_s[4..-1] ).to eq( BINARY_DATA )
 		end
+
 
 		it "generates a 64KiB binary message in a single unmasked frame correctly" do
 			data = BINARY_DATA * 256
