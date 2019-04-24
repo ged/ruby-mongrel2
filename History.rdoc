@@ -1,3 +1,13 @@
+== v0.52.2 [2019-04-24] Michael Granger <ged@FaerieMUD.org>
+
+Bugfixes:
+
+- Don't set linger on the Connection sockets until they're closing
+- Defer creation of the reactor in the handler until it's #run
+- Add #extended_reply? predicate to Mongrel2::Request for cases where
+  it's used as a response too
+
+
 == v0.52.1 [2018-07-23] Michael Granger <ged@FaerieMUD.org>
 
 Bugfixes:
