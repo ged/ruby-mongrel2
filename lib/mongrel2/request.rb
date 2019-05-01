@@ -109,7 +109,7 @@ class Mongrel2::Request
 	#################################################################
 
 	### Create a new Request object with the given +sender_id+, +conn_id+, +path+, +headers+,
-	### and +body+. The optional +nil+ is for the raw request content, which can be useful
+	### and +body+. The optional +raw+ is for the raw request content, which can be useful
 	### later for debugging.
 	def initialize( sender_id, conn_id, path, headers, body='', raw=nil )
 
