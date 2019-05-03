@@ -356,28 +356,21 @@ module Mongrel2::WebSocket
 
 		### Create a frame in response to the receiving Frame (i.e., with the same
 		### Mongrel2 connection ID and sender).
-		def response( *flags )
-			unless @response
-				@response = super()
+		def response( payload=nil, *flags )
+			res = super()
 
-				# Set the opcode
-				self.log.debug "Setting up response %p with symmetrical flags" % [ @response ]
-				if self.opcode == :ping
-					@response.opcode = :pong
-					IO.copy_stream( self.payload, @response.payload, 4096 )
-				else
-					@response.opcode = self.numeric_opcode
-				end
-
-				# Set flags in the response
-				unless flags.empty?
-					self.log.debug "  applying custom flags: %p" % [ flags ]
-					@response.set_flags( *flags )
-				end
-
+			if payload.is_a?( Symbol ) || payload.is_a?( Integer )
+				flags.unshift( payload )
+				payload = nil
 			end
 
-			return @response
+			if payload
+				res.payload.truncate( 0 )
+				res.payload << payload
+			end
+			res.set_flags( *flags ) unless flags.empty?
+
+			return res
 		end
 
 	end # class Request
@@ -387,6 +380,23 @@ module Mongrel2::WebSocket
 	class Response < Mongrel2::Response
 		extend Forwardable
 		include Mongrel2::WebSocket::FrameMethods
+
+
+		### Return a response to the specified +request+, inferring appropriate flags
+		### if appropriate.
+		def self::from_request( request )
+			response = super
+
+			if request.opcode == :ping
+				response.opcode = :pong
+				IO.copy_stream( request.payload, response.payload, 4096 )
+			else
+				# Numeric in case it's a custom (reserved) value
+				response.opcode = request.numeric_opcode
+			end
+
+			return response
+		end
 
 
 		### Init a few instance variables unique to websocket requests/responses.

@@ -335,12 +335,12 @@ module Mongrel2
 			config = DEFAULT_FACTORY_CONFIG.merge( config )
 
 			@sender_id = config[:sender_id]
+			@conn_id   = config[:conn_id]
 			@host      = config[:host]
 			@port      = config[:port]
 			@route     = config[:route]
-			@headers   = Mongrel2::Table.new( config[:headers] )
 
-			@conn_id   = 0
+			@headers   = Mongrel2::Table.new( config[:headers] )
 		end
 
 		######
