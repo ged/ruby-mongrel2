@@ -1,6 +1,8 @@
 # -*- ruby -*-
 #encoding: utf-8
 
+require 'forwardable'
+
 require 'mongrel2/request' unless defined?( Mongrel2::Request )
 require 'mongrel2/constants'
 
@@ -196,22 +198,45 @@ module Mongrel2::WebSocket
 	end # module WebSocket
 	include Constants
 
+
 	# Base exception class for WebSocket-related errors
 	class Error < ::RuntimeError; end
 
+
 	# Exception raised when a frame is malformed, doesn't parse, or is otherwise invalid.
 	class FrameError < Mongrel2::WebSocket::Error; end
+
 
 	# Exception raised when a handshake is created with an unrequested sub-protocol.
 	class HandshakeError < Mongrel2::WebSocket::Error; end
 
 
-	# A mixin containing methods common to WebSocket frame classes.
-	module Methods
+	# A mixin containing methods for request/response classes that wrap a Frame.
+	module FrameMethods
+		extend Forwardable
 
-		### Get a string identifying the websocket the frame belongs to.
-		def socket_id
-			return [ self.sender_id, self.conn_id ].join( ':' )
+
+		##
+		# The Websocket data as a Mongrel2::WebSocket::Frame
+		attr_reader :frame
+
+		##
+		# Delegate some methods to the contained frame
+		def_instance_delegators :frame,
+			:opcode, :opcode=, :numeric_opcode, :payload, :each_chunk, :flags, :set_flags,
+			:fin?, :fin=, :rsv1?, :rsv1=, :rsv2?, :rsv2=, :rsv3?, :rsv3=
+
+		### Append operator -- append +object+ to the contained frame's payload and
+		### return the receiver.
+		def <<( object )
+			self.frame << object
+			return self
+		end
+
+
+		### Return the details to include in the contents of the #inspected object.
+		def inspect_details
+			return "frame: %p" % [ self.frame ]
 		end
 
 	end # module Methods
@@ -219,8 +244,7 @@ module Mongrel2::WebSocket
 
 	# The client (request) handshake for a WebSocket opening handshake.
 	class ClientHandshake < Mongrel2::HTTPRequest
-		include Mongrel2::WebSocket::Constants,
-		        Mongrel2::WebSocket::Methods
+		include Mongrel2::WebSocket::Constants
 
 		# Set this class as the one that will handle WEBSOCKET_HANDSHAKE requests
 		register_request_type( self, :WEBSOCKET_HANDSHAKE )
@@ -266,7 +290,7 @@ module Mongrel2::WebSocket
 	# The server (response) handshake for a WebSocket opening handshake.
 	class ServerHandshake < Mongrel2::HTTPResponse
 		include Mongrel2::WebSocket::Constants,
-		        Mongrel2::WebSocket::Methods
+		        Mongrel2::WebSocket::FrameMethods
 
 		### Create a server handshake frame from the given client +handshake+.
 		def self::from_request( handshake )
@@ -303,36 +327,138 @@ module Mongrel2::WebSocket
 	end # class ServerHandshake
 
 
-	# WebSocket frame class; this is used for both requests and responses in
-	# WebSocket services.
-	class Frame < Mongrel2::Request
-		include Mongrel2::WebSocket::Constants,
-		        Mongrel2::WebSocket::Methods
-
-		# The default frame header flags: FIN + CLOSE
-		DEFAULT_FLAGS = FIN_FLAG | OPCODE[:close]
+	# WebSocket request -- this is the container for Frames from a client.
+	class Request < Mongrel2::Request
+		include Mongrel2::WebSocket::FrameMethods
 
 
 		# Set this class as the one that will handle WEBSOCKET requests
 		register_request_type( self, :WEBSOCKET )
 
 
-		### Override the type of response returned by this request type. Since
-		### WebSocket connections are symmetrical, responses are just new
-		### Mongrel2::WebSocket::Frames with the same Mongrel2 sender and
-		### connection IDs.
+		### Override the type of response returned by this request type.
 		def self::response_class
-			return self
+			return Mongrel2::WebSocket::Response
 		end
 
 
-		### Create a response frame from the given request +frame+.
-		def self::from_request( frame )
-			self.log.debug "Creating a %p response to request %p" % [ self, frame ]
-			response = new( frame.sender_id, frame.conn_id, frame.path )
-			response.request_frame = frame
+		### Init a few instance variables unique to websocket requests/responses.
+		def initialize( * )
+			super
 
-			return response
+			payload = self.body.read
+			self.body.rewind
+
+			@frame = Mongrel2::WebSocket::Frame.new( payload, self.headers.flags )
+		end
+
+
+		### Create a frame in response to the receiving Frame (i.e., with the same
+		### Mongrel2 connection ID and sender).
+		def response( *flags )
+			unless @response
+				@response = super()
+
+				# Set the opcode
+				self.log.debug "Setting up response %p with symmetrical flags" % [ @response ]
+				if self.opcode == :ping
+					@response.opcode = :pong
+					IO.copy_stream( self.payload, @response.payload, 4096 )
+				else
+					@response.opcode = self.numeric_opcode
+				end
+
+				# Set flags in the response
+				unless flags.empty?
+					self.log.debug "  applying custom flags: %p" % [ flags ]
+					@response.set_flags( *flags )
+				end
+
+			end
+
+			return @response
+		end
+
+	end # class Request
+
+
+	# WebSocket response -- this is the container for Frames sent to a client.
+	class Response < Mongrel2::Response
+		extend Forwardable
+		include Mongrel2::WebSocket::FrameMethods
+
+
+		### Init a few instance variables unique to websocket requests/responses.
+		def initialize( sender_id, conn_id, body='' )
+			@frame = Mongrel2::WebSocket::Frame.new( body )
+			super( sender_id, conn_id, @frame.payload )
+		end
+
+
+		##
+		# Delegate some methods to the contained frame
+		def_instance_delegators :frame,
+			:puts, :to_s, :each_chunk, :<<, :make_close_frame, :set_status
+
+	end # class Response
+
+
+	# WebSocket frame class; this is used for both requests and responses in
+	# WebSocket services.
+	class Frame
+		extend Loggability
+		include Mongrel2::WebSocket::Constants
+
+
+		# The default frame header flags: FIN + CLOSE
+		DEFAULT_FLAGS = FIN_FLAG | OPCODE[:close]
+
+		# The default size of the payload of fragment frames
+		DEFAULT_FRAGMENT_SIZE = 4096
+
+
+		# Loggability API -- log to the mongrel2 logger
+		log_to :mongrel2
+
+
+		### Create one or more fragmented frames for the data read from +io+ and yield
+		### each to the specified block. If no block is given, return a iterator that
+		### will yield the frames instead. The +io+ can be any object that responds to
+		### #readpartial, and the blocking semantics follow those of that method when
+		### iterating.
+		def self::each_fragment( io, opcode, size: DEFAULT_FRAGMENT_SIZE, &block )
+			raise ArgumentError, "Invalid opcode %p" % [opcode] unless OPCODE.key?( opcode )
+
+			iter = Enumerator.new do |yielder|
+				count = 0
+
+				until io.eof?
+					self.log.debug "Reading frame %d" % [ count ]
+					data = io.readpartial( size )
+					frame = if count.zero?
+							new( data, opcode )
+						else
+							new( data, :continuation )
+						end
+					frame.fin = io.eof?
+
+					yielder.yield( frame )
+
+					count += 1
+				end
+			end
+
+			return iter.each( &block ) if block
+			return iter
+		end
+
+
+		# Make convenience constructors for each opcode
+		OPCODE.keys.each do |opcode_name|
+			define_singleton_method( opcode_name ) do |payload='', *flags|
+				flags << opcode_name
+				return new( payload, *flags )
+			end
 		end
 
 
@@ -351,22 +477,18 @@ module Mongrel2::WebSocket
 		end
 
 
-
 		#################################################################
 		###	I N S T A N C E   M E T H O D S
 		#################################################################
 
-		### Override the constructor to add Integer flags extracted from the FLAGS header.
-		def initialize( sender_id, conn_id, path, headers={}, payload='', raw=nil )
-			payload.force_encoding( Encoding::UTF_8 ) if
-				payload.encoding == Encoding::ASCII_8BIT
+		### Create a new websocket frame that will be the body of a request or response.
+		def initialize( payload='', *flags )
+			@payload   = StringIO.new( payload )
+			@flags     = DEFAULT_FLAGS
+			@errors    = []
+			@chunksize = DEFAULT_CHUNKSIZE
 
-			super
-
-			@flags         = Integer( self.headers.flags || DEFAULT_FLAGS )
-			@request_frame = nil
-			@errors        = []
-			@chunksize     = DEFAULT_CHUNKSIZE
+			self.set_flags( *flags ) unless flags.empty?
 		end
 
 
@@ -375,16 +497,13 @@ module Mongrel2::WebSocket
 		######
 
 		# The payload data
-		attr_accessor :body
-		alias_method :payload, :body
-		alias_method :payload=, :body=
+		attr_accessor :payload
+		alias_method :body, :payload
+		alias_method :body=, :payload=
 
 
 		# The frame's header flags as an Integer
 		attr_accessor :flags
-
-		# The frame that this one is a response to
-		attr_accessor :request_frame
 
 		# The Array of validation errors
 		attr_reader :errors
@@ -405,6 +524,38 @@ module Mongrel2::WebSocket
 		attr_flag :rsv1, RSV1_FLAG
 		attr_flag :rsv2, RSV2_FLAG
 		attr_flag :rsv3, RSV3_FLAG
+
+
+		### Apply flag bits and opcodes: (:fin, :rsv1, :rsv2, :rsv3, :continuation,
+		### :text, :binary, :close, :ping, :pong) to the frame.
+		###
+		###   # Transform the frame into a CLOSE frame and set its FIN flag
+		###   frame.set_flags( :fin, :close )
+		###
+		def set_flags( *flag_symbols )
+			flag_symbols.flatten!
+			flag_symbols.compact!
+
+			self.log.debug "Setting flags for symbols: %p" % [ flag_symbols ]
+
+			flag_symbols.each do |flag|
+				case flag
+				when :fin, :rsv1, :rsv2, :rsv3
+					self.__send__( "#{flag}=", true )
+				when :continuation, :text, :binary, :close, :ping, :pong
+					self.opcode = flag
+				when Integer
+					self.log.debug "  setting Integer flags directly: %#08b" % [ flag ]
+					self.flags |= flag
+				when /\A0x\h{2}\z/
+					val = Integer( flag )
+					self.log.debug "  setting (stringified) Integer flags directly: %#08b" % [ val ]
+					self.flags = val
+				else
+					raise ArgumentError, "Don't know what the %p flag is." % [ flag ]
+				end
+			end
+		end
 
 
 		### Returns true if one or more of the RSV1-3 bits is set.
@@ -486,7 +637,8 @@ module Mongrel2::WebSocket
 		def validate
 			unless self.valid?
 				self.log.error "Validation failed."
-				raise Mongrel2::WebSocket::FrameError, "invalid frame: %s" % [ self.errors.join(', ') ]
+				raise Mongrel2::WebSocket::FrameError, "invalid frame: %s" %
+					[ self.errors.join(', ') ]
 			end
 		end
 
@@ -507,7 +659,7 @@ module Mongrel2::WebSocket
 
 		### Mongrel2::Connection API -- Yield the response in chunks if called with a block, else
 		### return an Enumerator that will do the same.
-		def each_chunk
+		def each_chunk( &block )
 			self.validate
 
 			iter = Enumerator.new do |yielder|
@@ -516,122 +668,42 @@ module Mongrel2::WebSocket
 				end
 			end
 
-			if block_given?
-				block = Proc.new
-				iter.each( &block )
-			else
-				return iter
-			end
+			return iter unless block
+			return iter.each( &block )
 		end
 
 
 		### Stringify into a response suitable for sending to the client.
 		def to_s
-			self.remember_payload_settings do
-				self.payload.rewind
-				self.payload.set_encoding( 'binary' )
-
-				header = self.make_header
-				data = self.payload.read
-
-				return header + data
-			end
+			return self.each_byte.to_a.pack( 'C*' )
 		end
 
 
 		### Return an Enumerator for the bytes of the raw frame as it appears
 		### on the wire.
-		def bytes
-			self.remember_payload_settings do
-				self.payload.rewind
-				self.log.debug "Making a bytes iterator for a %s payload" %
-					[ self.payload.external_encoding.name ]
+		def each_byte( &block )
+			self.log.debug "Making a bytes iterator for a %s payload" %
+				[ self.payload.external_encoding.name ]
 
-				return Enumerator.new do |yielder|
-					self.payload.set_encoding( 'binary' )
-					self.payload.rewind
+			payload_copy = self.payload.clone
+			payload_copy.set_encoding( 'binary' )
+			payload_copy.rewind
 
-					header_i = self.make_header.each_byte
-					body_i   = self.payload.each_byte
+			iter = self.make_header.each_byte + payload_copy.each_byte
 
-					header_i.each_with_index {|byte, i| yielder.yield(byte) }
-					body_i.each_with_index   {|byte, i| yielder.yield(byte) }
-				end
-			end
+			return iter unless block
+			return iter.each( &block )
 		end
+		alias_method :bytes, :each_byte
 
 
-		### Remember the payload IO's external encoding, position, etc. and restore them
-		### when the block returns.
-		def remember_payload_settings
-			original_enc = self.payload.external_encoding
-			original_pos = self.payload.pos
-
-			yield
-		ensure
-			self.payload.set_encoding( original_enc ) if original_enc
-			self.payload.pos = original_pos if original_pos
-		end
-
-
-		### Create a frame in response to the receiving Frame (i.e., with the same
-		### Mongrel2 connection ID and sender).
-		def response( *flags )
-			unless @response
-				@response = super()
-
-				# Set the opcode
-				self.log.debug "Setting up response %p with symmetrical flags" % [ @response ]
-				if self.opcode == :ping
-					@response.opcode = :pong
-					IO.copy_stream( self.payload, @response.payload, 4096 )
-				else
-					@response.opcode = self.numeric_opcode
-				end
-
-				# Set flags in the response
-				unless flags.empty?
-					self.log.debug "  applying custom flags: %p" % [ flags ]
-					@response.set_flags( *flags )
-				end
-
-			end
-
-			return @response
-		end
-
-
-		### Apply flag bits and opcodes: (:fin, :rsv1, :rsv2, :rsv3, :continuation,
-		### :text, :binary, :close, :ping, :pong) to the frame.
-		###
-		###   # Transform the frame into a CLOSE frame and set its FIN flag
-		###   frame.set_flags( :fin, :close )
-		###
-		def set_flags( *flag_symbols )
-			flag_symbols.flatten!
-			flag_symbols.compact!
-
-			self.log.debug "Setting flags for symbols: %p" % [ flag_symbols ]
-
-			flag_symbols.each do |flag|
-				case flag
-				when :fin, :rsv1, :rsv2, :rsv3
-					self.__send__( "#{flag}=", true )
-				when :continuation, :text, :binary, :close, :ping, :pong
-					self.opcode = flag
-				when Integer
-					self.log.debug "  setting Integer flags directly: 0b%08b" % [ flag ]
-					self.flags |= flag
-				else
-					raise ArgumentError, "Don't know what the %p flag is." % [ flag ]
-				end
-			end
-		end
-
-
-		### Compatibility with Mongrel2::Response.
-		def extended_reply? # :nodoc:
-			return false
+		### Return the frame as a human-readable string suitable for debugging.
+		def inspect
+			return "#<%p:%#0x %s>" % [
+				self.class,
+				self.object_id * 2,
+				self.inspect_details,
+			]
 		end
 
 
@@ -655,7 +727,7 @@ module Mongrel2::WebSocket
 
 		### Make a WebSocket header for the frame and return it.
 		def make_header
-			header = ''.force_encoding( Encoding::ASCII_8BIT )
+			header = nil
 			length = self.payload.size
 
 			self.log.debug "Making wire protocol header for payload of %d bytes" % [ length ]

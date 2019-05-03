@@ -286,16 +286,13 @@ module Mongrel2
 
 	# A factory for generating WebSocket request objects for testing.
 	#
-	class WebSocketFrameFactory < Mongrel2::RequestFactory
+	class WebSocketRequestFactory < Mongrel2::RequestFactory
 		include Mongrel2::Constants
 
 		# The default host
 		DEFAULT_TESTING_HOST  = 'localhost'
 		DEFAULT_TESTING_PORT  = '8113'
 		DEFAULT_TESTING_ROUTE = '/ws'
-
-		# The default WebSocket opcode
-		DEFAULT_OPCODE = :text
 
 		# Default headers
 		DEFAULT_TESTING_HEADERS = {
@@ -447,6 +444,8 @@ module Mongrel2
 			headers.origin    = "http://#{headers.host}"
 			headers.flags     = "0x%02x" % [ flags ]
 
+			self.log.debug "Headers are: %p" % [ headers ]
+
 			return headers
 		end
 
@@ -488,6 +487,7 @@ module Mongrel2
 		end
 
 	end # class WebSocketFrameFactory
+
 
 end # module Mongrel2
 

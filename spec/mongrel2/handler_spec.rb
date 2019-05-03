@@ -191,7 +191,7 @@ describe Mongrel2::Handler, :db do
 
 		expect( handler.conn ).to receive( :reply_close ).with( request )
 		expect( handler.conn ).to receive( :reply ) do |reply|
-			expect( reply ).to be_a( Mongrel2::WebSocket::Frame )
+			expect( reply ).to be_a( Mongrel2::WebSocket::Response )
 			expect( reply.opcode ).to eq( :close )
 			reply.payload.rewind
 			expect( reply.payload.read ).to start_with( '1008 ' )
@@ -214,7 +214,7 @@ describe Mongrel2::Handler, :db do
 
 		response = handler.dispatch_request( request )
 
-		expect( response ).to be_a( Mongrel2::WebSocket::Frame )
+		expect( response ).to be_a( Mongrel2::WebSocket::Response )
 	end
 
 

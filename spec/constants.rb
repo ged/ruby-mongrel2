@@ -115,7 +115,7 @@ module Mongrel2::TestConstants # :nodoc:all
 
 		TEST_WEBSOCKET_HEADERS = {
 			 'connection'               => 'Upgrade',
-			 'FLAGS'                    => '0x8A',
+			 'FLAGS'                    => '0x89',
 			 'host'                     => 'host.example.com:80',
 			 'METHOD'                   => 'WEBSOCKET',
 			 'origin'                   => 'http://host.example.com:80',

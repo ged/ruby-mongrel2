@@ -222,8 +222,7 @@ class WebSocketEchoServer < Mongrel2::Handler
 			next unless earliest > lastframe
 
 			# Make a CLOSE frame
-			frame = Mongrel2::WebSocket::Frame.new( sender_id, conn_id, '', {}, '' )
-			frame.opcode = :close
+			frame = Mongrel2::WebSocket::Frame.close
 			frame.set_status( CLOSE_EXCEPTION )
 
 			# Use the connection directly so we can send a frame and close the

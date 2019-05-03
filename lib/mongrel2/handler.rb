@@ -305,7 +305,7 @@ class Mongrel2::Handler
 			case request
 			when Mongrel2::WebSocket::ClientHandshake
 				return self.handle_websocket_handshake( request )
-			when Mongrel2::WebSocket::Frame
+			when Mongrel2::WebSocket::Request
 				return self.handle_websocket( request )
 			when Mongrel2::HTTPRequest
 				return self.handle( request )
