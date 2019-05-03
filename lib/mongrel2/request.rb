@@ -258,15 +258,22 @@ class Mongrel2::Request
 	# :section: Introspection Methods
 	#
 
+	### Returns a string containing the request's sender and connection IDs
+	### separated by a colon.
+	def socket_id
+		return "%s:%d" % [ self.sender_id, self.conn_id ]
+	end
+
+
+
 	### Returns a string containing a human-readable representation of the Request,
 	### suitable for debugging.
 	def inspect
-		return "#<%p:0x%016x %s (%s/%d)>" % [
+		return "#<%p:0x%016x %s (%s)>" % [
 			self.class,
 			self.object_id * 2,
 			self.inspect_details,
-			self.sender_id,
-			self.conn_id
+			self.socket_id
 		]
 	end
 

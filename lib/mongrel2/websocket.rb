@@ -224,7 +224,8 @@ module Mongrel2::WebSocket
 		# Delegate some methods to the contained frame
 		def_instance_delegators :frame,
 			:opcode, :opcode=, :numeric_opcode, :payload, :each_chunk, :flags, :set_flags,
-			:fin?, :fin=, :rsv1?, :rsv1=, :rsv2?, :rsv2=, :rsv3?, :rsv3=
+			:fin?, :fin=, :rsv1?, :rsv1=, :rsv2?, :rsv2=, :rsv3?, :rsv3=, :control?,
+			:has_rsv_flags?
 
 		### Append operator -- append +object+ to the contained frame's payload and
 		### return the receiver.

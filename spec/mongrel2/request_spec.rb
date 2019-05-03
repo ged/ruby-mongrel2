@@ -164,6 +164,11 @@ describe Mongrel2::Request, :db do
 			expect( @req.server_chroot.to_s ).to eq( '/' )
 		end
 
+
+		it "can return an ID for which sender and connection it's from" do
+			expect( @req.socket_id ).to eq( "#{@req.sender_id}:#{@req.conn_id}" )
+		end
+
 	end
 
 

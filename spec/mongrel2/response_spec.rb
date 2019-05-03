@@ -68,6 +68,13 @@ describe Mongrel2::Response do
 	end
 
 
+	it "can return an ID for which sender and connection it's for" do
+		response = Mongrel2::Response.new( TEST_UUID, 8 )
+
+		expect( response.socket_id ).to eq( "#{response.sender_id}:#{response.conn_id}" )
+	end
+
+
 	context	"an instance with default values" do
 
 		let( :response ) { Mongrel2::Response.new(TEST_UUID, 8) }
