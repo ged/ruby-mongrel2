@@ -290,8 +290,7 @@ module Mongrel2::WebSocket
 
 	# The server (response) handshake for a WebSocket opening handshake.
 	class ServerHandshake < Mongrel2::HTTPResponse
-		include Mongrel2::WebSocket::Constants,
-		        Mongrel2::WebSocket::FrameMethods
+		include Mongrel2::WebSocket::Constants
 
 		### Create a server handshake frame from the given client +handshake+.
 		def self::from_request( handshake )
