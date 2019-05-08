@@ -1,4 +1,5 @@
-#!/usr/bin/ruby
+# -*- ruby -*-
+# frozen_string_literal: true
 # coding: utf-8
 
 require 'mongrel2' unless defined?( Mongrel2 )

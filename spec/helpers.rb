@@ -1,4 +1,5 @@
-#!/usr/bin/ruby
+# -*- ruby -*-
+# frozen_string_literal: true
 # coding: utf-8
 
 # SimpleCov test coverage reporting; enable this using the :coverage rake task

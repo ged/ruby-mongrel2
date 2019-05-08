@@ -1,4 +1,5 @@
-#!/usr/bin/ruby
+# -*- ruby -*-
+# frozen_string_literal: true
 
 require 'stringio'
 require 'tnetstring'
@@ -32,7 +33,7 @@ class Mongrel2::Response
 
 	### Create a new Response object for the specified +sender_id+, +conn_id+, and +body+.
 	def initialize( sender_id, conn_id, body='' )
-		body = StringIO.new( body, 'a+' ) unless body.respond_to?( :read )
+		body = StringIO.new( body.dup, 'a+' ) unless body.respond_to?( :read )
 
 		@sender_id             = sender_id
 		@conn_id               = conn_id
@@ -76,7 +77,7 @@ class Mongrel2::Response
 	### Set the response's entity body to +newbody+. If +newbody+ is a String-ish object
 	### (i.e., it responds to #to_str), it will be wrapped in a StringIO in 'a+' mode).
 	def body=( newbody )
-		newbody = StringIO.new( newbody, 'a+' ) if newbody.respond_to?( :to_str )
+		newbody = StringIO.new( newbody.dup, 'a+' ) if newbody.respond_to?( :to_str )
 		@body = newbody
 	end
 

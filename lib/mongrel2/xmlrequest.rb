@@ -1,4 +1,5 @@
-#!/usr/bin/ruby
+# -*- ruby -*-
+# frozen_string_literal: true
 
 require 'libxml'
 require 'loggability'

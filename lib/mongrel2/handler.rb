@@ -1,5 +1,5 @@
-#-*- ruby -*-
-#encoding: utf-8
+# -*- ruby -*-
+# frozen_string_literal: true
 
 require 'cztop'
 require 'cztop/reactor'
@@ -24,7 +24,7 @@ require 'mongrel2/websocket'
 # A dumb, dead-simple example that just returns a plaintext 'Hello'
 # document with a timestamp.
 #
-#     #!/usr/bin/env ruby
+#     # -*- ruby -*-
 #
 #     require 'mongrel2/handler'
 #
@@ -409,10 +409,11 @@ class Mongrel2::Handler
 	### a new request via the regular callback when the upload completes whose entity body
 	### is open to the spooled file.
 	def handle_async_upload_start( request )
-		explanation = "If you wish to handle requests like this, either set your server's "
-		explanation << "'limits.content_length' setting to a higher value than %d, or override " %
-			 [ request.content_length ]
-		explanation << "#handle_async_upload_start."
+		explanation = <<~END_MESSAGE % [ request.content_length ]
+		If you wish to handle requests like this, either set your server's
+		'limits.content_length' setting to a higher value than %d, or override
+		#handle_async_upload_start.
+		END_MESSAGE
 
 		self.log.warn "Async upload from %s dropped." % [ request.remote_ip ]
 		self.log.info( explanation )

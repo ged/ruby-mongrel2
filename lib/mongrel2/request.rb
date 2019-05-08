@@ -1,5 +1,5 @@
-#-*- ruby -*-
-#encoding: utf-8
+# -*- ruby -*-
+# frozen_string_literal: true
 
 require 'ipaddr'
 require 'stringio'
@@ -152,7 +152,7 @@ class Mongrel2::Request
 	### Set the request's entity body to +newbody+. If +newbody+ is a String-ish object
 	### (i.e., it responds to #to_str), it will be wrapped in a StringIO in 'r+' mode).
 	def body=( newbody )
-		newbody = StringIO.new( newbody, 'a+' ) if newbody.respond_to?( :to_str )
+		newbody = StringIO.new( newbody.dup, 'a+' ) if newbody.respond_to?( :to_str )
 		@body = newbody
 	end
 
@@ -302,8 +302,8 @@ class Mongrel2::Request
 				body.is_a?( String )
 
 			# Get the object as a String, set the encoding
-			str = body.to_s
-			str.force_encoding( enc ) if enc && str.encoding == Encoding::ASCII_8BIT
+			str = String.new( body, encoding: enc )
+			# str.force_encoding( enc ) if enc && str.encoding == Encoding::ASCII_8BIT
 
 			return StringIO.new( str, 'r+' )
 		else

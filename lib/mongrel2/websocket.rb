@@ -1,5 +1,5 @@
 # -*- ruby -*-
-#encoding: utf-8
+# frozen_string_literal: true
 
 require 'forwardable'
 
@@ -493,7 +493,7 @@ module Mongrel2::WebSocket
 
 		### Create a new websocket frame that will be the body of a request or response.
 		def initialize( payload='', *flags )
-			@payload   = StringIO.new( payload )
+			@payload   = StringIO.new( payload.dup )
 			@flags     = DEFAULT_FLAGS
 			@errors    = []
 			@chunksize = DEFAULT_CHUNKSIZE

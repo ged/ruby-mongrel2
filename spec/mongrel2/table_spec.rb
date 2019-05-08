@@ -1,4 +1,5 @@
-#!/usr/bin/env ruby
+# -*- ruby -*-
+# frozen_string_literal: true
 
 require_relative '../helpers'
 
@@ -111,8 +112,8 @@ describe Mongrel2::Table do
 
 
 	it "dupes its inner hash when duped" do
-		@table['foom'] = 'a string'
-		@table['frong'] = %w[eenie meenie mynie moe]
+		@table['foom'] = +'a string'
+		@table['frong'] = [+'eenie', +'meenie', +'mynie', +'moe']
 
 		newtable = @table.dup
 		newtable['idkfa'] = 'god'

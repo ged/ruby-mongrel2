@@ -1,4 +1,5 @@
-#!/usr/bin/env ruby
+# -*- ruby -*-
+# frozen_string_literal: true
 
 require 'mongrel2' unless defined?( Mongrel2 )
 require 'mongrel2/config' unless defined?( Mongrel2::Config )
