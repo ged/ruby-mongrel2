@@ -65,6 +65,7 @@ spec/mongrel2/httpresponse_spec.rb
 spec/mongrel2/request_spec.rb
 spec/mongrel2/response_spec.rb
 spec/mongrel2/table_spec.rb
+spec/mongrel2/testing_spec.rb
 spec/mongrel2/websocket_spec.rb
 spec/mongrel2/xmlrequest_spec.rb
 spec/mongrel2_spec.rb

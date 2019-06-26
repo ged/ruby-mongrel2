@@ -29,7 +29,10 @@ class Mongrel2::Table
 	log_to :mongrel2
 
 	# Methods that understand case-insensitive keys
-	KEYED_METHODS = [ :"[]", :"[]=", :delete, :fetch, :has_key?, :include?, :member?, :store ]
+	KEYED_METHODS = %i[ [] []= delete fetch has_key? include? member? store ]
+
+	# Method to not delegate to the inner hash
+	NON_DELEGATED_METHODS = %i[ inspect freeze ]
 
 
 	### Auto-generate methods which call the given +delegate+ after normalizing
@@ -75,7 +78,7 @@ class Mongrel2::Table
 	# Delegate some methods to the underlying Hash
 	begin
 		unoverridden_methods = Hash.instance_methods(false).collect {|mname| mname.to_sym }
-		def_delegators :@hash, *( unoverridden_methods - KEYED_METHODS )
+		def_delegators :@hash, *( unoverridden_methods - KEYED_METHODS - NON_DELEGATED_METHODS )
 	end
 
 
@@ -150,6 +153,23 @@ class Mongrel2::Table
 	### keys.
 	def values_at( *keys )
 		@hash.values_at( *(keys.collect {|k| normalize_key(k)}) )
+	end
+
+
+	### Return a human-readable representation of the object suitable for debugging.
+	def inspect
+		return "#<%p:%#x %p>" % [
+			self.class,
+			self.object_id * 2,
+			@hash
+		]
+	end
+
+
+	### Overridden to freeze the inner hash as well.
+	def freeze
+		super
+		@hash.freeze
 	end
 
 

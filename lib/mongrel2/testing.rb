@@ -109,7 +109,7 @@ module Mongrel2
 		DEFAULT_TESTING_ROUTE = DEFAULT_TESTING_URL.path
 
 		# The default set of headers used for HTTP requests
-		DEFAULT_TESTING_HEADERS  = {
+		DEFAULT_TESTING_HEADERS  = Mongrel2::Table.new(
 			'x-forwarded-for' => '127.0.0.1',
 			'accept-language' => 'en-US,en;q=0.8',
 			'accept-encoding' => 'gzip,deflate,sdch',
@@ -121,7 +121,7 @@ module Mongrel2
 			                     'Safari/535.1',
 			'url-scheme'      => 'http',
 			'VERSION'         => 'HTTP/1.1',
-		}
+		)
 
 		# The defaults used by the HTTP request factory
 		DEFAULT_FACTORY_CONFIG = {
@@ -162,12 +162,12 @@ module Mongrel2
 			config = self.class.default_factory_config.merge( config )
 
 			@sender_id = config[:sender_id]
+			@conn_id   = config[:conn_id]
 			@host      = config[:host]
 			@port      = config[:port]
 			@route     = config[:route]
-			@headers   = Mongrel2::Table.new( config[:headers] )
 
-			@conn_id = 0
+			@headers   = Mongrel2::Table.new( config[:headers] )
 		end
 
 		######
@@ -296,7 +296,7 @@ module Mongrel2
 		DEFAULT_TESTING_ROUTE = '/ws'
 
 		# Default headers
-		DEFAULT_TESTING_HEADERS = {
+		DEFAULT_TESTING_HEADERS = Mongrel2::Table.new(
 			'METHOD'                => 'WEBSOCKET',
 			'PATTERN'               => '/ws',
 			'URI'                   => '/ws',
@@ -310,7 +310,7 @@ module Mongrel2
 			'origin'                => "http://#{DEFAULT_TESTING_HOST}",
 			'FLAGS'                 => '0x89', # FIN + PING
 			'x-forwarded-for'       => '127.0.0.1'
-		}
+		)
 
 		# The defaults used by the websocket request factory
 		DEFAULT_FACTORY_CONFIG = {
@@ -329,20 +329,6 @@ module Mongrel2
 			const_get(cname).freeze
 		end
 
-
-		### Create a new factory using the specified +config+.
-		def initialize( config={} )
-			config[:headers] = DEFAULT_TESTING_HEADERS.merge( config[:headers] ) if config[:headers]
-			config = DEFAULT_FACTORY_CONFIG.merge( config )
-
-			@sender_id = config[:sender_id]
-			@conn_id   = config[:conn_id]
-			@host      = config[:host]
-			@port      = config[:port]
-			@route     = config[:route]
-
-			@headers   = Mongrel2::Table.new( config[:headers] )
-		end
 
 		######
 		public
