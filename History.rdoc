@@ -1,3 +1,13 @@
+== v0.53.0 [2019-05-07] Michael Granger <ged@FaerieMUD.org>
+
+Enhancements:
+
+- Modify to run with frozen string literals (Ruby >= 2.6).
+- Add a #socket_id method to Mongrel2::Request and ::Response.
+- Rewrite websocket functionality to make it easier to write servers
+  that use it.
+
+
 == v0.52.2 [2019-04-24] Michael Granger <ged@FaerieMUD.org>
 
 Bugfixes:
