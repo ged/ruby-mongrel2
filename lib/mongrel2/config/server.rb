@@ -197,10 +197,11 @@ class Mongrel2::Config::Server < Mongrel2::Config( :server )
 			self.target.save( :validate => false )
 
 			self.log.debug "Host [%s] (block: %p)" % [ name, block ]
-			adapter = Mongrel2::Config::DSL::Adapter.new( Mongrel2::Config::Host, name: name )
+			adapter = Mongrel2::Config::DSL::Adapter.
+				new( Mongrel2::Config::Host, name: name, server_id: self.target.id )
 			adapter.target.matching = name
 			adapter.instance_eval( &block ) if block
-			self.target.add_host( adapter.target )
+			adapter.target.save
 		end
 
 

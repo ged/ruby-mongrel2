@@ -65,6 +65,7 @@ module Mongrel2
 		plugin :subclasses
 		plugin :json_serializer
 		plugin :serialization
+		plugin :update_or_create
 
 
 		# Configuration defaults

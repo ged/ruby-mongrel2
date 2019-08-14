@@ -51,7 +51,7 @@ class Mongrel2::Config::Host < Mongrel2::Config( :host )
 			self.target.save
 			self.log.debug "Route %s -> %p [%p]" % [ path, target, opts ]
 
-			args = { :path => path, :target => target }
+			args = { path: path, target: target }
 			args.merge!( opts )
 			route = Mongrel2::Config::Route.new( args )
 

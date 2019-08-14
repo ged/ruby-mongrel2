@@ -22,17 +22,11 @@ module Mongrel2::Config::DSL
 		### Create an instance of the specified +targetclass+ using the specified +opts+
 		### as initial values. The first pair of +opts+ will be used in the filter to
 		### find any previous instance and delete it.
-		def initialize( targetclass, opts={} )
+		def initialize( targetclass, opts={}, &block )
 			self.log.debug "Wrapping a %p" % [ targetclass ]
 			@targetclass = targetclass
 
-			# Use the first pair as the primary key
-			unless opts.empty?
-				first_pair = Hash[ *opts.first ]
-				@targetclass.filter( first_pair ).destroy
-			end
-
-			@target = @targetclass.new( opts )
+			@target = @targetclass.find_or_new( opts, &block )
 			self.decorate_with_column_declaratives( @target )
 			self.decorate_with_custom_declaratives( @targetclass )
 		end
@@ -98,19 +92,18 @@ module Mongrel2::Config::DSL
 		Mongrel2.log.info "Entering transaction for server %p" % [ uuid ]
 		Mongrel2::Config.db.transaction do
 
-			# Set up the options hash with the UUID and reasonable defaults
-			# for everything else
-			server_opts = {
-				uuid:         uuid,
-			    access_log:   "/logs/access.log",
-			    error_log:    "/logs/error.log",
-			    pid_file:     "/run/mongrel2.pid",
-			    default_host: "localhost",
-			    port:         8888,
-			}
-
 			Mongrel2.log.debug "Server [%s] (block: %p)" % [ uuid, block ]
-			adapter = Adapter.new( Mongrel2::Config::Server, server_opts )
+			adapter = Adapter.new( Mongrel2::Config::Server, uuid: uuid ) do |server|
+			    server.access_log   ||= "/logs/access.log"
+			    server.error_log    ||= "/logs/error.log"
+			    server.pid_file     ||= "/run/mongrel2.pid"
+			    server.default_host ||= "localhost"
+			    server.port         ||= 8888
+
+				server.hosts.each( &:destroy )
+				server.filters.each( &:destroy )
+				server.xrequests.each( &:destroy )
+			end
 			adapter.instance_eval( &block ) if block
 
 			Mongrel2.log.info "  saving server %p..." % [ uuid ]

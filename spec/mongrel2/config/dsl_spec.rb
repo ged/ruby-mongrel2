@@ -56,6 +56,8 @@ describe Mongrel2::Config::DSL, :db do
 
 			end
 
+			result.refresh
+
 			expect( result ).to be_a( Mongrel2::Config::Server )
 			expect( result.hosts.size ).to eq(  1  )
 			host = result.hosts.first
@@ -94,6 +96,8 @@ describe Mongrel2::Config::DSL, :db do
 				end
 
 			end
+
+			result.refresh
 
 			expect( result ).to be_a( Mongrel2::Config::Server )
 			expect( result.hosts.size ).to eq(  2  )
@@ -232,6 +236,7 @@ describe Mongrel2::Config::DSL, :db do
 					min_size: 1000
 			end
 
+			result.refresh
 			expect( result.filters.size ).to eq(  1  )
 			expect( result.filters.first ).to be_a( Mongrel2::Config::Filter )
 			expect( result.filters.first.settings ).
@@ -261,6 +266,7 @@ describe Mongrel2::Config::DSL, :db do
 					min_size: 1000
 			end
 
+			result.refresh
 			expect( result.xrequests.size ).to eq(  1  )
 			expect( result.xrequests.first ).to be_a( Mongrel2::Config::XRequest )
 			expect( result.xrequests.first.settings ).
