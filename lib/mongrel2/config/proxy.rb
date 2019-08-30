@@ -12,5 +12,11 @@ class Mongrel2::Config::Proxy < Mongrel2::Config( :proxy )
 	#     addr TEXT,
 	#     port INTEGER);
 
+
+	### Return a description of the proxy.
+	def to_s
+		return "Proxy to %s:%d" % [ self.addr, self.port ]
+	end
+
 end # class Mongrel2::Config::Proxy
 

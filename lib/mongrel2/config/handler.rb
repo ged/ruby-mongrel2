@@ -59,6 +59,18 @@ class Mongrel2::Config::Handler < Mongrel2::Config( :handler )
 	end
 
 
+	### Return a description of the handler.
+	def to_s
+		return "Handler `%s' %s <-> %s {%s}%s" % [
+			self.send_ident,
+			self.recv_spec,
+			self.send_spec,
+			self.protocol,
+			self.raw_payload.nonzero? ? ' (raw)' : '',
+		]
+	end
+
+
 	#########
 	protected
 	#########

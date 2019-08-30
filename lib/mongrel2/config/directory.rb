@@ -23,6 +23,17 @@ class Mongrel2::Config::Directory < Mongrel2::Config( :directory )
 	end
 
 
+	### Return a description of the directory.
+	def to_s
+		return "Directory %s(%s) {%s} [cache %ds]" % [
+			self.base,
+			self.index_file,
+			self.default_ctype,
+			self.cache_ttl
+		]
+	end
+
+
 	#########
 	protected
 	#########
