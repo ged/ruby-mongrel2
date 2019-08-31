@@ -217,17 +217,6 @@ class Mongrel2::M2SHCommand
 	# Commands
 	#
 
-	### The 'settings' command
-	def settings_command( *args )
-		header "Advanced Server Settings"
-		Mongrel2::Config.settings.each do |key,val|
-			message( %{<%= color "#{key}:", :subheader %> #{val}} )
-		end
-	end
-	help :settings, "Show the 'advanced' server settings."
-	usage :settings
-
-
 	### The 'version' command
 	def version_command( *args )
 		message( "<%= color 'Version:', :header %> " + Mongrel2.version_string(true) )
