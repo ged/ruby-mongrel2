@@ -6,6 +6,7 @@ var/
 \.foreman$
 \.log$
 \.sqlite$
+\.lock$
 ^coverage/
 ^doc/
 ^logs/

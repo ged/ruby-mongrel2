@@ -1,15 +1,15 @@
 # -*- encoding: utf-8 -*-
-# stub: mongrel2 0.54.0.pre20190818125219 ruby lib
+# stub: mongrel2 0.54.0.pre20190904205758 ruby lib
 
 Gem::Specification.new do |s|
   s.name = "mongrel2".freeze
-  s.version = "0.54.0.pre20190818125219"
+  s.version = "0.54.0.pre20190904205758"
 
   s.required_rubygems_version = Gem::Requirement.new("> 1.3.1".freeze) if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib".freeze]
   s.authors = ["Michael Granger".freeze]
   s.cert_chain = ["certs/ged.pem".freeze]
-  s.date = "2019-08-18"
+  s.date = "2019-09-05"
   s.description = "Ruby-Mongrel2 is a complete Ruby connector for Mongrel2[http://mongrel2.org/].\n\nThis library includes configuration-database ORM classes, a Ruby\nimplementation of the 'm2sh' tool, a configuration DSL for generating config\ndatabases in pure Ruby, a Control port interface object, and handler classes\nfor creating applications or higher-level frameworks.".freeze
   s.email = ["ged@FaerieMUD.org".freeze]
   s.executables = ["m2sh.rb".freeze]
@@ -18,7 +18,7 @@ Gem::Specification.new do |s|
   s.homepage = "https://bitbucket.org/ged/ruby-mongrel2".freeze
   s.licenses = ["BSD-3-Clause".freeze]
   s.rdoc_options = ["--main".freeze, "README.rdoc".freeze]
-  s.required_ruby_version = Gem::Requirement.new(">= 2.4.0".freeze)
+  s.required_ruby_version = Gem::Requirement.new(">= 2.5.0".freeze)
   s.rubygems_version = "3.0.3".freeze
   s.summary = "Ruby-Mongrel2 is a complete Ruby connector for Mongrel2[http://mongrel2.org/]".freeze
 
@@ -28,19 +28,22 @@ Gem::Specification.new do |s|
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<cztop>.freeze, ["~> 0.11"])
       s.add_runtime_dependency(%q<cztop-reactor>.freeze, ["~> 0.6"])
-      s.add_runtime_dependency(%q<libxml-ruby>.freeze, ["~> 3.0"])
-      s.add_runtime_dependency(%q<loggability>.freeze, ["~> 0.12"])
+      s.add_runtime_dependency(%q<gli>.freeze, ["~> 2.19"])
+      s.add_runtime_dependency(%q<libxml-ruby>.freeze, ["~> 3.1"])
+      s.add_runtime_dependency(%q<loggability>.freeze, ["~> 0.14"])
+      s.add_runtime_dependency(%q<pastel>.freeze, ["~> 0.7"])
       s.add_runtime_dependency(%q<sequel>.freeze, ["~> 5.2"])
       s.add_runtime_dependency(%q<sqlite3>.freeze, ["~> 1.3"])
       s.add_runtime_dependency(%q<sysexits>.freeze, ["~> 1.1"])
       s.add_runtime_dependency(%q<tnetstring>.freeze, ["~> 0.3"])
-      s.add_runtime_dependency(%q<trollop>.freeze, ["~> 2.0"])
-      s.add_runtime_dependency(%q<yajl-ruby>.freeze, ["~> 1.0"])
+      s.add_runtime_dependency(%q<tty-prompt>.freeze, ["~> 0.19"])
+      s.add_runtime_dependency(%q<tty-table>.freeze, ["~> 0.11"])
+      s.add_runtime_dependency(%q<yajl-ruby>.freeze, ["~> 1.4"])
       s.add_development_dependency(%q<hoe-mercurial>.freeze, ["~> 1.4"])
       s.add_development_dependency(%q<hoe-deveiate>.freeze, ["~> 0.10"])
       s.add_development_dependency(%q<hoe-highline>.freeze, ["~> 0.2"])
       s.add_development_dependency(%q<amalgalite>.freeze, ["~> 1.5"])
-      s.add_development_dependency(%q<configurability>.freeze, ["~> 3.1"])
+      s.add_development_dependency(%q<configurability>.freeze, ["~> 3.4"])
       s.add_development_dependency(%q<simplecov>.freeze, ["~> 0.12"])
       s.add_development_dependency(%q<rdoc-generator-fivefish>.freeze, ["~> 0"])
       s.add_development_dependency(%q<rdoc>.freeze, [">= 4.0", "< 7"])
@@ -48,19 +51,22 @@ Gem::Specification.new do |s|
     else
       s.add_dependency(%q<cztop>.freeze, ["~> 0.11"])
       s.add_dependency(%q<cztop-reactor>.freeze, ["~> 0.6"])
-      s.add_dependency(%q<libxml-ruby>.freeze, ["~> 3.0"])
-      s.add_dependency(%q<loggability>.freeze, ["~> 0.12"])
+      s.add_dependency(%q<gli>.freeze, ["~> 2.19"])
+      s.add_dependency(%q<libxml-ruby>.freeze, ["~> 3.1"])
+      s.add_dependency(%q<loggability>.freeze, ["~> 0.14"])
+      s.add_dependency(%q<pastel>.freeze, ["~> 0.7"])
       s.add_dependency(%q<sequel>.freeze, ["~> 5.2"])
       s.add_dependency(%q<sqlite3>.freeze, ["~> 1.3"])
       s.add_dependency(%q<sysexits>.freeze, ["~> 1.1"])
       s.add_dependency(%q<tnetstring>.freeze, ["~> 0.3"])
-      s.add_dependency(%q<trollop>.freeze, ["~> 2.0"])
-      s.add_dependency(%q<yajl-ruby>.freeze, ["~> 1.0"])
+      s.add_dependency(%q<tty-prompt>.freeze, ["~> 0.19"])
+      s.add_dependency(%q<tty-table>.freeze, ["~> 0.11"])
+      s.add_dependency(%q<yajl-ruby>.freeze, ["~> 1.4"])
       s.add_dependency(%q<hoe-mercurial>.freeze, ["~> 1.4"])
       s.add_dependency(%q<hoe-deveiate>.freeze, ["~> 0.10"])
       s.add_dependency(%q<hoe-highline>.freeze, ["~> 0.2"])
       s.add_dependency(%q<amalgalite>.freeze, ["~> 1.5"])
-      s.add_dependency(%q<configurability>.freeze, ["~> 3.1"])
+      s.add_dependency(%q<configurability>.freeze, ["~> 3.4"])
       s.add_dependency(%q<simplecov>.freeze, ["~> 0.12"])
       s.add_dependency(%q<rdoc-generator-fivefish>.freeze, ["~> 0"])
       s.add_dependency(%q<rdoc>.freeze, [">= 4.0", "< 7"])
@@ -69,19 +75,22 @@ Gem::Specification.new do |s|
   else
     s.add_dependency(%q<cztop>.freeze, ["~> 0.11"])
     s.add_dependency(%q<cztop-reactor>.freeze, ["~> 0.6"])
-    s.add_dependency(%q<libxml-ruby>.freeze, ["~> 3.0"])
-    s.add_dependency(%q<loggability>.freeze, ["~> 0.12"])
+    s.add_dependency(%q<gli>.freeze, ["~> 2.19"])
+    s.add_dependency(%q<libxml-ruby>.freeze, ["~> 3.1"])
+    s.add_dependency(%q<loggability>.freeze, ["~> 0.14"])
+    s.add_dependency(%q<pastel>.freeze, ["~> 0.7"])
     s.add_dependency(%q<sequel>.freeze, ["~> 5.2"])
     s.add_dependency(%q<sqlite3>.freeze, ["~> 1.3"])
     s.add_dependency(%q<sysexits>.freeze, ["~> 1.1"])
     s.add_dependency(%q<tnetstring>.freeze, ["~> 0.3"])
-    s.add_dependency(%q<trollop>.freeze, ["~> 2.0"])
-    s.add_dependency(%q<yajl-ruby>.freeze, ["~> 1.0"])
+    s.add_dependency(%q<tty-prompt>.freeze, ["~> 0.19"])
+    s.add_dependency(%q<tty-table>.freeze, ["~> 0.11"])
+    s.add_dependency(%q<yajl-ruby>.freeze, ["~> 1.4"])
     s.add_dependency(%q<hoe-mercurial>.freeze, ["~> 1.4"])
     s.add_dependency(%q<hoe-deveiate>.freeze, ["~> 0.10"])
     s.add_dependency(%q<hoe-highline>.freeze, ["~> 0.2"])
     s.add_dependency(%q<amalgalite>.freeze, ["~> 1.5"])
-    s.add_dependency(%q<configurability>.freeze, ["~> 3.1"])
+    s.add_dependency(%q<configurability>.freeze, ["~> 3.4"])
     s.add_dependency(%q<simplecov>.freeze, ["~> 0.12"])
     s.add_dependency(%q<rdoc-generator-fivefish>.freeze, ["~> 0"])
     s.add_dependency(%q<rdoc>.freeze, [">= 4.0", "< 7"])

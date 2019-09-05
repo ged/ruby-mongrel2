@@ -25,24 +25,27 @@ hoespec = Hoe.spec 'mongrel2' do
 
 	self.developer 'Michael Granger', 'ged@FaerieMUD.org'
 
-	self.dependency 'cztop',                '~> 0.11'
-	self.dependency 'cztop-reactor',        '~> 0.6'
-	self.dependency 'libxml-ruby',          '~> 3.0'
-	self.dependency 'loggability',          '~> 0.12'
-	self.dependency 'sequel',               '~> 5.2'
-	self.dependency 'sqlite3',              '~> 1.3'
-	self.dependency 'sysexits',             '~> 1.1'
-	self.dependency 'tnetstring',           '~> 0.3'
-	self.dependency 'trollop',              '~> 2.0'
-	self.dependency 'yajl-ruby',            '~> 1.0'
+	self.dependency 'cztop', '~> 0.11'
+	self.dependency 'cztop-reactor', '~> 0.6'
+	self.dependency 'gli', '~> 2.19'
+	self.dependency 'libxml-ruby', '~> 3.1'
+	self.dependency 'loggability', '~> 0.14'
+	self.dependency 'pastel', '~> 0.7'
+	self.dependency 'sequel', '~> 5.2'
+	self.dependency 'sqlite3', '~> 1.3'
+	self.dependency 'sysexits', '~> 1.1'
+	self.dependency 'tnetstring', '~> 0.3'
+	self.dependency 'tty-prompt', '~> 0.19'
+	self.dependency 'tty-table', '~> 0.11'
+	self.dependency 'yajl-ruby', '~> 1.4'
 
-	self.dependency 'amalgalite',      '~> 1.5', :developer
-	self.dependency 'configurability', '~> 3.1', :developer
-	self.dependency 'simplecov',       '~> 0.12', :developer
-	self.dependency 'hoe-deveiate',    '~> 0.8', :developer
-	self.dependency 'rdoc-generator-fivefish', '~> 0', :development
+	self.dependency 'amalgalite', '~> 1.5', :developer
+	self.dependency 'configurability', '~> 3.4', :developer
+	self.dependency 'hoe-deveiate', '~> 0.10', :developer
+	self.dependency 'simplecov', '~> 0.12', :developer
+	self.dependency 'rdoc-generator-fivefish', '~> 0', :developer
 
-	self.require_ruby_version( '>=2.4.0' )
+	self.require_ruby_version( '>=2.5.0' )
 	self.hg_sign_tags = true if self.respond_to?( :hg_sign_tags= )
 	self.check_history_on_release = true if self.respond_to?( :check_history_on_release= )
 	self.rdoc_locations << "deveiate:/usr/local/www/public/code/#{remote_rdoc_dir}"
