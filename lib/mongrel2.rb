@@ -22,7 +22,7 @@ module Mongrel2
 	abort "\n\n>>> Mongrel2 requires Ruby 2.4 or later. <<<\n\n" if RUBY_VERSION < '2.4.0'
 
 	# Library version constant
-	VERSION = '0.53.0'
+	VERSION = '0.54.0'
 
 	# Version-control revision constant
 	REVISION = %q$Revision$

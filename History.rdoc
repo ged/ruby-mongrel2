@@ -1,3 +1,10 @@
+== v0.54.0 [2019-09-04] Michael Granger <ged@FaerieMUD.org>
+
+Enhancements:
+
+- Convert the CLI to use GLI instead of (deprecated) Trollop
+
+
 == v0.53.0 [2019-05-07] Michael Granger <ged@FaerieMUD.org>
 
 Enhancements:
