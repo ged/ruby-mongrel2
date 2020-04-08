@@ -1,6 +1,10 @@
 # Release History for mongrel2
 
 ---
+## v0.55.0 [2020-04-08] Michael Granger <ged@faeriemud.org>
+
+- Un-hoeify, update for Ruby 2.7.
+- Add a version subcommand
 
 
 ## v0.54.0 [2019-09-04] Michael Granger <ged@FaerieMUD.org>
