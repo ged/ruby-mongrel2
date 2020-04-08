@@ -1,11 +1,16 @@
-== v0.54.0 [2019-09-04] Michael Granger <ged@FaerieMUD.org>
+# Release History for mongrel2
+
+---
+
+
+## v0.54.0 [2019-09-04] Michael Granger <ged@FaerieMUD.org>
 
 Enhancements:
 
 - Convert the CLI to use GLI instead of (deprecated) Trollop
 
 
-== v0.53.0 [2019-05-07] Michael Granger <ged@FaerieMUD.org>
+## v0.53.0 [2019-05-07] Michael Granger <ged@FaerieMUD.org>
 
 Enhancements:
 
@@ -15,7 +20,7 @@ Enhancements:
   that use it.
 
 
-== v0.52.2 [2019-04-24] Michael Granger <ged@FaerieMUD.org>
+## v0.52.2 [2019-04-24] Michael Granger <ged@FaerieMUD.org>
 
 Bugfixes:
 
@@ -25,14 +30,14 @@ Bugfixes:
   it's used as a response too
 
 
-== v0.52.1 [2018-07-23] Michael Granger <ged@FaerieMUD.org>
+## v0.52.1 [2018-07-23] Michael Granger <ged@FaerieMUD.org>
 
 Bugfixes:
 
 - Fix version of dependency on cztop-reactor
 
 
-== v0.52.0 [2018-07-21] Michael Granger <ged@FaerieMUD.org>
+## v0.52.0 [2018-07-21] Michael Granger <ged@FaerieMUD.org>
 
 Enhancements:
 
@@ -40,7 +45,7 @@ Enhancements:
 - Fix use of Gem.datadir for newer Rubygems.
 
 
-==  v0.51.0 [2017-11-15] Michael Granger <ged@FaerieMUD.org>
+##  v0.51.0 [2017-11-15] Michael Granger <ged@FaerieMUD.org>
 
 Enhancements:
 
@@ -52,14 +57,14 @@ Bugfixes:
 - Add missing config input file for the bootstrap command
 
 
-== v0.50.2 [2017-07-05] Michael Granger <ged@FaerieMUD.org>
+## v0.50.2 [2017-07-05] Michael Granger <ged@FaerieMUD.org>
 
 Bugfixes:
 
 - Add missing require to Strelka::Handler.
 
 
-==  v0.50.1 [2017-05-31] Michael Granger <ged@FaerieMUD.org>
+##  v0.50.1 [2017-05-31] Michael Granger <ged@FaerieMUD.org>
 
 Bugfixes:
 
@@ -67,21 +72,21 @@ Bugfixes:
 - Randomize the inproc selfpipe socket name (mainly useful for testing).
 
 
-==  v0.50.0 [2017-04-24] Michael Granger <ged@FaerieMUD.org>
+##  v0.50.0 [2017-04-24] Michael Granger <ged@FaerieMUD.org>
 
 Bugfixes:
 
 - Fix issues with (and require) Sequel 4.45+
 
 
-==  v0.49.0 [2017-03-10] Michael Granger <ged@FaerieMUD.org>
+##  v0.49.0 [2017-03-10] Michael Granger <ged@FaerieMUD.org>
 
 Enhancements:
 
 - Use the CZTop library instead of rbczmq for ZeroMQ sockets.
 
 
-== v0.48.0 [2017-01-16] Mahlon E. Smith <mahlon@martini.nu>
+## v0.48.0 [2017-01-16] Mahlon E. Smith <mahlon@martini.nu>
 
 Housekeeping:
 
@@ -89,14 +94,14 @@ Housekeeping:
 - Bumped Configurability dependency.
 
 
-== v0.47.0 [2016-11-23] Mahlon E. Smith <mahlon@martini.nu>
+## v0.47.0 [2016-11-23] Mahlon E. Smith <mahlon@martini.nu>
 
 Enhancements:
 
 - Close spooled request bodies at the end of the request lifecycle.
 
 
-== v0.46.0 [2016-11-05] Michael Granger <ged@FaerieMUD.org>
+## v0.46.0 [2016-11-05] Michael Granger <ged@FaerieMUD.org>
 
 Enhancements:
 
@@ -104,7 +109,7 @@ Enhancements:
 - Cache config mimetype table
 
 
-== v0.45.1 [2016-11-03] Michael Granger <ged@FaerieMUD.org>
+## v0.45.1 [2016-11-03] Michael Granger <ged@FaerieMUD.org>
 
 Bugfixes:
 
@@ -112,7 +117,7 @@ Bugfixes:
 - Fix an order dependency in the specs.
 
 
-== v0.45.0 [2016-11-03] Michael Granger <ged@FaerieMUD.org>
+## v0.45.0 [2016-11-03] Michael Granger <ged@FaerieMUD.org>
 
 Bugfixes:
 
@@ -121,7 +126,7 @@ Bugfixes:
 - Raise ZMQ::Error on nil return from Connection#recv
 
 
-== v0.44.0 [2016-01-20] Mahlon E. Smith <mahlon@martini.nu>
+## v0.44.0 [2016-01-20] Mahlon E. Smith <mahlon@martini.nu>
 
 Enhancements:
 
@@ -134,29 +139,29 @@ https://datatracker.ietf.org/doc/draft-ietf-httpbis-legally-
 restricted-status/?include_text=1
 
 
-== v0.43.2 [2015-03-25] Michael Granger <ged@FaerieMUD.org>
+## v0.43.2 [2015-03-25] Michael Granger <ged@FaerieMUD.org>
 
 Bugfixes:
 
 - Remove some duplicated status codes that warn under Ruby 2.2.
 - Remove some debug logging that errors under Ruby 2.2.
 
-== v0.43.1 (yanked: no signed tag)
+## v0.43.1 (yanked: no signed tag)
 
 
-== v0.43.0 [2014-12-17] Michael Granger <ged@FaerieMUD.org>
+## v0.43.0 [2014-12-17] Michael Granger <ged@FaerieMUD.org>
 
 - Add a Mongrel2::Request#server_chroot
   Used to qualify filesystem paths relative to Mongrel's chroot for
   sendfile, async upload, etc.
 
 
-== v0.42.0 [2014-08-27] Michael Granger <ged@FaerieMUD.org>
+## v0.42.0 [2014-08-27] Michael Granger <ged@FaerieMUD.org>
 
 Add support for sending extended replies.
 
 
-== v0.41.0 [2014-02-02] Michael Granger <ged@FaerieMUD.org>
+## v0.41.0 [2014-02-02] Michael Granger <ged@FaerieMUD.org>
 
 - Convert back to rbczmq for modern mongrel2s
 - Config introspection and cleanup.
@@ -166,31 +171,31 @@ Add support for sending extended replies.
 - Use LibXML instead of Nokogiri for XML request type
 
 
-== v0.40.0 [2013-10-31] Michael Granger <ged@FaerieMUD.org>
+## v0.40.0 [2013-10-31] Michael Granger <ged@FaerieMUD.org>
 
 - Move back to the zmq library, as rbczmq was too unstable.
 - Drop the xrequest table when creating the config DB.
 
 
-== v0.39.0 [2013-09-25] Michael Granger <ged@FaerieMUD.org>
+## v0.39.0 [2013-09-25] Michael Granger <ged@FaerieMUD.org>
 
 - Replace stagnant zmq library with rbczmq.
 - Add config support for 1.8.1's "X-Requests"
 
 
-== v0.38.0 [2013-09-18] Michael Granger <ged@FaerieMUD.org>
+## v0.38.0 [2013-09-18] Michael Granger <ged@FaerieMUD.org>
 
 - Update dependencies, add Gemfile.
 - Update to Mongrel2 1.8.1 config schema.
 
 
-== v0.37.0 [2013-09-13] Michael Granger <ged@FaerieMUD.org>
+## v0.37.0 [2013-09-13] Michael Granger <ged@FaerieMUD.org>
 
 - Make explicitly-set 'nil' body also a bodiless response.
 - Add support for Sequel 4.x
 
 
-== v0.36.0 [2013-02-28] Michael Granger <ged@FaerieMUD.org>
+## v0.36.0 [2013-02-28] Michael Granger <ged@FaerieMUD.org>
 
 - Fixes for Ruby 2.
 - Fix status line for responses that have an explicit content-length.
@@ -202,7 +207,7 @@ Add support for sending extended replies.
 - Fix the 'start' subcommand of m2sh.rb.
 
 
-== v0.35.0 [2012-12-11] Michael Granger <ged@FaerieMUD.org>
+## v0.35.0 [2012-12-11] Michael Granger <ged@FaerieMUD.org>
 
 - Allow WebSocket frames to be set to reserved opcodes
 - Allow WebSocket opcodes to be set numerically
@@ -213,7 +218,7 @@ Add support for sending extended replies.
     WebSocket::ClientHandshake, and WebSocket::ServerHandshake
 - Ensure the ZMQ context is closed when #run exits.
 
-== v0.34.0 [2012-10-17] Michael Granger <ged@FaerieMUD.org>
+## v0.34.0 [2012-10-17] Michael Granger <ged@FaerieMUD.org>
 
 - Fix the multiple-server case in 'm2sh.rb start'
 - Add support for the new (edge) 'url-scheme' header and add an #ssl?
@@ -224,25 +229,25 @@ Add support for sending extended replies.
 - Remove some more chatty debug logging.
 
 
-== v0.33.0 [2012-10-02] Michael Granger <ged@FaerieMUD.org>
+## v0.33.0 [2012-10-02] Michael Granger <ged@FaerieMUD.org>
 
 - Implement deferred signal-handling for Mongrel2::Handler
 - Update the examples/
 - Squelch some of the noisier debug logging
 
 
-== v0.32.0 [2012-09-18] Michael Granger <ged@FaerieMUD.org>
+## v0.32.0 [2012-09-18] Michael Granger <ged@FaerieMUD.org>
 
 - Add a settings command for showing "expert" settings to m2sh.rb.
 - Updating dependencies
 
 
-== v0.31.1 [2012-08-20] Michael Granger <ged@FaerieMUD.org>
+## v0.31.1 [2012-08-20] Michael Granger <ged@FaerieMUD.org>
 
 - Fix an error message in m2sh.rb.
 
 
-== v0.31.0 [2012-07-30] Michael Granger <ged@FaerieMUD.org>
+## v0.31.0 [2012-07-30] Michael Granger <ged@FaerieMUD.org>
 
 Improve Server control-socket pathing.
 
@@ -252,13 +257,13 @@ exception if no socket is found instead of just returning a
 socket that's doomed to block forever.
 
 
-== v0.30.1 [2012-07-27] Michael Granger <ged@FaerieMUD.org>
+## v0.30.1 [2012-07-27] Michael Granger <ged@FaerieMUD.org>
 
 Documentation and packaging fixes. Switch to sqlite3 until
 Amalgalite works until MacOS X again.
 
 
-== v0.30.0 [2012-07-27] Michael Granger <ged@FaerieMUD.org>
+## v0.30.0 [2012-07-27] Michael Granger <ged@FaerieMUD.org>
 
 - Add a static index page to the quickstart Dir directory.
 - Make the failure to find a mongrel2 binary friendlier.
@@ -266,7 +271,7 @@ Amalgalite works until MacOS X again.
   service.
 
 
-== v0.29.0 [2012-07-13] Michael Granger <ged@FaerieMUD.org>
+## v0.29.0 [2012-07-13] Michael Granger <ged@FaerieMUD.org>
 
 - Make m2sh.rb write audit log events for modifying actions
 - Add a --why option to m2sh.rb to allow reasons for actions to be
@@ -282,7 +287,7 @@ Amalgalite works until MacOS X again.
 - Remove extraneous message from m2sh.rb's quickstart subcommand
 
 
-== v0.28.0 [2012-07-12] Michael Granger <ged@FaerieMUD.org>
+## v0.28.0 [2012-07-12] Michael Granger <ged@FaerieMUD.org>
 
 - Add Mongrel2::Config::Server pathname methods for the path 
   attributes (#access_log, #pid_file, etc.).
@@ -292,19 +297,19 @@ Amalgalite works until MacOS X again.
 - Remove shell mode from m2sh.rb.
 
 
-== v0.27.0 [2012-07-02] Michael Granger <ged@FaerieMUD.org>
+## v0.27.0 [2012-07-02] Michael Granger <ged@FaerieMUD.org>
 
 - Adds support for websocket handshake in 'develop' branch.
 - Adds 'bootstrap' and 'quickstart' commands to m2sh.rb.
 
 
-== v0.26.0 [2012-06-26] Michael Granger <ged@FaerieMUD.org>
+## v0.26.0 [2012-06-26] Michael Granger <ged@FaerieMUD.org>
 
 - Fix the derived path to the async upload body
 - Add a default async upload handler method that cancels the upload
 
 
-== v0.25.0 [2012-06-20] Michael Granger <ged@FaerieMUD.org>
+## v0.25.0 [2012-06-20] Michael Granger <ged@FaerieMUD.org>
 
 NOTE: This revision contains non-backward-compatible changes to
 Mongrel2::Request, Mongrel2::Response, and all subclasses.
@@ -318,14 +323,14 @@ Mongrel2::Request, Mongrel2::Response, and all subclasses.
 - Add support for Content-type charsets.
 
 
-== v0.24.0 [2012-05-31] Michael Granger <ged@FaerieMUD.org>
+## v0.24.0 [2012-05-31] Michael Granger <ged@FaerieMUD.org>
 
 - Fix a bug when duping a Mongrel2::Table with immediate objects as values.
 - Change Config.settings to a Table.
 - Add support for Mongrel2 async uploads.
 
 
-== v0.23.0 [2012-05-17] Michael Granger <ged@FaerieMUD.org>
+## v0.23.0 [2012-05-17] Michael Granger <ged@FaerieMUD.org>
 
 - Add a convenience method to Mongrel2::Handler for fetching its
   associated config object.
@@ -333,19 +338,19 @@ Mongrel2::Request, Mongrel2::Response, and all subclasses.
 - Bumping dependency on Loggability to 0.2.
 
 
-== v0.22.1 [2012-05-07] Michael Granger <ged@FaerieMUD.org>
+## v0.22.1 [2012-05-07] Michael Granger <ged@FaerieMUD.org>
 
 Fix loggability dependency version.
 
 
-== v0.22.0 [2012-05-07] Michael Granger <ged@FaerieMUD.org>
+## v0.22.0 [2012-05-07] Michael Granger <ged@FaerieMUD.org>
 
 - Convert to Loggability for logging.
 - Add an option to bin/m2sh.rb to rewrite the mongrel2 port of a host
   on the fly at startup.
 
 
-== v0.21.0 [2012-04-23] Michael Granger <ged@FaerieMUD.org>
+## v0.21.0 [2012-04-23] Michael Granger <ged@FaerieMUD.org>
 
 - Rename the defaults for Mongrel2::Config.
   This was changed to conform with Configurability's defaults API. The
@@ -355,7 +360,7 @@ Fix loggability dependency version.
   X-Forwarded-For headers. [mahlon]
 
 
-== v0.20.3 [2012-04-12] Michael Granger <ged@FaerieMUD.org>
+## v0.20.3 [2012-04-12] Michael Granger <ged@FaerieMUD.org>
 
 - Fix a require in mongrel2/testing.
 - Assume paths passed to configure( :configdb ) should use SQLite.
@@ -363,18 +368,18 @@ Fix loggability dependency version.
 - Set API docs to use fivefish if available
 
 
-== v0.20.2 [2012-04-10] Michael Granger <ged@FaerieMUD.org>
+## v0.20.2 [2012-04-10] Michael Granger <ged@FaerieMUD.org>
 
 - Fix Mongrel2::Config.dbname.
 
 
-== v0.20.1 [2012-03-28] Michael Granger <ged@FaerieMUD.org>
+## v0.20.1 [2012-03-28] Michael Granger <ged@FaerieMUD.org>
 
 - Fix dependencies and the spec that fails when you run against the
   version of Sequel I was trying to fix in the previous release.
 
 
-== v0.20.0 [2012-03-28] Michael Granger <ged@FaerieMUD.org>
+## v0.20.0 [2012-03-28] Michael Granger <ged@FaerieMUD.org>
 
 - Fix the config DB for Sequel 3.34.
 
@@ -391,12 +396,12 @@ configuration databases, e.g., when I get the PostgreSQL config
 module working, it'll be easier to point the config model at it.
 
 
-== v0.19.0 [2012-03-28] Michael Granger <ged@FaerieMUD.org>
+## v0.19.0 [2012-03-28] Michael Granger <ged@FaerieMUD.org>
 
 - Make HTTPResponse default to a 200 status if there's a body.
 
 
-== v0.18.0 [2012-03-28] Michael Granger <ged@FaerieMUD.org>
+## v0.18.0 [2012-03-28] Michael Granger <ged@FaerieMUD.org>
 
 - Make the 'handler' DSL directive replace any existing handler with
   its send_ident.
@@ -404,7 +409,7 @@ module working, it'll be easier to point the config model at it.
   specs and IDs.
 
 
-== v0.17.0 [2012-03-18] Michael Granger <ged@FaerieMUD.org>
+## v0.17.0 [2012-03-18] Michael Granger <ged@FaerieMUD.org>
 
 - Squelch logging of expected SQL errors.
   Errors are normal during Mongrel2::Config.db= and
@@ -414,12 +419,12 @@ module working, it'll be easier to point the config model at it.
 - Fix documentation for WebSocket#validate_control_frame
 
 
-== v0.16.0 [2012-03-10] Michael Granger <ged@FaerieMUD.org>
+## v0.16.0 [2012-03-10] Michael Granger <ged@FaerieMUD.org>
 
 - Add WebSocket (RFC6455) support
 
 
-== v0.15.1 [2012-03-02] Michael Granger <ged@FaerieMUD.org>
+## v0.15.1 [2012-03-02] Michael Granger <ged@FaerieMUD.org>
 
 - Make sure Mongrel2::Config::Host deletes cascade to their routes
 - Init the database outside of the transaction in the "server" DSL
@@ -429,20 +434,20 @@ module working, it'll be easier to point the config model at it.
 - Log SQL to the logger at DEBUG level
 
 
-== v0.15.0 [2012-02-27] Michael Granger <ged@FaerieMUD.org>
+## v0.15.0 [2012-02-27] Michael Granger <ged@FaerieMUD.org>
 
 - Fix the Mongrel2::Config::Server.by_uuid dataset method to return a
   dataset instead of the instance.
 
 
-== v0.14.0 [2012-02-27] Michael Granger <ged@FaerieMUD.org>
+## v0.14.0 [2012-02-27] Michael Granger <ged@FaerieMUD.org>
 
 - Add an alias for #headers -> #header to Mongrel2::Request and
   Mongrel2::HTTPResponse.
 - Add an OPTIONS request factory method to the Mongrel2::RequestFactory
 
 
-== v0.13.0 [2012-02-24] Michael Granger <ged@FaerieMUD.org>
+## v0.13.0 [2012-02-24] Michael Granger <ged@FaerieMUD.org>
 
 - Fix the ZMQ socket identifier used by Connection.
 - Add missing slash in the control socket URI
@@ -453,14 +458,14 @@ module working, it'll be easier to point the config model at it.
   * Set the content-length to 0
 
 
-== v0.12.0 [2012-02-17] Michael Granger <ged@FaerieMUD.org>
+## v0.12.0 [2012-02-17] Michael Granger <ged@FaerieMUD.org>
 
 - Add bodiless response predicate to Mongrel2::HTTPResponse.
 - Add #put and #delete factory methods to the Mongrel2::RequestFactory.
 - Flesh out docs for the Filter config class.
 
 
-== v0.11.0 [2012-02-15] Michael Granger <ged@FaerieMUD.org>
+## v0.11.0 [2012-02-15] Michael Granger <ged@FaerieMUD.org>
 
 - Make the DSL declarations replace existing records.
 - Flesh out the documentation for the DSL
@@ -468,7 +473,7 @@ module working, it'll be easier to point the config model at it.
   Content-type and Content-encoding headers.
 
 
-== v0.10.0 [2012-02-06] Michael Granger <ged@FaerieMUD.org>
+## v0.10.0 [2012-02-06] Michael Granger <ged@FaerieMUD.org>
 
 This release includes updates for Mongrel 1.8 and finishes up the m2sh.rb tool.
 
@@ -489,30 +494,30 @@ This release includes updates for Mongrel 1.8 and finishes up the m2sh.rb tool.
   the negotiation
 
 
-== v0.9.2 [2011-10-12] Michael Granger <ged@FaerieMUD.org>
+## v0.9.2 [2011-10-12] Michael Granger <ged@FaerieMUD.org>
 
 Bugfix: dup instead of clone to get rid of frozen status.
 
 
-== v0.9.1 [2011-10-12] Michael Granger <ged@FaerieMUD.org>
+## v0.9.1 [2011-10-12] Michael Granger <ged@FaerieMUD.org>
 
 Bugfix: use a dup of the default content-type constant instead 
 of the String itself.
 
 
-== v0.9.0 [2011-10-12] Michael Granger <ged@FaerieMUD.org>
+## v0.9.0 [2011-10-12] Michael Granger <ged@FaerieMUD.org>
 
 - Fix Mongrel2::Table not duping/cloning its internal values.
 - Set a default Content-type header in HTTP responses
 
 
-== v0.8.0 [2011-10-12] Michael Granger <ged@FaerieMUD.org>
+## v0.8.0 [2011-10-12] Michael Granger <ged@FaerieMUD.org>
 
 - Split out the normalization of HTTP response headers into two
   methods for overriding.
 
 
-== v0.7.0 [2011-10-09] Michael Granger <ged@FaerieMUD.org>
+## v0.7.0 [2011-10-09] Michael Granger <ged@FaerieMUD.org>
 
 - Add an optional #request attribute to Mongrel2::Response and make
   Response.from_request set it. This is to make things like content-
@@ -520,7 +525,7 @@ of the String itself.
 - Log request and response both at INFO.
 
 
-== v0.6.0 [2011-10-03] Michael Granger <ged@FaerieMUD.org>
+## v0.6.0 [2011-10-03] Michael Granger <ged@FaerieMUD.org>
 
 Mongrel2::HTTPRequest enhancements.
 - Added #body= for rewriting the entity body
@@ -530,19 +535,19 @@ Mongrel2::HTTPRequest enhancements.
   request objects
 
 
-== v0.5.0 [2011-09-30] Michael Granger <ged@FaerieMUD.org>
+## v0.5.0 [2011-09-30] Michael Granger <ged@FaerieMUD.org>
 
 Enhancements:
 - Added support for POST and HEAD requests to Mongrel2::RequestFactory.
 
 
-== v0.4.0 [2011-09-27] Michael Granger <ged@FaerieMUD.org>
+## v0.4.0 [2011-09-27] Michael Granger <ged@FaerieMUD.org>
 
 Additions:
 - Added Mongrel2::Config::Server.by_uuid( uuid )
 
 
-== v0.3.1 [2011-09-27] Michael Granger <ged@FaerieMUD.org>
+## v0.3.1 [2011-09-27] Michael Granger <ged@FaerieMUD.org>
 
 Bugfix:
 - Measure the content-length of HTTPResponse in bytes, not characters.
@@ -553,7 +558,7 @@ Enhancements:
   output
 
 
-== v0.3.0 [2011-09-23] Michael Granger <ged@FaerieMUD.org>
+## v0.3.0 [2011-09-23] Michael Granger <ged@FaerieMUD.org>
 
 - Mongrel2::Client fixes/documentation updates.
 - Include FileUtils in the 'm2sh.rb load' context so configs 
@@ -563,29 +568,29 @@ Enhancements:
 - Add missing include to Mongrel2::Handler
 
 
-== v0.2.4 [2011-09-21] Michael Granger <ged@FaerieMUD.org>
+## v0.2.4 [2011-09-21] Michael Granger <ged@FaerieMUD.org>
 
 - Added a cleaned-up Mongrel2::Response#inspect like
   Mongrel2::Request.
 - Correct body size in inspected request/response output.
 
 
-== v0.2.3 [2011-09-21] Michael Granger <ged@FaerieMUD.org>
+## v0.2.3 [2011-09-21] Michael Granger <ged@FaerieMUD.org>
 
 - Change the default response status from '200 OK' to '204 No Content'
 
 
-== v0.2.2 [2011-09-19] Michael Granger <ged@FaerieMUD.org>
+## v0.2.2 [2011-09-19] Michael Granger <ged@FaerieMUD.org>
 
 - Packaging fix
 
 
-== v0.2.1 [2011-09-19] Michael Granger <ged@FaerieMUD.org>
+## v0.2.1 [2011-09-19] Michael Granger <ged@FaerieMUD.org>
 
 - Add missing HTTP::CONTINUE constant.
 
 
-== v0.2.0 [2011-09-18] Michael Granger <ged@FaerieMUD.org>
+## v0.2.0 [2011-09-18] Michael Granger <ged@FaerieMUD.org>
 
 - Factor out the generically-useful RSpec helper functions into
   mongrel2/testing.rb and add a RequestFactory.
@@ -599,7 +604,7 @@ Enhancements:
 - Config DSL: directory: Default the index file to index.html
 
 
-== v0.1.2 [2011-09-16] Michael Granger <ged@FaerieMUD.org>
+## v0.1.2 [2011-09-16] Michael Granger <ged@FaerieMUD.org>
 
 Fixed some header problems in Mongrel2::HTTPResponse:
 
@@ -607,23 +612,23 @@ Fixed some header problems in Mongrel2::HTTPResponse:
 - Don't clear headers passed to the constructor.
 
 
-== v0.1.1 [2011-11-14] Michael Granger <ged@FaerieMUD.org>
+## v0.1.1 [2011-11-14] Michael Granger <ged@FaerieMUD.org>
 
 Update dependency to rbzmq-2.1.4 for ZMQ::Error.
 
 
-== v0.1.0 [2011-11-14] Michael Granger <ged@FaerieMUD.org>
+## v0.1.0 [2011-11-14] Michael Granger <ged@FaerieMUD.org>
 
 Memoize Mongrel2::Request#response, and add Mongrel2::Request.response_class to
 allow for easy overriding of the response type.
 
 
-== v0.0.2 [2011-11-13] Michael Granger <ged@FaerieMUD.org>
+## v0.0.2 [2011-11-13] Michael Granger <ged@FaerieMUD.org>
 
 Added a shim to work around lack of ZMQ::Error in zmq-2.1.3.
 
 
-== v0.0.1 [2011-09-12] Michael Granger <ged@FaerieMUD.org>
+## v0.0.1 [2011-09-12] Michael Granger <ged@FaerieMUD.org>
 
 Initial release.
 

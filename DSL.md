@@ -1,4 +1,4 @@
-= The Mongrel2 Config DSL
+# The Mongrel2 Config DSL
 
 The Mongrel2::Config::DSL module is a mixin that will add functions to your
 namespace that can create and replace configuration items in the current
@@ -23,42 +23,65 @@ point the config classes to the right database before using the DSL:
 If you're creating a config to be loaded via m2sh.rb, you don't need any of
 that, as m2sh.rb provides its own prelude before loading the config.
 
-== DSL Syntax
+## DSL Syntax
 
-There is basically one directive for each configuration item, and the layout follows the basic structure described in the {Mongrel2 manual}[http://mongrel2.org/static/book-finalch4.html#x6-260003.4].
+There is basically one directive for each configuration item, and the layout follows the basic structure described in the [Mongrel2 manual](http://mongrel2.org/manual/book-finalch4.html#x6-240003.3).
 
 
-=== server
+### server
 
     server <uuid> { <server config block> }
 
-This creates or replaces the server associated with the specified +uuid+. The
-<tt>server config block</tt> has directives for each of the server attributes,
+This creates or replaces the server associated with the specified `uuid`. The
+`server config block` has directives for each of the server attributes,
 each of which corresponds to one of the columns in the configuration database's
 +server+ table (descriptions largely borrowed from the
-manual[http://mongrel2.org/static/book-finalch4.html#x6-270003.4.1]):
+[manual](http://mongrel2.org/static/book-finalch4.html#x6-270003.4.1)):
 
-[chroot +directory+]   The directory that Mongrel2 should chroot to at startup.
-                       Defaults to <tt>/var/www</tt>.
-[access_log +path+]    The path to the access log file relative to the +chroot+.
-                       Usually starts with a ‘/’. Defaults to
-                       <tt>/logs/access.log</tt>.
-[error_log +path+]     The error log file, just like +access_log+. Defaults to
-                       <tt>/logs/error.log</tt>.
-[pid_file +path+]      The path to the PID file, relative to the +chroot+.
-                       Defaults to <tt>/run/mongrel2.pid</tt>.
-[default_host +name+]  Which +host+ in the server to use as the default if
-                       the +Host+ header doesn't match any host's +matching+
-                       attribute. Defaults to <tt>localhost</tt>.
-[bind_addr +ipaddr+]   The IP address to bind to; default is <tt>0.0.0.0</tt>.
-[port +int+]           The port the server should listen on for new connections;
-                       defaults to <tt>8888</tt>.
+<dl class="rdoc-list label-list">
+  <dt>chroot <code>directory</code></dt>
+  <dd>
+  The directory that <a href="Mongrel2.html"><code>Mongrel2</code></a> should chroot to at startup. Defaults to <code>/var/www</code>.
+  </dd>
+
+  <dt>access_log <code>path</code></dt>
+  <dd>
+  The path to the access log file relative to the <code>chroot</code>. sually starts with a ‘/’. Defaults to <code>/logs/access.log</code>.
+  </dd>
+
+  <dt>error_log <code>path</code></dt>
+  <dd>
+  The error log file, just like <code>access_log</code>. Defaults to code>/logs/error.log</code>.
+  </dd>
+
+  <dt>pid_file <code>path</code></dt>
+  <dd>
+  The path to the PID file, relative to the <code>chroot</code>. Defaults to code>/run/mongrel2.pid</code>.
+  </dd>
+
+  <dt>default_host <code>name</code></dt>
+  <dd>
+  Which <code>host</code> in the server to use as the default if the code>Host</code> header doesn't match any host's <code>matching</code>
+     attribute. Defaults to <code>localhost</code>.
+  </dd>
+
+  <dt>bind_addr <code>ipaddr</code></dt>
+  <dd>
+  The IP address to bind to; default is <code>0.0.0.0</code>.
+  </dd>
+
+  <dt>port <code>int</code></dt>
+  <dd>
+  The port the server should listen on for new connections; defaults to code>8888</code>.
+  </dd>
+</dl>
+
 
 The server will be saved immediately upon exiting the block, and will return the
 saved Mongrel2::Config::Server object.
 
 
-=== host
+### host
 
     host <name> { <host config block> }
 
@@ -67,10 +90,13 @@ This creates or replaces the named Host within a +server+ block. Inside the
 Host, adding Routes, and setting up Handler, Proxy, and Directory targets
 for Routes.
 
-[matching +pattern+]     This is a pattern that’s used to match incoming
-                         <tt>Host</tt> headers for routing purposes.
-[maintenance +boolean+]  This is a (currently unused) setting that will display
-                         a "down for maintenance" page.
+<dl class="rdoc-list label-list">
+  <dt>matching <code>pattern</code></dt>
+  <dd>This is a pattern that’s used to match incoming <tt>Host</tt> headers for routing purposes.</dd>
+
+  <dt>maintenance <code>boolean</code></dt>
+  <dd>This is a (currently unused) setting that will display a "down for maintenance" page.</dd>
+</dl>
 
 The rest of the block will likely be concerned with setting up the routes for
 the host using the +route+, +handler+, +directory+, and +proxy+ directives, e.g.:
@@ -110,7 +136,7 @@ etc:
       route '', testhandler
     end
 
-=== route
+### route
 
     route <pattern>, <target>, [<opts>]
 
@@ -134,7 +160,7 @@ It returns the configured Route object.
     route '.png', image_handler, reverse: true
     route '.ico', image_handler, reverse: true
 
-=== handler
+### handler
 
     handler <send_spec>, <send_ident>, [<recv_spec>[, <recv_ident>]], [<options>]
 
@@ -152,9 +178,12 @@ it to the same as +send_ident+.
 
 Valid +options+ for Handlers are:
 
-[raw_payload +boolean+]  ?
-[protocol +name+]        The protocol used to communicate with the handler. Should
-                         be either 'tnetstring' or 'json' (the default).
+<dl class="rdoc-list label-list">
+  <dt>raw_payload <code>boolean</code></dt>
+  <dd>?</dd>
+  <dt>protocol <code>name</code></dt>
+  <dd>The protocol used to communicate with the handler. Should be either <code>tnetstring</code> or <code>json</code> (the default).</dd>
+</dl>
 
 As with the other directives, +handler+ returns the newly-saved Handler object.
 This means that you can either assign it to a variable for later inclusion in
@@ -163,10 +192,10 @@ one or more Route declarations, or you can define it in the <tt>route</tt> itsel
     route '/gravatar/:email', handler('tcp://localhost:1480', 'gravatar-service')
     # => #<Mongrel2::Config::Route ...>
 
-See the documentation for @route@ for more examples of this.
+See the documentation for `route` for more examples of this.
 
 
-=== directory
+### directory
 
     directory <base>, [<index_file>[, <default_ctype>[, <options>]]]
 
@@ -178,7 +207,7 @@ says that "eventually you’ll be able to tweak more and more of the
 settings to control how Dirs work."
 
 
-=== proxy
+### proxy
 
     proxy <addr>[, <port>]
 
@@ -187,7 +216,7 @@ on the given +addr+ and +port+. If not specified, +port+ defaults to
 <tt>80</tt>. Returns the saved Proxy object.
 
 
-=== filter
+### filter
 
     filter <path>[, <settings>]
 
@@ -197,7 +226,7 @@ and passing it the specified +options+ as a
 TNetstring[http://tnetstrings.org/].
 
 
-=== setting/settings
+### setting/settings
 
     setting <name>, <value>
     settings <name1> => <value1>[, <name2> => <value2>, ...]
@@ -213,7 +242,7 @@ An example (from the manual):
         "upload.temp_store_mode" => "0666"
     # => [ #<Mongrel2::Config::Setting ...>, #<Mongrel2::Config::Setting ...>, ... ]
 
-=== mimetype/mimetypes
+### mimetype/mimetypes
 
     mimetype <extension>, <mimetype>
     mimetypes <extension1> => <mimetype1>[, <extension2> => <mimetype2>]
@@ -227,7 +256,7 @@ An example:
     # => [#<Mongrel2::Config::Mimetype ...>, ... ]
 
 
-== Example
+## Example
 
 This is the mongrel2.org config re-expressed in the Ruby DSL:
 

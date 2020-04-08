@@ -6,7 +6,7 @@ require 'loggability'
 require 'mongrel2' unless defined?( Mongrel2 )
 require 'mongrel2/config' unless defined?( Mongrel2::Config )
 
-# See DSL.rdoc for details on how to use this mixin.
+# See DSL.md for details on how to use this mixin.
 module Mongrel2::Config::DSL
 
 	# A decorator object that provides the DSL-ish interface to the various Config

@@ -1,11 +1,20 @@
-= Ruby-Mongrel2
+# Ruby-Mongrel2
 
-home :: https://bitbucket.org/ged/ruby-mongrel2
-github :: https://github.com/ged/ruby-mongrel2
-docs :: http://deveiate.org/code/mongrel2
+home
+: https://hg.sr.ht/~ged/ruby-mongrel2
+
+code
+: https://hg.sr.ht/~ged/ruby-mongrel2
+
+github
+: https://github.com/ged/ruby-mongrel2
+
+docs
+: https://deveiate.org/code/mongrel2
 
 
-== Description
+
+## Description
 
 Ruby-Mongrel2 is a complete Ruby connector for Mongrel2[http://mongrel2.org/].
 
@@ -15,44 +24,44 @@ databases in pure Ruby, a Control port interface object, and handler classes
 for creating applications or higher-level frameworks.
 
 
-== Installation and Setup
+## Installation and Setup
 
 Install mongrel2:
 
-  $ {brew,port,portmaster,apt-get install,etc} mongrel2
+    $ {brew,port,portmaster,apt-get install,etc} mongrel2
 
 Install the mongrel2 gem:
 
-  $ gem install mongrel2
+    $ gem install mongrel2
 
 Dump a config database generation script into the current working directory:
 
-  $ m2sh.rb bootstrap
+    $ m2sh.rb bootstrap
 
 Edit the generated file:
 
-  $ $EDITOR config.rb
+    $ $EDITOR config.rb
 
 Create a config database from the Ruby config:
 
-  $ m2sh.rb load config.rb
+    $ m2sh.rb load config.rb
 
 Start the server:
 
-  $ m2sh.rb start
+    $ m2sh.rb start
 
 Or combine <tt>bootstrap</tt>, <tt>load</tt>, and <tt>start</tt> all into one
 command:
 
-  $ m2sh.rb quickstart
+    $ m2sh.rb quickstart
 
 
-== Usage
+## Usage
 
 The library consists of three major parts: the Config ORM classes, the
 Handler classes, and the Control class.
 
-=== Config ORM Classes
+### Config ORM Classes
 
 There's one class per table like with most ORMs, a Mongrel2::Config::DSL mixin
 for adding the Ruby configuration DSL to your namespace, and the top-level
@@ -78,28 +87,29 @@ also fall back to using the sqlite3 library instead:
     Finished in 3.67 seconds
     102 examples, 0 failures
 
+For more detailed documentation, see:
 
 * Mongrel2::Config
-  * Mongrel2::Config::DSL
-  * Mongrel2::Config::Server
-  * Mongrel2::Config::Host
-  * Mongrel2::Config::Route
-  * Mongrel2::Config::Directory
-  * Mongrel2::Config::Proxy
-  * Mongrel2::Config::Handler
-  * Mongrel2::Config::Setting
-  * Mongrel2::Config::Mimetype
-  * Mongrel2::Config::Statistic
-  * Mongrel2::Config::Filter
-  * Mongrel2::Config::Log
+    * Mongrel2::Config::DSL
+    * Mongrel2::Config::Server
+    * Mongrel2::Config::Host
+    * Mongrel2::Config::Route
+    * Mongrel2::Config::Directory
+    * Mongrel2::Config::Proxy
+    * Mongrel2::Config::Handler
+    * Mongrel2::Config::Setting
+    * Mongrel2::Config::Mimetype
+    * Mongrel2::Config::Statistic
+    * Mongrel2::Config::Filter
+    * Mongrel2::Config::Log
 
 
-=== Handler Classes
+### Handler Classes
 
 The main handler class is, unsurprisingly, Mongrel2::Handler. It uses a
 Mongrel2::Connection object to talk to the server, wrapping the request data
-up in a Mongrel2::Request object, and expecting a Mongrel2::Response in
-response.
+up in a Mongrel2::Request object, and expecting a Mongrel2::Response to be
+returned in response.
 
 There are specialized Request classes for each of the kinds of requests
 Mongrel2 sends:
@@ -117,14 +127,14 @@ The Mongrel2::Handler class itself has documentation on how to write your own
 handlers.
 
 
-=== The Control Class
+### The Control Class
 
 The Mongrel2::Control class is an object interface to {the Mongrel2 control
 port}[http://mongrel2.org/static/book-finalch4.html#x6-390003.8]. It can be
 used to stop and restart the server, check its status, etc.
 
 
-=== Other Classes
+### Other Classes
 
 There are a few other classes and modules worth checking out, too:
 
@@ -136,21 +146,21 @@ Mongrel2::RequestFactory::
   A factory for generating fixtured requests of various types for testing.
 
 
-== Contributing
+## Contributing
 
 You can check out the current development source with Mercurial via its
-{Bitbucket project}[https://bitbucket.org/ged/ruby-mongrel2]. Or if you 
+{project page}[https://hg.sr.ht/~ged/ruby-mongrel2]. Or if you
 prefer Git, via {its Github mirror}[https://github.com/ged/ruby-mongrel2].
 
 After checking out the source, run:
 
-    $ rake newb
+    $ rake setup
 
-This task will install any missing dependencies, run the tests/specs,
-and generate the API documentation.
+This task will install any missing dependencies and do any other setup
+necessary to start development.
 
 
-== Other Implementations
+## Other Implementations
 
 There are two other Mongrel2 Ruby libraries, +m2r+ +rack-mongrel2+.
 This implementation differs from them in several ways:
@@ -167,9 +177,14 @@ This implementation differs from them in several ways:
   looks.
 
 
-== License
+## Authors
 
-Copyright (c) 2011-2016, Michael Granger
+* Michael Granger <ged@faeriemud.org>
+
+
+## License
+
+Copyright (c) 2011-2020, Michael Granger
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without

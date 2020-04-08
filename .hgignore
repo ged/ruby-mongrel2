@@ -8,7 +8,7 @@ var/
 \.sqlite$
 \.lock$
 ^coverage/
-^doc/
+^docs/
 ^logs/
 ^pkg/
 ^run/

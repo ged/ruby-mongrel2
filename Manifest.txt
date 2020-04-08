@@ -1,11 +1,8 @@
-.autotest
-.gemtest
 .simplecov
-ChangeLog
-DSL.rdoc
-History.rdoc
+DSL.md
+History.md
 Manifest.txt
-README.rdoc
+README.md
 Rakefile
 bin/m2sh.rb
 data/mongrel2/config.rb.in
