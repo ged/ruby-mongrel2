@@ -44,7 +44,7 @@ class Mongrel2::Request
 		# This isn't supposed to happen, but guard against it anyway
 		headers['METHOD'] =~ /^(\w+)$/ or
 			raise Mongrel2::UnhandledMethodError, headers['METHOD']
-		req_method = $1.untaint.to_sym
+		req_method = $1.to_sym
 		self.log.debug "Request method is: %p" % [ req_method ]
 		concrete_class = self.subclass_for_method( req_method )
 
